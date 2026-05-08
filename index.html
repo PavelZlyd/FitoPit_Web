@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Персонализированный план питания под вашу цель, диету и аллергии" />
+  <title>FitoPit — План питания</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="./favicon.png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="./icons/icon-152x152.png" />
+
+  <!-- Шрифт -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- Мета для PWA -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="FitoPit">
+  <meta name="msapplication-TileImage" content="icons/icon-144x144.png">
+  <meta name="msapplication-TileColor" content="#667eea">
+  <meta name="theme-color" content="#3a86ff">
+
+  <!-- Schema.org микроразметка -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "NutritionInformation",
+      "name": "FitoPit — План питания",
+      "description": "Интеллектуальный план питания для занятых людей"
+    }
+  </script>
+
+  <!-- Стили -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<script>
+  // Принудительное удаление Service Worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(registrations => {
+      registrations.forEach(reg => {
+        reg.unregister().then(() => {
+          console.log('✅ SW удалён:', reg.scope);
+          // Опционально: перезагрузить, чтобы загрузить свежие файлы
+          if (registrations.length > 0) {
+            setTimeout(() => location.reload(), 500);
+          }
+        });
+      });
+    }).catch(err => {
+      console.log('❌ Ошибка при удалении SW:', err);
+    });
+  }
+</script>
+
+<div class="container">
+  <header>
+    <div class="logo">
+      <div class="logo-icon">FP</div>
+      <div class="logo-text">FitoPit</div>
+    </div>
+    <p>Интеллектуальный план питания для занятых людей</p>
+  </header>
+
+  <div class="content">
+    <form id="nutritionForm">
+      <div class="form-group">
+        <label for="age">Возраст (лет):</label>
+        <input type="number" id="age" required min="18" max="80" placeholder="Например: 32" />
+      </div>
+      <div class="form-group">
+        <label for="gender">Пол:</label>
+        <select id="gender" required>
+          <option value="male">Мужской</option>
+          <option value="female">Женский</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="weight">Вес (кг):</label>
+        <input type="number" id="weight" required step="0.1" placeholder="Например: 70.5" />
+      </div>
+      <div class="form-group">
+        <label for="height">Рост (см):</label>
+        <input type="number" id="height" required placeholder="Например: 175" />
+      </div>
+      <div class="form-group">
+        <label for="activity">Уровень активности:</label>
+        <select id="activity" required>
+          <option value="1.2">Низкий (редко двигаюсь)</option>
+          <option value="1.375">Средний (тренируюсь 3–5 раз)</option>
+          <option value="1.55">Высокий (ежедневные тренировки)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="goal">Цель:</label>
+        <select id="goal" required>
+          <option value="lose">Похудение</option>
+          <option value="maintain">Поддержание веса</option>
+          <option value="gain">Набор массы</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="diet">Диета:</label>
+        <select id="diet" required>
+          <option value="normal">Обычное питание</option>
+          <option value="vegetarian">Вегетарианское</option>
+          <option value="vegan">Веган</option>
+          <option value="glutenfree">Без глютена</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Аллергии:</label>
+        <div class="checkbox-group" id="allergies">
+          <div class="checkbox-item"><input type="checkbox" value="dairy"> <label>Молочка</label></div>
+          <div class="checkbox-item"><input type="checkbox" value="eggs"> <label>Яйца</label></div>
+          <div class="checkbox-item"><input type="checkbox" value="nuts"> <label>Орехи</label></div>
+          <div class="checkbox-item"><input type="checkbox" value="gluten"> <label>Глютен</label></div>
+          <div class="checkbox-item"><input type="checkbox" value="fish"> <label>Рыба</label></div>
+        </div>
+      </div>
+      <button type="submit">Сгенерировать план питания</button>
+      <button type="reset" class="btn-reset">Очистить</button>
+    </form>
+
+    <div id="result" style="display: none;">
+      <h2>Ваш недельный план питания</h2>
+      <p><strong>Рекомендуемые калории в день:</strong> <span id="calories"></span></p>
+      <div id="mealPlan"></div>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 FitoPit — Заботимся о вашем здоровье в рабочие дни
+  </footer>
+</div>
+
+<!-- Подключаем скрипты -->
+<script src="data.js"></script>
+<script src="utils.js"></script>
+<script src="generator.js"></script>
+<script src="ui.js"></script>
+
+<!-- Нет Service Worker — полностью удалён -->
+
+</body>
+</html>
