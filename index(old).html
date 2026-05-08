@@ -1,0 +1,769 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FitoPit — План питания</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #3a86ff;
+      --primary-dark: #2660cc;
+      --text: #2b3445;
+      --light: #f8f9fa;
+      --border: #e0e6ed;
+      --success: #27ae60;
+      --danger: #e74c3c;
+      --gray: #6c757d;
+      --bg-card: #fafbfd;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--light);
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 24px auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary), #2660cc);
+      color: white;
+      padding: 32px 40px;
+      text-align: center;
+    }
+
+    .logo {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 0 0 8px 0;
+    }
+
+    .logo-icon {
+      width: 56px;
+      height: 56px;
+      background: white;
+      color: var(--primary);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: 700;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .logo-text {
+      font-size: 28px;
+    }
+
+    header p {
+      margin: 0;
+      font-size: 16px;
+      opacity: 0.9;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .content {
+      padding: 40px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--text);
+      font-size: 15px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(58, 134, 255, 0.2);
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #f1f5f9;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 8px;
+      display: block;
+      margin: 32px auto 0;
+      transition: background 0.3s;
+      box-shadow: 0 4px 12px rgba(58, 134, 255, 0.3);
+    }
+
+    button:hover {
+      background-color: var(--primary-dark);
+    }
+
+    /* Анимация появления результата */
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    #result {
+      margin-top: 32px;
+      border-top: 1px solid var(--border);
+      padding-top: 32px;
+      animation: slideIn 0.6s ease-out;
+    }
+
+    .daily-meal {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 24px;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeInUp 0.5s ease-out forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .daily-meal:nth-child(1) { animation-delay: 0.1s; }
+    .daily-meal:nth-child(2) { animation-delay: 0.2s; }
+    .daily-meal:nth-child(3) { animation-delay: 0.3s; }
+    .daily-meal:nth-child(4) { animation-delay: 0.4s; }
+    .daily-meal:nth-child(5) { animation-delay: 0.5s; }
+    .daily-meal:nth-child(6) { animation-delay: 0.6s; }
+    .daily-meal:nth-child(7) { animation-delay: 0.7s; }
+
+    .meal-header {
+      font-weight: 600;
+      color: var(--primary-dark);
+      margin: 12px 0 10px;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .meal-header::before {
+      content: "🍽️";
+      font-size: 18px;
+    }
+
+    .meal-item {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px dashed #eef1f5;
+    }
+
+    .meal-item:last-child {
+      border-bottom: none;
+    }
+
+    .meal-image {
+      width: 64px;
+      height: 64px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .meal-info h4 {
+      margin: 0;
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .meal-info p {
+      margin: 4px 0 0;
+      color: var(--gray);
+      font-size: 13px;
+    }
+
+    .calories {
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .summary {
+      font-weight: 600;
+      font-size: 14px;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .summary.good {
+      color: var(--success);
+    }
+
+    .summary.bad {
+      color: var(--danger);
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: var(--gray);
+      font-size: 14px;
+      border-top: 1px solid var(--border);
+      background: #fcfdff;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        margin: 12px;
+        border-radius: 12px;
+      }
+      .content {
+        padding: 24px;
+      }
+      header {
+        padding: 24px 20px;
+      }
+      .logo {
+        flex-direction: column;
+        gap: 8px;
+      }
+      .logo-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+      }
+      .logo-text {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="logo">
+      <div class="logo-icon">FP</div>
+      <div class="logo-text">FitoPit</div>
+    </div>
+    <p>Интеллектуальный план питания для занятых людей</p>
+  </header>
+
+  <div class="content">
+    <form id="nutritionForm">
+      <div class="form-group">
+        <label>Возраст (лет):</label>
+        <input type="number" id="age" required min="18" max="80" placeholder="Например: 32" />
+      </div>
+      <div class="form-group">
+        <label>Пол:</label>
+        <select id="gender" required>
+          <option value="male">Мужской</option>
+          <option value="female">Женский</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Вес (кг):</label>
+        <input type="number" id="weight" required step="0.1" placeholder="Например: 70.5" />
+      </div>
+      <div class="form-group">
+        <label>Рост (см):</label>
+        <input type="number" id="height" required placeholder="Например: 175" />
+      </div>
+      <div class="form-group">
+        <label>Уровень активности:</label>
+        <select id="activity" required>
+          <option value="1.2">Низкий (редко двигаюсь)</option>
+          <option value="1.375">Средний (тренируюсь 3–5 раз)</option>
+          <option value="1.55">Высокий (ежедневные тренировки)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Цель:</label>
+        <select id="goal" required>
+          <option value="lose">Похудение</option>
+          <option value="maintain">Поддержание веса</option>
+          <option value="gain">Набор массы</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Диета:</label>
+        <select id="diet" required>
+          <option value="normal">Обычное питание</option>
+          <option value="vegetarian">Вегетарианское</option>
+          <option value="vegan">Веган</option>
+          <option value="glutenfree">Без глютена</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Аллергии:</label>
+        <div class="checkbox-group" id="allergies">
+          <div class="checkbox-item"><input type="checkbox" value="dairy"> <label>Молочка</label></div>
+          <div class="checkbox-item"><input type="checkbox" value="eggs"> <label>Яйца</label></div>
+          <div class="checkbox-item"><input type="checkbox" value="nuts"> <label>Орехи</label></div>
+          <div class="checkbox-item"><input type="checkbox" value="gluten"> <label>Глютен</label></div>
+          <div class="checkbox-item"><input type="checkbox" value="fish"> <label>Рыба</label></div>
+        </div>
+      </div>
+      <button type="submit">Сгенерировать план питания</button>
+    </form>
+
+    <div id="result" style="display: none;">
+      <h2>Ваш недельный план питания</h2>
+      <p><strong>Рекомендуемые калории в день:</strong> <span id="calories"></span></p>
+      <div id="mealPlan"></div>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 FitoPit — Заботимся о вашем здоровье в рабочие дни
+  </footer>
+</div>
+
+<script>
+  const form = document.getElementById('nutritionForm');
+  const resultDiv = document.getElementById('result');
+  const caloriesSpan = document.getElementById('calories');
+  const mealPlanDiv = document.getElementById('mealPlan');
+
+  // 🍽️ Полная база рецептов с калориями и атрибутами
+  const recipesDB = {
+  breakfast: [
+    { title: "Омлет с сыром", kcalPer100g: 187, diet: ["normal", "vegetarian"], allergens: ["dairy", "eggs"], type: "main" },
+    { title: "Гречневая каша", kcalPer100g: 110, diet: ["normal", "vegetarian", "vegan", "glutenfree"], allergens: [], type: "side" },
+    { title: "Творог с ягодами", kcalPer100g: 120, diet: ["normal", "vegetarian"], allergens: ["dairy"], type: "main" },
+    { title: "Бутерброд с авокадо", kcalPer100g: 210, diet: ["normal", "vegetarian", "vegan"], allergens: ["gluten"], type: "main" },
+    { title: "Сырники", kcalPer100g: 160, diet: ["normal", "vegetarian"], allergens: ["dairy", "eggs"], type: "main" }
+  ],
+  lunch: {
+    first: [
+      { title: "Борщ с мясом", kcalPer100g: 65, diet: ["normal"], allergens: [], type: "first" },
+      { title: "Куриный суп", kcalPer100g: 70, diet: ["normal"], allergens: [], type: "first" },
+      { title: "Щи", kcalPer100g: 55, diet: ["normal"], allergens: [], type: "first" },
+      { title: "Суп-пюре из цветной капусты", kcalPer100g: 80, diet: ["vegetarian", "vegan"], allergens: ["dairy"], type: "first" }
+    ],
+    second: [
+  { title: "Гуляш с картофелем", kcalPer100g: 120, diet: ["normal"], allergens: [], type: "main" },
+  { title: "Паста с томатами", kcalPer100g: 140, diet: ["normal", "vegetarian"], allergens: ["gluten"], type: "side" },
+  { title: "Рис с овощами", kcalPer100g: 115, diet: ["normal", "vegetarian", "vegan"], allergens: [], type: "side" },
+  { title: "Запечённые овощи", kcalPer100g: 90, diet: ["vegetarian", "vegan"], allergens: [], type: "side" },
+  { title: "Тушёная фасоль", kcalPer100g: 130, diet: ["vegan"], allergens: [], type: "main" },  // ← Запятая добавлена!
+  { title: "Запечённая курица", kcalPer100g: 165, diet: ["normal"], allergens: [], type: "main" },
+  { title: "Рыба на пару", kcalPer100g: 110, diet: ["normal"], allergens: ["fish"], type: "main" }
+]
+  },
+  dinner: {
+    main: [
+      { title: "Запечённая курица", kcalPer100g: 165, diet: ["normal"], allergens: [], type: "main" },
+      { title: "Рыба на пару", kcalPer100g: 110, diet: ["normal"], allergens: ["fish"], type: "main" },
+      { title: "Тушёные овощи", kcalPer100g: 80, diet: ["vegetarian", "vegan"], allergens: [], type: "main" },
+      { title: "Овощное рагу", kcalPer100g: 85, diet: ["vegetarian", "vegan"], allergens: [], type: "main" }
+    ],
+    side: [
+      { title: "Картофельное пюре", kcalPer100g: 90, diet: ["vegetarian"], allergens: ["dairy"], type: "side" },
+      { title: "Гречка", kcalPer100g: 110, diet: ["normal", "vegetarian", "vegan", "glutenfree"], allergens: [], type: "side" },
+      { title: "Рис", kcalPer100g: 115, diet: ["normal", "vegetarian", "vegan", "glutenfree"], allergens: [], type: "side" },
+      { title: "Тушёная капуста", kcalPer100g: 60, diet: ["vegetarian", "vegan"], allergens: [], type: "side" }
+    ]
+  },
+  snack: [
+    { title: "Яблоко", kcalPer100g: 52, diet: ["normal", "vegetarian", "vegan", "glutenfree"], allergens: [], type: "snack" },
+    { title: "Греческий йогурт", kcalPer100g: 90, diet: ["normal", "vegetarian"], allergens: ["dairy"], type: "snack" },
+    { title: "Орехи (миндаль)", kcalPer100g: 575, diet: ["vegetarian", "vegan"], allergens: ["nuts"], type: "snack" },
+    { title: "Банан", kcalPer100g: 89, diet: ["normal", "vegetarian", "vegan", "glutenfree"], allergens: [], type: "snack" },
+    { title: "Хумус с овощами", kcalPer100g: 160, diet: ["vegetarian", "vegan"], allergens: [], type: "snack" }
+  ]
+};
+
+  // 🔋 Калорийные добавки (без сметаны!)
+  const calorieBoosters = [
+    { title: "Кусочек чёрного хлеба", kcalPer100g: 250, diet: ["normal", "vegetarian"], allergens: ["gluten"] },
+    { title: "Авокадо", kcalPer100g: 160, diet: ["normal", "vegetarian", "vegan"], allergens: [] },
+    { title: "Сыр", kcalPer100g: 400, diet: ["normal", "vegetarian"], allergens: ["dairy"] }
+  ];
+
+  // Функция: случайный выбор
+  function getRandom(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  // Функция: проверка, подходит ли рецепт по диете и аллергиям
+  function isRecipeAllowed(recipe, diet, allergies) {
+    if (!recipe.diet.includes(diet)) return false;
+    return !recipe.allergens.some(aller => allergies.includes(aller));
+  }
+
+  // Генерация блюда с ограничением по весу
+  function generateSimpleMeal(targetCalories, options, diet, allergies) {
+    const allowed = options.filter(r => isRecipeAllowed(r, diet, allergies));
+    if (allowed.length === 0) return null;
+
+    const recipe = getRandom(allowed);
+    let weight = Math.min(250, Math.round((targetCalories / recipe.kcalPer100g) * 100));
+    weight = Math.max(100, weight);
+    const calories = Math.round((recipe.kcalPer100g * weight) / 100);
+
+    return { ...recipe, weight, calories };
+  }
+
+  // Комплексный обед: первое + второе + добавка при недоборе
+  function generateLunch(targetCalories, diet, allergies) {
+  const meals = [];
+  const firstCourses = recipesDB.lunch.first.filter(r => isRecipeAllowed(r, diet, allergies));
+  const mainCourses = recipesDB.lunch.second.filter(r => isRecipeAllowed(r, diet, allergies) && r.type === "main");
+  const sideCourses = recipesDB.lunch.second.filter(r => isRecipeAllowed(r, diet, allergies) && r.type === "side");
+
+  // Суп
+  if (firstCourses.length > 0) {
+    const first = getRandom(firstCourses);
+    const weightFirst = Math.min(400, Math.max(100, Math.round((targetCalories * 0.4 / first.kcalPer100g) * 100)));
+    const calFirst = Math.round((first.kcalPer100g * weightFirst) / 100);
+    meals.push({ ...first, weight: weightFirst, calories: calFirst });
+  }
+
+  // Основное блюдо
+  if (mainCourses.length > 0) {
+    const main = getRandom(mainCourses);
+    const remainingAfterFirst = targetCalories - (meals[0]?.calories || 0);
+    const weightMain = Math.min(250, Math.max(100, Math.round((remainingAfterFirst * 0.5 / main.kcalPer100g) * 100)));
+    const calMain = Math.round((main.kcalPer100g * weightMain) / 100);
+    meals.push({ ...main, weight: weightMain, calories: calMain });
+  }
+
+  // Гарнир
+  if (sideCourses.length > 0) {
+    const side = getRandom(sideCourses);
+    const remainingAfterMain = targetCalories - meals.reduce((sum, m) => sum + m.calories, 0);
+    const weightSide = Math.min(300, Math.max(100, Math.round((remainingAfterMain / side.kcalPer100g) * 100)));
+    const calSide = Math.round((side.kcalPer100g * weightSide) / 100);
+    meals.push({ ...side, weight: weightSide, calories: calSide });
+  }
+
+  // Добавка при недоборе
+  const totalCalories = meals.reduce((sum, m) => sum + m.calories, 0);
+  if (totalCalories < targetCalories * 0.85) {
+    const boosters = calorieBoosters.filter(r => isRecipeAllowed(r, diet, allergies));
+    if (boosters.length > 0) {
+      const booster = getRandom(boosters);
+      const needed = targetCalories - totalCalories;
+      const weightBooster = Math.min(50, Math.round((needed / booster.kcalPer100g) * 100));
+      const calBooster = Math.round((booster.kcalPer100g * weightBooster) / 100);
+      meals.push({ ...booster, weight: weightBooster, calories: calBooster, isAddOn: true });
+    }
+  }
+
+  return meals.length > 0 ? meals : [getFallbackMeal(diet, allergies)];
+}
+
+  // Комплексный ужин: основное + гарнир + добавка
+  function generateDinner(targetCalories, diet, allergies) {
+    const meals = [];
+    const mains = recipesDB.dinner.main.filter(r => isRecipeAllowed(r, diet, allergies));
+    const sides = recipesDB.dinner.side.filter(r => isRecipeAllowed(r, diet, allergies));
+
+    if (mains.length > 0 && sides.length > 0) {
+      // Основное блюдо — до 250 г
+      const main = getRandom(mains);
+      const weightMain = Math.min(250, Math.max(100, Math.round((targetCalories * 0.6 / main.kcalPer100g) * 100)));
+      const calMain = Math.round((main.kcalPer100g * weightMain) / 100);
+      meals.push({ ...main, weight: weightMain, calories: calMain });
+
+      // Гарнир — до 300 г
+      const side = getRandom(sides);
+      const remaining = targetCalories - calMain;
+      const weightSide = Math.min(300, Math.max(100, Math.round((remaining / side.kcalPer100g) * 100)));
+      const calSide = Math.round((side.kcalPer100g * weightSide) / 100);
+      meals.push({ ...side, weight: weightSide, calories: calSide });
+    }
+
+    // Добавка при недоборе
+    const totalCalories = meals.reduce((sum, m) => sum + m.calories, 0);
+    if (totalCalories < targetCalories * 0.85) {
+      const boosters = calorieBoosters.filter(r => isRecipeAllowed(r, diet, allergies));
+      if (boosters.length > 0) {
+        const booster = getRandom(boosters);
+        const needed = targetCalories - totalCalories;
+        const weightBooster = Math.min(50, Math.round((needed / booster.kcalPer100g) * 100));
+        const calBooster = Math.round((booster.kcalPer100g * weightBooster) / 100);
+        meals.push({ ...booster, weight: weightBooster, calories: calBooster, isAddOn: true });
+      }
+    }
+
+    return meals.length > 0 ? meals : [getFallbackMeal(diet, allergies)];
+  }
+
+  // Перекус
+  function generateSnack(targetCalories, diet, allergies) {
+    return generateSimpleMeal(targetCalories, recipesDB.snack, diet, allergies) || getFallbackMeal(diet, allergies);
+  }
+
+  // Генерация полноценного приёма пищи (основное + гарнир), как обед/ужин
+  function generateFullMeal(targetCalories, diet, allergies) {
+    const meals = [];
+
+    // Берём вторые блюда из обеда или основные из ужина
+    const mains = [
+      ...recipesDB.lunch.second,
+      ...recipesDB.dinner.main
+    ].filter(r => isRecipeAllowed(r, diet, allergies));
+
+    const sides = recipesDB.dinner.side.filter(r => isRecipeAllowed(r, diet, allergies));
+
+    if (mains.length > 0 && sides.length > 0) {
+      // Основное блюдо — до 250 г
+      const main = getRandom(mains);
+      const weightMain = Math.min(250, Math.max(100, Math.round((targetCalories * 0.6 / main.kcalPer100g) * 100)));
+      const calMain = Math.round((main.kcalPer100g * weightMain) / 100);
+      meals.push({ ...main, weight: weightMain, calories: calMain });
+
+      // Гарнир — до 300 г
+      const side = getRandom(sides);
+      const remaining = targetCalories - calMain;
+      const weightSide = Math.min(300, Math.max(100, Math.round((remaining / side.kcalPer100g) * 100)));
+      const calSide = Math.round((side.kcalPer100g * weightSide) / 100);
+      meals.push({ ...side, weight: weightSide, calories: calSide });
+    }
+
+    // Добавка при недоборе
+    const totalCalories = meals.reduce((sum, m) => sum + m.calories, 0);
+    if (totalCalories < targetCalories * 0.85) {
+      const boosters = calorieBoosters.filter(r => isRecipeAllowed(r, diet, allergies));
+      if (boosters.length > 0) {
+        const booster = getRandom(boosters);
+        const needed = targetCalories - totalCalories;
+        const weightBooster = Math.min(50, Math.round((needed / booster.kcalPer100g) * 100));
+        const calBooster = Math.round((booster.kcalPer100g * weightBooster) / 100);
+        meals.push({ ...booster, weight: weightBooster, calories: calBooster, isAddOn: true });
+      }
+    }
+
+    return meals.length > 0 ? meals : [getFallbackMeal(diet, allergies)];
+  }
+
+  function getFallbackMeal(diet, allergies) {
+    return { title: "Лёгкий салат", kcalPer100g: 50, diet: ["vegan"], allergens: [], weight: 200, calories: 100 };
+  }
+
+  // Карта: ключевое слово → Emoji
+  const emojiMap = {
+    омлет: '🍳', каша: '🥣', творог: '🧀', авокадо: '🥑',
+    сырники: '🟡', борщ: '🍲', суп: '🥘', щи: '🥗', капуста: '🥬',
+    гуляш: '🍖', паста: '🍝', рис: '🍚', овощи: '🥦', запеканка: '🥧',
+    рагу: '🥘', курица: '🍗', рыба: '🐟', фасоль: '🫘', пюре: '🥔',
+    гречка: '🌾', хумус: '🥒', яблоко: '🍎', банан: '🍌', йогурт: '🥛', орехи: '🥜',
+    хлеб: '🍞', масло: '🧈', сыр: '🧀', салат: '🥗'
+  };
+
+  function getEmojiForTitle(title) {
+    const key = Object.keys(emojiMap).find(k => title.toLowerCase().includes(k));
+    return key ? emojiMap[key] : title.charAt(0).toUpperCase();
+  }
+
+  // Создание элемента блюда с emoji
+  function createMealItem(meal) {
+    const item = document.createElement('div');
+    item.className = 'meal-item';
+    item.innerHTML = `
+      <div style="
+        width: 64px;
+        height: 64px;
+        background: #f1f5f9;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        border: 1px solid var(--border);
+        flex-shrink: 0;
+      ">
+        ${getEmojiForTitle(meal.title)}
+      </div>
+      <div class="meal-info">
+        <h4>${meal.title}</h4>
+        <p><span class="calories">${meal.calories} ккал</span> &bull; ${meal.weight} г</p>
+      </div>
+    `;
+    return item;
+  }
+
+  // Добавление одного блюда с заголовком
+  function addMealToDay(dayDiv, meal, header) {
+    if (!meal) return;
+    const item = createMealItem(meal);
+    const container = document.createElement('div');
+    container.innerHTML = `<div class="meal-header">${header}</div>`;
+    container.appendChild(item);
+    dayDiv.appendChild(container);
+  }
+
+  // Добавление комплексного приёма (несколько блюд)
+  function addMealWithHeader(dayDiv, meals, header) {
+    const container = document.createElement('div');
+    container.innerHTML = `<div class="meal-header">${header}</div>`;
+    meals.forEach(meal => {
+      container.appendChild(createMealItem(meal));
+    });
+    dayDiv.appendChild(container);
+  }
+
+  // --- ГЛАВНАЯ ЛОГИКА ---
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    resultDiv.style.display = 'block';
+    mealPlanDiv.innerHTML = '';
+
+    const age = parseFloat(document.getElementById('age').value);
+    const gender = document.getElementById('gender').value;
+    const weight = parseFloat(document.getElementById('weight').value);
+    const height = parseFloat(document.getElementById('height').value);
+    const activity = parseFloat(document.getElementById('activity').value);
+    const goal = document.getElementById('goal').value;
+    const diet = document.getElementById('diet').value;
+    const allergies = Array.from(document.querySelectorAll('#allergies input:checked')).map(cb => cb.value);
+
+    // Расчёт BMR
+    let bmr;
+    if (gender === 'male') {
+      bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+    } else {
+      bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+    }
+
+    let dailyCalories = bmr * activity;
+    if (goal === 'lose') dailyCalories *= 0.8;
+    if (goal === 'gain') dailyCalories *= 1.2;
+
+    const targetCalories = Math.round(dailyCalories);
+    caloriesSpan.textContent = targetCalories;
+
+    // Генерация плана на 7 дней
+    for (let day = 1; day <= 7; day++) {
+      const dayDiv = document.createElement('div');
+      dayDiv.innerHTML = `<h3>День ${day}</h3>`;
+      dayDiv.className = 'daily-meal';
+
+      let totalDailyCalories = 0;
+
+      // --- ЗАВТРАК (30%)
+      const breakfastOpt = recipesDB.breakfast.filter(r => isRecipeAllowed(r, diet, allergies));
+      const breakfast = generateSimpleMeal(Math.round(targetCalories * 0.3), breakfastOpt, diet, allergies);
+      addMealToDay(dayDiv, breakfast, "Завтрак");
+      if (breakfast) totalDailyCalories += breakfast.calories;
+
+      // --- ОБЕД (35%)
+      const lunchMeals = generateLunch(Math.round(targetCalories * 0.35), diet, allergies);
+      addMealWithHeader(dayDiv, lunchMeals, "Обед");
+      lunchMeals.forEach(m => { totalDailyCalories += m.calories });
+
+      // --- ПЕРЕКУС (10%)
+      const snack = generateSnack(Math.round(targetCalories * 0.1), diet, allergies);
+      addMealToDay(dayDiv, snack, "Перекус");
+      if (snack) totalDailyCalories += snack.calories;
+
+                  // --- ПОЛДНИК (только при наборе массы) — может быть со сливом!
+      if (goal === 'gain') {
+        const alreadyEatenBeforePolundnik = totalDailyCalories;
+        const remainingBeforeDinner = targetCalories - alreadyEatenBeforePolundnik;
+
+        if (remainingBeforeDinner < 300) {
+          // Оставим всё ужину
+        } else {
+          const polundnikTarget = Math.max(
+            400,
+            Math.min(700, remainingBeforeDinner * 0.7)
+          );
+
+          // С вероятностью 30% — делаем полдник со сливом
+          const useSoup = Math.random() < 0.3;
+
+          const polundnikMeals = useSoup
+            : generateFullMeal(Math.round(polundnikTarget), diet, allergies);
+
+          addMealWithHeader(dayDiv, polundnikMeals, "Полдник");
+          polundnikMeals.forEach(m => { totalDailyCalories += m.calories });
+        }
+      }
+
+      // --- УЖИН (остаток, минимум 10%)
+      const alreadyEaten = totalDailyCalories;
+      const minDinnerCalories = Math.round(targetCalories * 0.1);
+      const remainingForDinner = Math.max(minDinnerCalories, targetCalories - alreadyEaten);
+      const dinnerMeals = generateDinner(remainingForDinner, diet, allergies);
+      addMealWithHeader(dayDiv, dinnerMeals, "Ужин");
+      dinnerMeals.forEach(m => { totalDailyCalories += m.calories });
+
+      // --- ИТОГО ---
+      const summary = document.createElement('div');
+      summary.className = 'summary';
+      summary.classList.add(Math.abs(totalDailyCalories - targetCalories) <= 50 ? 'good' : 'bad');
+      summary.textContent = `Итого: ${totalDailyCalories} ккал (цель: ${targetCalories})`;
+      dayDiv.appendChild(summary);
+
+      mealPlanDiv.appendChild(dayDiv);
+    }
+  });
+</script>
+</body>
+</html>
