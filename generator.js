@@ -342,6 +342,8 @@ function getBoosterPortionWeight(booster, needed = null) {
   if (bt.includes('сметан')) return 30;
   if (bt.includes('хлебец')) return 30;
   if (bt.includes('хумус') || bt.includes('гуакамоле')) return 40;
+  if (bt.includes('чай')) return 200;
+  if (bt.includes('сахар') || bt.includes('кубик')) return 5;
   if (needed != null) {
     return Math.min(50, roundPortionWeight((needed / booster.kcalPer100g) * 100, true));
   }
@@ -361,7 +363,8 @@ function addCalorieBooster(meals, targetCalories, constraints) {
   const booster = getWeightedRandom(boosters, constraints.budget);
   const bt = booster.title.toLowerCase();
   const hasFixedWeight = ['масло', 'фета', 'сыр', 'орех', 'сухофрукт', 'изюм', 'мед', 'мёд', 'авокадо',
-    'банан', 'яблок', 'груш', 'кефир', 'творог', 'сметан', 'хлебец', 'хумус', 'гуакамоле', 'хлеб']
+    'банан', 'яблок', 'груш', 'кефир', 'творог', 'сметан', 'хлебец', 'хумус', 'гуакамоле', 'хлеб',
+    'чай', 'сахар', 'кубик']
     .some(k => bt.includes(k));
   const weightBooster = hasFixedWeight
     ? getBoosterPortionWeight(booster)
@@ -588,10 +591,110 @@ function computeWeeklyTargets(baseCalories, strategy, cheatDayIndex, cheatEnable
 function resolveCheatDayIndex(userData) {
   if (!userData.cheatDayEnabled) return -1;
   const choice = userData.cheatDayChoice;
-  if (choice === 'random' || choice === '' || choice == null) {
-    return Math.floor(Math.random() * 7);
+  if (choice !== 'random' && choice !== '' && choice != null) {
+    const fixed = parseInt(choice, 10);
+    if (fixed >= 0 && fixed < 7) return fixed;
   }
-  return parseInt(choice, 10);
+  const stored = userData.resolvedCheatDayIndex;
+  if (stored >= 0 && stored < 7) return stored;
+  return Math.floor(Math.random() * 7);
+}
+
+const DAY_MEAL_TYPES = ['breakfast', 'secondBreakfast', 'lunch', 'snack', 'dinner', 'secondDinner'];
+
+function sumDayCalories(day) {
+  return DAY_MEAL_TYPES.reduce((sum, type) => {
+    const meals = day[type];
+    if (!Array.isArray(meals)) return sum;
+    return sum + meals.reduce((s, m) => s + (m?.calories || 0), 0);
+  }, 0);
+}
+
+function recalcMealFromWeight(meal, weight) {
+  weight = roundPortionWeight(weight, !!meal.isAddOn);
+  const addonCal = (meal.addons || []).reduce((s, a) => s + (a.calories || 0), 0);
+  const addonP = (meal.addons || []).reduce((s, a) => s + (a.protein || 0), 0);
+  const addonF = (meal.addons || []).reduce((s, a) => s + (a.fat || 0), 0);
+  const addonC = (meal.addons || []).reduce((s, a) => s + (a.carbs || 0), 0);
+  const baseCal = roundCalories((meal.kcalPer100g * weight) / 100);
+  meal.weight = weight;
+  meal.calories = roundCalories(baseCal + addonCal);
+  meal.protein = parseFloat(((meal.proteinPer100g * weight) / 100 + addonP).toFixed(1));
+  meal.fat = parseFloat(((meal.fatPer100g * weight) / 100 + addonF).toFixed(1));
+  meal.carbs = parseFloat(((meal.carbsPer100g * weight) / 100 + addonC).toFixed(1));
+}
+
+function tryAddDayBooster(day, needed, constraints) {
+  for (const type of ['dinner', 'lunch', 'snack', 'secondDinner', 'breakfast', 'secondBreakfast']) {
+    const meals = day[type];
+    if (!Array.isArray(meals) || !meals.length) continue;
+    const before = sumDayCalories(day);
+    const mealCals = meals.reduce((s, m) => s + (m.calories || 0), 0);
+    addCalorieBooster(meals, mealCals + needed, constraints);
+    if (sumDayCalories(day) > before) return true;
+  }
+  return false;
+}
+
+function tryReduceDayCalories(day, surplus) {
+  const minWeight = 50;
+
+  for (const type of ['dinner', 'lunch', 'snack', 'secondBreakfast', 'breakfast', 'secondDinner']) {
+    const meals = day[type];
+    if (!Array.isArray(meals)) continue;
+    for (let i = meals.length - 1; i >= 0; i--) {
+      const meal = meals[i];
+      if (!meal?.kcalPer100g) continue;
+
+      if (meal.isAddOn && meal.weight <= 30) {
+        meals.splice(i, 1);
+        return true;
+      }
+
+      if (!meal.isAddOn && meal.addons?.length) {
+        const removed = meal.addons.pop();
+        meal.calories = Math.max(0, roundCalories(meal.calories - removed.calories));
+        meal.protein = parseFloat(Math.max(0, meal.protein - removed.protein).toFixed(1));
+        meal.fat = parseFloat(Math.max(0, meal.fat - removed.fat).toFixed(1));
+        meal.carbs = parseFloat(Math.max(0, meal.carbs - removed.carbs).toFixed(1));
+        return true;
+      }
+
+      if (meal.isAddOn || meal.weight <= minWeight) continue;
+
+      const reduceBy = Math.min(
+        meal.weight - minWeight,
+        Math.max(25, Math.round((surplus / meal.kcalPer100g) * 100 / 25) * 25)
+      );
+      if (reduceBy >= 25) {
+        recalcMealFromWeight(meal, meal.weight - reduceBy);
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+function isDayBalanced(total, target) {
+  return Math.abs(total - target) <= Math.max(30, target * 0.05);
+}
+
+function balanceDayCalories(day, targetCalories, constraints) {
+  if (day.isCheatDay || !targetCalories) return day;
+
+  for (let attempt = 0; attempt < 10; attempt++) {
+    const total = sumDayCalories(day);
+    if (isDayBalanced(total, targetCalories)) break;
+
+    const diff = targetCalories - total;
+    if (diff > 0) {
+      if (!tryAddDayBooster(day, diff, constraints)) break;
+    } else if (!tryReduceDayCalories(day, -diff)) {
+      break;
+    }
+  }
+
+  return day;
 }
 
 function generateDayMeals(constraints, userData) {
@@ -616,16 +719,7 @@ function generateDayMeals(constraints, userData) {
     }
   }
 
-  if (!userData.enableSecondBreakfast) {
-    const flatMeals = Object.values(day).flat().filter(m => m && m.calories);
-    const totalCalories = flatMeals.reduce((s, m) => s + (m.calories || 0), 0);
-    const deficit = dailyCalories - totalCalories;
-    if (deficit > dailyCalories * 0.1) {
-      const meal = generateMeal('secondBreakfast', constraints, userData);
-      if (meal[0]?.calories > 50) day.secondBreakfast = meal;
-    }
-  }
-
+  balanceDayCalories(day, dailyCalories, constraints);
   return day;
 }
 

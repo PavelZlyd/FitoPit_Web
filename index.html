@@ -200,6 +200,18 @@
       <ul id="userRecipesList" class="user-recipes-list"></ul>
     </section>
 
+    <section id="importPlanSection" class="import-plan-panel">
+      <details>
+        <summary data-i18n="importPlanSummary">📥 Загрузить сохранённый план</summary>
+        <p class="import-plan-hint" data-i18n="importPlanHint">Вставь текст, скопированный кнопкой «Копировать план».</p>
+        <textarea id="importPlanText" class="import-plan-text" rows="8" placeholder="🍽 FitoPit — Твой план питания…"></textarea>
+        <div class="import-plan-actions">
+          <button type="button" id="importPlanBtn" data-i18n="importPlanBtn">📥 Загрузить план</button>
+        </div>
+        <p id="importPlanError" class="import-plan-error" style="display: none;"></p>
+      </details>
+    </section>
+
     <div id="result" style="display: none;">
       <h2>Твой план питания</h2>
       <p>Базовые калории: <strong id="calories">0</strong> ккал <span id="calorieStatus"></span></p>

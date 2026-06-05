@@ -1030,6 +1030,26 @@ const recipesDB = {
         diet: ["vegetarian", "vegan"],
         allergens: [],
         budget: "medium"
+      },
+      {
+        title: "Чай",
+        kcalPer100g: 1,
+        proteinPer100g: 0.0,
+        fatPer100g: 0.0,
+        carbsPer100g: 0.2,
+        diet: ["normal", "vegetarian", "vegan", "glutenfree"],
+        allergens: [],
+        budget: "low"
+      },
+      {
+        title: "Кубик сахара",
+        kcalPer100g: 387,
+        proteinPer100g: 0.0,
+        fatPer100g: 0.0,
+        carbsPer100g: 99.8,
+        diet: ["normal", "vegetarian", "vegan", "glutenfree"],
+        allergens: [],
+        budget: "low"
       }
     ];
 
@@ -1092,6 +1112,36 @@ const recipesDB = {
       }
     ];
 
+    // Прямые ссылки на eda.ru (проверенные) + поиск для остальных
+    const recipeLinkMap = {
+      "Сырники": "https://eda.ru/recepty/syrniki",
+      "Омлет с сыром": "https://eda.ru/recepty/omlet",
+      "Омлет без масла": "https://eda.ru/recepty/omlet",
+      "Салат Цезарь (без куриного)": "https://eda.ru/recepty/salat-cezar",
+      "Плов": "https://eda.ru/recepty/plov",
+      "Уха": "https://eda.ru/recepty/uha",
+      "Гуляш": "https://eda.ru/recepty/gulyash",
+      "Гуляш с картофелем": "https://eda.ru/recepty/gulyash",
+      "Паста карбонара": "https://eda.ru/recepty/karbonara",
+      "Лазанья": "https://eda.ru/recepty/lazanya",
+      "Борщ с мясом": "https://eda.ru/recepty/borsh",
+      "Щи": "https://eda.ru/recepty/schi",
+      "Блины": "https://eda.ru/recepty/bliny-na-moloke"
+    };
+
+    const noRecipeLinkTitles = new Set([
+      "Банан", "Яблоко", "Груша", "Апельсин", "Мандарин", "Киви",
+      "Ягоды свежие", "Виноград", "Огурец с солью", "Варёное яйцо",
+      "Кефир 1%", "Кефир 2.5%", "Протеиновый батончик",
+      "Авокадо", "Сыр", "Орехи (горсть)", "Оливковое масло (1 ст. л.)",
+      "Мед (1 ч. л.)", "Чай", "Кубик сахара"
+    ]);
+
+    if (typeof window !== 'undefined') {
+      window.recipeLinkMap = recipeLinkMap;
+      window.noRecipeLinkTitles = noRecipeLinkTitles;
+    }
+
     // Emoji map (глобально для UI и генератора)
     const emojiMap = {
       омлет: '🍳', каша: '🥣', творог: '🧀', авокадо: '🥑',
@@ -1103,6 +1153,7 @@ const recipesDB = {
       хлеб: '🍞', масло: '🧈', сыр: '🧀', салат: '🥗', тост: '🥪', котлета: '🍔',
       плов: '🍛', лазанья: '🍝', кукуруза: '🌽', картофель: '🥔', лосось: '🐟',
       тофу: '🥩', оладьи: '🥞', кефир: '🥛', гранола: '🥣', батончик: '🍫',
-      бургер: '🍔', пицца: '🍕', тортик: '🍰', мороженое: '🍦', карбонара: '🍝'
+      бургер: '🍔', пицца: '🍕', тортик: '🍰', мороженое: '🍦', карбонара: '🍝',
+      чай: '🍵', сахар: '🍬'
     };
     if (typeof window !== 'undefined') window.emojiMap = emojiMap;

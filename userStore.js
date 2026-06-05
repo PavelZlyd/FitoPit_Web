@@ -1,6 +1,7 @@
 // Локальное хранение профиля и пользовательских блюд
 const PROFILE_KEY = 'fitopit_profile';
 const RECIPES_KEY = 'fitopit_user_recipes';
+const PLAN_KEY = 'fitopit_last_plan';
 
 const DEFAULT_PROFILE = {
   age: null,
@@ -15,6 +16,7 @@ const DEFAULT_PROFILE = {
   allergies: [],
   cheatDayEnabled: false,
   cheatDayChoice: 'random',
+  resolvedCheatDayIndex: null,
   weeklyStrategy: 'flat',
   cookingPref: 'any',
   enableSecondBreakfast: false,
@@ -139,4 +141,28 @@ function importUserData(json) {
   const data = JSON.parse(json);
   if (data.profile) saveProfile(data.profile);
   if (data.recipes) saveUserRecipes(data.recipes);
+}
+
+function saveLastPlan({ days, weeklyTargets, cheatDayIndex, baseDailyCalories, activeDayIndex }) {
+  if (!days?.length) return;
+  localStorage.setItem(PLAN_KEY, JSON.stringify({
+    days,
+    weeklyTargets: weeklyTargets || days.map(d => d.dayCaloriesTarget),
+    cheatDayIndex: cheatDayIndex ?? -1,
+    baseDailyCalories: baseDailyCalories || 0,
+    activeDayIndex: activeDayIndex ?? 0
+  }));
+}
+
+function loadLastPlan() {
+  try {
+    const raw = localStorage.getItem(PLAN_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function clearLastPlan() {
+  localStorage.removeItem(PLAN_KEY);
 }

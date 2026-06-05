@@ -30,6 +30,7 @@ const translations = {
     secondDinner: "🍵 Второй ужин",
     cheatDay: "🎉 Читмил",
     addBooster: "Добавить масло, сыр и др.",
+    removeAddon: "Убрать добавку",
     boosterMenuTitle: "Добавить к блюду",
     selectDish: "Выбрать блюдо…",
     regenMeal: "Перегенерировать приём пищи",
@@ -38,13 +39,25 @@ const translations = {
     sectionStrategy: "Стратегия недели",
     strategyCaloriesHint: "Ровная неделя — одинаковая норма каждый день. Циклическая — пн–чт чуть меньше, суббота чуть больше.",
     strategyCheatHint: "В этот день вместо обычного меню — разрешённые «вкусняшки».",
-    chartTitle: "Калории по дням недели",
+    chartTitle: "Итого калорий за день",
+    chartTargetHint: "цель",
     myRecipes: "Моя база блюд",
     editProfile: "✏️ Изменить профиль",
     createPlan: "🎯 Создать план",
     reset: "🗑 Очистить",
     profileSummary: "Профиль сохранён",
-    submitQuick: "🎯 Обновить план"
+    submitQuick: "🎯 Обновить план",
+    deltaOnTarget: "в цели",
+    deltaOver: "выше цели",
+    deltaUnder: "ниже цели",
+    recipeLink: "📖 Рецепт",
+    importPlanSummary: "📥 Загрузить сохранённый план",
+    importPlanHint: "Вставь текст, скопированный кнопкой «Копировать план».",
+    importPlanBtn: "📥 Загрузить план",
+    importPlanPlaceholder: "🍽 FitoPit — Твой план питания…",
+    importPlanSuccess: "✅ План загружен",
+    importPlanError: "Не удалось распознать план. Проверь, что текст скопирован из FitoPit.",
+    copyFailed: "❌ Не удалось скопировать"
   },
   en: {
     title: "Your Meal Plan",
@@ -67,6 +80,7 @@ const translations = {
     secondDinner: "🍵 Late Dinner",
     cheatDay: "🎉 Cheat Day",
     addBooster: "Add butter, cheese, etc.",
+    removeAddon: "Remove add-on",
     boosterMenuTitle: "Add to meal",
     selectDish: "Choose dish…",
     regenMeal: "Regenerate meal",
@@ -75,13 +89,25 @@ const translations = {
     sectionStrategy: "Weekly strategy",
     strategyCaloriesHint: "Flat — same calories every day. Cycle — slightly less Mon–Thu, slightly more on Saturday.",
     strategyCheatHint: "On this day, regular meals are replaced with allowed treat options.",
-    chartTitle: "Calories by day of the week",
+    chartTitle: "Daily calorie totals",
+    chartTargetHint: "target",
     myRecipes: "My recipe database",
     editProfile: "✏️ Edit profile",
     createPlan: "🎯 Create plan",
     reset: "🗑 Clear",
     profileSummary: "Profile saved",
-    submitQuick: "🎯 Refresh plan"
+    submitQuick: "🎯 Refresh plan",
+    deltaOnTarget: "on target",
+    deltaOver: "above target",
+    deltaUnder: "below target",
+    recipeLink: "📖 Recipe",
+    importPlanSummary: "📥 Load saved plan",
+    importPlanHint: "Paste text copied with the «Copy Plan» button.",
+    importPlanBtn: "📥 Load plan",
+    importPlanPlaceholder: "🍽 FitoPit — Your Meal Plan…",
+    importPlanSuccess: "✅ Plan loaded",
+    importPlanError: "Could not parse the plan. Make sure the text was copied from FitoPit.",
+    copyFailed: "❌ Copy failed"
   }
 };
 
@@ -128,6 +154,9 @@ function switchLang(lang) {
     const key = el.dataset.i18n;
     if (tr[key]) el.textContent = tr[key];
   });
+
+  const importTextarea = document.getElementById('importPlanText');
+  if (importTextarea) importTextarea.placeholder = tr.importPlanPlaceholder;
 
   const submitBtn = document.getElementById('submitBtn');
   const resetBtn = document.getElementById('resetBtn');
@@ -286,6 +315,44 @@ function sumProperty(day, prop) {
   }, 0);
 }
 
+function getCalorieDeltaInfo(total, target) {
+  const delta = Math.round(total - target);
+  const abs = Math.abs(delta);
+  let status = 'good';
+  if (abs > 100) status = 'bad';
+  else if (abs > 50) status = 'warn';
+  return { delta, status };
+}
+
+function formatCalorieDelta(delta) {
+  const tr = t();
+  if (delta === 0) return tr.deltaOnTarget;
+  const sign = delta > 0 ? '+' : '';
+  const suffix = delta > 0 ? tr.deltaOver : tr.deltaUnder;
+  return `${sign}${delta} ккал (${suffix})`;
+}
+
+function getRecipeUrl(title, meal) {
+  if (meal?.url) return meal.url;
+  const noLink = typeof noRecipeLinkTitles !== 'undefined' ? noRecipeLinkTitles : window.noRecipeLinkTitles;
+  if (noLink?.has?.(title)) return null;
+
+  const map = typeof recipeLinkMap !== 'undefined' ? recipeLinkMap : window.recipeLinkMap;
+  if (map?.[title]) return map[title];
+
+  const query = currentLang === 'ru' ? `${title} рецепт` : `${title} recipe`;
+  if (currentLang === 'ru') {
+    return `https://yandex.ru/search/?text=${encodeURIComponent(query)}`;
+  }
+  return `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+}
+
+function renderRecipeLink(meal) {
+  const url = getRecipeUrl(meal.title, meal);
+  if (!url) return '';
+  return `<a href="${escapeHtml(url)}" class="recipe-link" target="_blank" rel="noopener noreferrer">${t().recipeLink}</a>`;
+}
+
 function isCheatDay(day) {
   return !!day.isCheatDay;
 }
@@ -296,22 +363,39 @@ function getFilteredBoosters() {
     .filter(b => typeof isRecipeAllowed === 'function' && isRecipeAllowed(b, constraints));
 }
 
-function renderWeeklyKcalChart(targets) {
+function renderWeeklyKcalChart(plan) {
   const chart = document.getElementById("weeklyKcalChart");
-  if (!chart || !targets?.length) return;
-  const max = Math.max(...targets);
+  if (!chart || !plan?.length) return;
+
   const tr = t();
-  const cheatIdx = weeklyPlan.cheatDayIndex;
+  const days = plan.map((day, i) => {
+    const total = sumProperty(day, 'calories');
+    const target = day.dayCaloriesTarget || weeklyTargets[i] || 0;
+    const { status } = getCalorieDeltaInfo(total, target);
+    return { total, target, status, isCheat: isCheatDay(day) };
+  });
+
+  const max = Math.max(...days.map(d => Math.max(d.total, d.target)), 1);
+
   chart.innerHTML = `
     <p class="chart-label">${tr.chartTitle}</p>
     <div class="chart-bars">
-      ${targets.map((kcal, i) => `
-        <div class="chart-bar-wrap${cheatIdx === i ? ' chart-bar-cheat' : ''}" title="${tr.day} ${i + 1}: ${kcal} ккал">
-          <span class="chart-kcal">${kcal}</span>
-          <div class="chart-bar" style="height: ${Math.round((kcal / max) * 100)}%"></div>
+      ${days.map(({ total, target, status, isCheat }, i) => {
+        const barHeight = Math.max(4, Math.round((total / max) * 100));
+        const targetLine = target > 0 ? Math.round((target / max) * 100) : 0;
+        const title = target > 0
+          ? `${tr.day} ${i + 1}: ${total} ккал (${tr.chartTargetHint}: ${target})`
+          : `${tr.day} ${i + 1}: ${total} ккал`;
+        return `
+        <div class="chart-bar-wrap${isCheat ? ' chart-bar-cheat' : ''}" title="${title}">
+          <span class="chart-kcal">${total}</span>
+          <div class="chart-bar-track">
+            ${target > 0 ? `<div class="chart-bar-target-line" style="bottom: ${targetLine}%"></div>` : ''}
+            <div class="chart-bar chart-bar--${status}" style="height: ${barHeight}%"></div>
+          </div>
           <span class="chart-day">${i + 1}</span>
-        </div>
-      `).join('')}
+        </div>`;
+      }).join('')}
     </div>
   `;
 }
@@ -343,6 +427,10 @@ function regenerateMeal(dayIndex, mealType) {
     ? generateCheatMeal(mealType, constraints, userData.dailyCalories)
     : generateMeal(mealType, constraints, userData);
   weeklyPlan[dayIndex][mealType] = Array.isArray(meal) ? meal.filter(Boolean) : [meal].filter(Boolean);
+  const dayTarget = weeklyTargets[dayIndex] ?? baseDailyCalories;
+  if (typeof balanceDayCalories === 'function') {
+    balanceDayCalories(weeklyPlan[dayIndex], dayTarget, constraints);
+  }
   displayWeeklyPlan(weeklyPlan, baseDailyCalories, activeDayIndex);
 }
 
@@ -392,6 +480,31 @@ function selectDishRecipe(dayIndex, mealType, mealIndex, recipeTitle) {
   displayWeeklyPlan(weeklyPlan, baseDailyCalories, activeDayIndex);
 }
 
+function persistCurrentPlan() {
+  if (!weeklyPlan?.length) return;
+  saveLastPlan({
+    days: weeklyPlan,
+    weeklyTargets: weeklyPlan.weeklyTargets || weeklyTargets,
+    cheatDayIndex: weeklyPlan.cheatDayIndex,
+    baseDailyCalories,
+    activeDayIndex
+  });
+}
+
+function restoreLastPlan() {
+  const saved = loadLastPlan();
+  if (!saved?.days?.length) return false;
+
+  weeklyPlan = saved.days;
+  weeklyPlan.cheatDayIndex = saved.cheatDayIndex ?? -1;
+  weeklyPlan.weeklyTargets = saved.weeklyTargets || saved.days.map(d => d.dayCaloriesTarget);
+  weeklyTargets = weeklyPlan.weeklyTargets;
+  baseDailyCalories = saved.baseDailyCalories || 0;
+  activeDayIndex = Math.max(0, Math.min(6, saved.activeDayIndex ?? 0));
+  displayWeeklyPlan(weeklyPlan, baseDailyCalories, activeDayIndex);
+  return true;
+}
+
 function displayWeeklyPlan(plan, dailyCalories, dayIndex = activeDayIndex) {
   const activeTab = document.querySelector('.tab-button.active');
   if (activeTab) {
@@ -409,7 +522,7 @@ function displayWeeklyPlan(plan, dailyCalories, dayIndex = activeDayIndex) {
 
   resultDiv.style.display = "block";
   document.getElementById("calories").textContent = Math.round(dailyCalories);
-  renderWeeklyKcalChart(plan.weeklyTargets || weeklyTargets);
+  renderWeeklyKcalChart(plan);
 
   tabsContainer.innerHTML = `
     <div class="tab-buttons">
@@ -426,6 +539,8 @@ function displayWeeklyPlan(plan, dailyCalories, dayIndex = activeDayIndex) {
 
   mealPlanDiv.innerHTML = plan.map((day, dayIndex) => {
     const dayTarget = day.dayCaloriesTarget || weeklyTargets[dayIndex] || dailyCalories;
+    const dayTotal = sumProperty(day, 'calories');
+    const { delta, status } = getCalorieDeltaInfo(dayTotal, dayTarget);
     return `
     <div class="day-plan" data-day-content="${dayIndex}" style="display: none;">
       <p class="day-target">${tr.target}: <strong>${dayTarget}</strong> ккал</p>
@@ -444,13 +559,17 @@ function displayWeeklyPlan(plan, dailyCalories, dayIndex = activeDayIndex) {
                 return `
                   <div class="addon-item">
                     <span class="emoji">${getEmojiForBooster(meal.title)}</span>
-                    +${meal.weight}г ${meal.title} (${meal.calories}ккал)
+                    <span>+${meal.weight}г ${escapeHtml(meal.title)} (${meal.calories}ккал)</span>
+                    <button type="button" class="mini-btn remove-addon-btn" title="${tr.removeAddon}"
+                            onclick="removeStandaloneAddon(${dayIndex}, '${mealType}', ${mealIndex})">✕</button>
                   </div>`;
               }
-              const addonsHtml = (meal.addons || []).map(a => `
+              const addonsHtml = (meal.addons || []).map((a, addonIndex) => `
                 <div class="addon-item">
                   <span class="emoji">${getEmojiForBooster(a.title)}</span>
-                  +${a.weight}г ${a.title} (${a.calories}ккал)
+                  <span>+${a.weight}г ${escapeHtml(a.title)} (${a.calories}ккал)</span>
+                  <button type="button" class="mini-btn remove-addon-btn" title="${tr.removeAddon}"
+                          onclick="removeAttachedAddon(${dayIndex}, '${mealType}', ${mealIndex}, ${addonIndex})">✕</button>
                 </div>
               `).join("");
 
@@ -463,6 +582,7 @@ function displayWeeklyPlan(plan, dailyCalories, dayIndex = activeDayIndex) {
                     ${meal.weight}г • ${meal.calories}ккал •
                     Б:${(meal.protein || 0).toFixed(1)}г Ж:${(meal.fat || 0).toFixed(1)}г У:${(meal.carbs || 0).toFixed(1)}г
                   </span>
+                  ${renderRecipeLink(meal)}
                   <button type="button" class="mini-btn add-booster-btn"
                           title="${tr.addBooster}"
                           onclick="showBoosterMenu(${dayIndex}, '${mealType}', ${mealIndex})">➕</button>
@@ -473,9 +593,10 @@ function displayWeeklyPlan(plan, dailyCalories, dayIndex = activeDayIndex) {
           </div>
         `;
       }).join("")}
-      <div class="daily-summary">
+      <div class="daily-summary daily-summary--${status}">
         <strong>${tr.total}</strong><br>
-        Калории: ${sumProperty(day, 'calories')} ккал<br>
+        Калории: ${dayTotal} / ${dayTarget} ккал<br>
+        <span class="calorie-delta">${formatCalorieDelta(delta)}</span><br>
         Б: ${sumProperty(day, 'protein').toFixed(1)}г,
         Ж: ${sumProperty(day, 'fat').toFixed(1)}г,
         У: ${sumProperty(day, 'carbs').toFixed(1)}г
@@ -501,16 +622,189 @@ function displayWeeklyPlan(plan, dailyCalories, dayIndex = activeDayIndex) {
       document.querySelectorAll(".day-plan").forEach(d => d.style.display = "none");
       btn.classList.add("active");
       document.querySelector(`[data-day-content="${idx}"]`).style.display = "block";
+      persistCurrentPlan();
     });
   });
 
   updateCalorieStatus(dailyCalories);
+  persistCurrentPlan();
+}
+
+const IMPORT_DAY_RE = /^(?:День|Day)\s+(\d+)(?:\s*\(([^)]+)\))?\s*[—–-]\s*(\d+)/i;
+const IMPORT_DISH_RE = /^[-–]\s*(.+?),\s*(\d+(?:[.,]\d+)?)\s*(?:г|g),\s*(\d+)\s*(?:ккал|kcal)/i;
+const IMPORT_ADDON_ARROW_RE = /^[→➜>]+\s*\+(\d+(?:[.,]\d+)?)\s*(?:г|g)\s+(.+?)\s*\((\d+)\s*(?:ккал|kcal)\)/i;
+const IMPORT_ADDON_PLUS_RE = /^\+\s*(.+?),\s*(\d+(?:[.,]\d+)?)\s*(?:г|g),\s*(\d+)\s*(?:ккал|kcal)/i;
+
+function getMealLabelMap() {
+  const map = new Map();
+  for (const lang of ['ru', 'en']) {
+    for (const type of MEAL_ORDER) {
+      map.set(translations[lang][type], type);
+    }
+  }
+  return map;
+}
+
+function findRecipeByTitle(title) {
+  const sources = [];
+  if (typeof getMergedRecipesDB === 'function') {
+    const db = getMergedRecipesDB();
+    sources.push(
+      ...(db.breakfast || []),
+      ...(db.lunch?.first || []),
+      ...(db.lunch?.second || []),
+      ...(db.dinner?.main || []),
+      ...(db.dinner?.side || []),
+      ...(db.snack || [])
+    );
+  }
+  if (typeof calorieBoosters !== 'undefined') sources.push(...calorieBoosters);
+  if (typeof cheatMealRecipes !== 'undefined') sources.push(...cheatMealRecipes);
+  return sources.find(r => r.title === title);
+}
+
+function buildImportedMeal(title, weight, calories, opts = {}) {
+  const recipe = findRecipeByTitle(title);
+  const w = Math.round(parseFloat(String(weight).replace(',', '.')));
+  const cal = Math.round(parseFloat(calories));
+  const meal = {
+    title: title.trim(),
+    kcalPer100g: recipe?.kcalPer100g ?? (w > 0 ? Math.round((cal / w) * 100) : 50),
+    proteinPer100g: recipe?.proteinPer100g ?? 0,
+    fatPer100g: recipe?.fatPer100g ?? 0,
+    carbsPer100g: recipe?.carbsPer100g ?? 0,
+    diet: recipe?.diet ? [...recipe.diet] : ['normal'],
+    allergens: recipe?.allergens ? [...recipe.allergens] : [],
+    budget: recipe?.budget ?? 'medium',
+    type: recipe?.type ?? (opts.isAddOn ? 'side' : 'main'),
+    complete: recipe?.complete,
+    weight: w,
+    calories: cal,
+    protein: recipe ? parseFloat(((recipe.proteinPer100g * w) / 100).toFixed(1)) : 0,
+    fat: recipe ? parseFloat(((recipe.fatPer100g * w) / 100).toFixed(1)) : 0,
+    carbs: recipe ? parseFloat(((recipe.carbsPer100g * w) / 100).toFixed(1)) : 0
+  };
+  if (opts.isAddOn) meal.isAddOn = true;
+  return meal;
+}
+
+function createEmptyImportDay(target, dayIndex, isCheatDay) {
+  return {
+    isCheatDay,
+    dayCaloriesTarget: target,
+    dayIndex,
+    breakfast: [],
+    secondBreakfast: [],
+    lunch: [],
+    snack: [],
+    dinner: [],
+    secondDinner: []
+  };
+}
+
+function parseImportedPlan(text) {
+  const mealLabelMap = getMealLabelMap();
+  const lines = text.split(/\r?\n/);
+  const plan = [];
+  let currentDay = null;
+  let currentMealType = null;
+  let currentMainMeal = null;
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line || line.startsWith('🍽 FitoPit')) continue;
+
+    const dayMatch = line.match(IMPORT_DAY_RE);
+    if (dayMatch) {
+      if (currentDay) plan.push(currentDay);
+      const dayIndex = parseInt(dayMatch[1], 10) - 1;
+      const paren = dayMatch[2] || '';
+      const target = parseInt(dayMatch[3], 10);
+      const isCheat = /читмил|cheat day|🎉/i.test(paren) || /🎉/.test(line);
+      currentDay = createEmptyImportDay(target, dayIndex, isCheat);
+      currentMealType = null;
+      currentMainMeal = null;
+      continue;
+    }
+
+    if (!currentDay) continue;
+
+    if (line.endsWith(':')) {
+      const labelKey = line.slice(0, -1);
+      if (mealLabelMap.has(labelKey)) {
+        currentMealType = mealLabelMap.get(labelKey);
+        currentMainMeal = null;
+        continue;
+      }
+    }
+
+    if (!currentMealType) continue;
+
+    let m;
+    if ((m = line.match(IMPORT_ADDON_ARROW_RE))) {
+      const addon = buildImportedMeal(m[2], m[1], m[3], { isAddOn: true });
+      if (currentMainMeal) {
+        if (!currentMainMeal.addons) currentMainMeal.addons = [];
+        currentMainMeal.addons.push(addon);
+      } else {
+        currentDay[currentMealType].push(addon);
+      }
+      continue;
+    }
+
+    if ((m = line.match(IMPORT_ADDON_PLUS_RE))) {
+      currentDay[currentMealType].push(buildImportedMeal(m[1], m[2], m[3], { isAddOn: true }));
+      currentMainMeal = null;
+      continue;
+    }
+
+    if ((m = line.match(IMPORT_DISH_RE))) {
+      const meal = buildImportedMeal(m[1], m[2], m[3]);
+      currentDay[currentMealType].push(meal);
+      currentMainMeal = meal;
+    }
+  }
+
+  if (currentDay) plan.push(currentDay);
+  if (!plan.length) return null;
+
+  plan.weeklyTargets = plan.map(d => d.dayCaloriesTarget);
+  plan.cheatDayIndex = plan.findIndex(d => d.isCheatDay);
+  return plan;
+}
+
+function showImportPlanError(message) {
+  const el = document.getElementById('importPlanError');
+  if (!el) return;
+  el.textContent = message;
+  el.style.display = message ? 'block' : 'none';
+}
+
+function loadImportedPlan(text) {
+  const plan = parseImportedPlan(text);
+  if (!plan?.length) {
+    showImportPlanError(t().importPlanError);
+    return false;
+  }
+
+  weeklyPlan = plan;
+  weeklyTargets = plan.weeklyTargets || plan.map(d => d.dayCaloriesTarget);
+  baseDailyCalories = Math.round(
+    weeklyTargets.reduce((s, v) => s + v, 0) / weeklyTargets.length
+  ) || baseDailyCalories;
+  activeDayIndex = 0;
+
+  displayWeeklyPlan(weeklyPlan, baseDailyCalories, activeDayIndex);
+  showImportPlanError('');
+  document.getElementById('result')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  return true;
 }
 
 function generateCopyText(plan) {
   const tr = t();
+  const days = Array.isArray(plan) ? plan.filter(d => d && typeof d === 'object') : [];
   let text = `🍽 FitoPit — ${tr.title}\n\n`;
-  plan.forEach((day, i) => {
+  days.forEach((day, i) => {
     const target = day.dayCaloriesTarget || weeklyTargets[i] || baseDailyCalories;
     text += `${tr.day} ${i + 1}${isCheatDay(day) ? ` (${tr.cheatDay})` : ''} — ${target} ккал\n`;
     MEAL_ORDER.forEach(mealType => {
@@ -534,11 +828,44 @@ function generateCopyText(plan) {
   return text;
 }
 
+async function copyTextToClipboard(text) {
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      // fallback below
+    }
+  }
+
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.setAttribute('readonly', '');
+  textarea.style.position = 'fixed';
+  textarea.style.top = '-1000px';
+  textarea.style.left = '-1000px';
+  document.body.appendChild(textarea);
+  textarea.focus();
+  textarea.select();
+  textarea.setSelectionRange(0, text.length);
+
+  let ok = false;
+  try {
+    ok = document.execCommand('copy');
+  } catch {
+    ok = false;
+  } finally {
+    document.body.removeChild(textarea);
+  }
+  return ok;
+}
+
 function getEmojiForBooster(title) {
   const map = {
     масло: '🧈', сыр: '🧀', фета: '🧀', орех: '🥜', мед: '🍯', мёд: '🍯', авокадо: '🥑',
     хлеб: '🍞', хлебец: '🍘', банан: '🍌', яблок: '🍎', груш: '🍐', кефир: '🥛',
-    творог: '🥣', сметан: '🥄', сухофрукт: '🍇', хумус: '🫘', гуакамоле: '🥑'
+    творог: '🥣', сметан: '🥄', сухофрукт: '🍇', хумус: '🫘', гуакамоле: '🥑',
+    чай: '🍵', сахар: '🍬', кубик: '🍬'
   };
   const lower = (title || '').toLowerCase();
   for (const [key, emoji] of Object.entries(map)) {
@@ -592,7 +919,26 @@ function getBoosterWeight(booster) {
   if (bt.includes('сметан')) return 30;
   if (bt.includes('хлебец')) return 30;
   if (bt.includes('хумус') || bt.includes('гуакамоле')) return 40;
+  if (bt.includes('чай')) return 200;
+  if (bt.includes('сахар') || bt.includes('кубик')) return 5;
   return 20;
+}
+
+function removeAttachedAddon(dayIndex, mealType, mealIndex, addonIndex) {
+  const meal = weeklyPlan[dayIndex]?.[mealType]?.[mealIndex];
+  if (!meal?.addons?.length || addonIndex < 0 || addonIndex >= meal.addons.length) return;
+  meal.addons.splice(addonIndex, 1);
+  if (typeof recalcMealFromWeight === 'function') {
+    recalcMealFromWeight(meal, meal.weight);
+  }
+  displayWeeklyPlan(weeklyPlan, baseDailyCalories, activeDayIndex);
+}
+
+function removeStandaloneAddon(dayIndex, mealType, mealIndex) {
+  const meals = weeklyPlan[dayIndex]?.[mealType];
+  if (!meals?.[mealIndex]?.isAddOn) return;
+  meals.splice(mealIndex, 1);
+  displayWeeklyPlan(weeklyPlan, baseDailyCalories, activeDayIndex);
 }
 
 function addBoosterToMeal(dayIndex, mealType, mealIndex, boosterIndex) {
@@ -635,8 +981,8 @@ function renderUserRecipesList() {
   list.innerHTML = recipes.length
     ? recipes.map(r => `
         <li>
-          <span>${r.title} — ${r.kcalPer100g} ккал/100г (${(r.mealSlots || []).join(', ')})</span>
-          <button type="button" class="mini-btn" onclick="deleteUserRecipeById('${r.id}')">🗑</button>
+          <span>${escapeHtml(r.title)} — ${r.kcalPer100g} ккал/100г (${escapeHtml((r.mealSlots || []).join(', '))})</span>
+          <button type="button" class="mini-btn" onclick="deleteUserRecipeById(${JSON.stringify(r.id)})">🗑</button>
         </li>
       `).join('')
     : `<li class="empty-hint">${currentLang === 'ru' ? 'Пока нет своих блюд' : 'No custom recipes yet'}</li>`;
@@ -647,11 +993,18 @@ function deleteUserRecipeById(id) {
   renderUserRecipesList();
 }
 
+function clearResolvedCheatDay() {
+  const profile = loadProfile();
+  if (profile.resolvedCheatDayIndex == null) return;
+  profile.resolvedCheatDayIndex = null;
+  saveProfile(profile);
+}
+
 function createPlanFromForm() {
   const form = document.getElementById("nutritionForm");
   const userData = getFormData(form);
   userData.allergies = getSelectedAllergies();
-  saveProfile(userData);
+  userData.resolvedCheatDayIndex = loadProfile().resolvedCheatDayIndex ?? null;
 
   userData.dailyCalories = calculateCalories(
     userData.weight, userData.height, userData.age,
@@ -662,6 +1015,13 @@ function createPlanFromForm() {
   const constraints = buildConstraints(userData);
   weeklyPlan = generateWeeklyPlan(constraints, userData);
   weeklyTargets = weeklyPlan.weeklyTargets || Array(7).fill(baseDailyCalories);
+
+  if (userData.cheatDayEnabled && weeklyPlan.cheatDayIndex >= 0) {
+    userData.resolvedCheatDayIndex = weeklyPlan.cheatDayIndex;
+  } else {
+    userData.resolvedCheatDayIndex = null;
+  }
+  saveProfile(userData);
 
   activeDayIndex = 0;
   displayWeeklyPlan(weeklyPlan, baseDailyCalories, activeDayIndex);
@@ -687,6 +1047,7 @@ document.addEventListener("DOMContentLoaded", () => {
   profileEditMode = !isProfileComplete(profile);
   updateSurveyVisibility();
   renderUserRecipesList();
+  restoreLastPlan();
 
   document.getElementById("editProfileBtn")?.addEventListener("click", () => {
     profileEditMode = true;
@@ -696,6 +1057,11 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("cheatDay")?.addEventListener("change", (e) => {
     const group = document.getElementById("cheatDayChoiceGroup");
     if (group) group.style.opacity = e.target.checked ? '1' : '0.5';
+    clearResolvedCheatDay();
+  });
+
+  document.getElementById("cheatDayChoice")?.addEventListener("change", () => {
+    clearResolvedCheatDay();
   });
 
   const form = document.getElementById("nutritionForm");
@@ -707,6 +1073,7 @@ document.addEventListener("DOMContentLoaded", () => {
   form?.addEventListener("reset", () => {
     weeklyPlan = [];
     weeklyTargets = [];
+    clearLastPlan();
     document.getElementById("result").style.display = "none";
     profileEditMode = true;
     updateSurveyVisibility();
@@ -731,11 +1098,30 @@ document.addEventListener("DOMContentLoaded", () => {
     renderUserRecipesList();
   });
 
-  document.getElementById("copyPlan")?.addEventListener("click", function () {
-    navigator.clipboard.writeText(generateCopyText(weeklyPlan)).then(() => {
-      this.textContent = t().copied;
-      setTimeout(() => { this.textContent = t().copy; }, 2000);
-    }).catch(err => console.error(err));
+  document.getElementById("copyPlan")?.addEventListener("click", async function () {
+    if (!weeklyPlan?.length) return;
+
+    const btn = this;
+    const text = generateCopyText(weeklyPlan);
+    const ok = await copyTextToClipboard(text);
+
+    btn.textContent = ok ? t().copied : t().copyFailed;
+    setTimeout(() => { btn.textContent = t().copy; }, 2000);
+  });
+
+  document.getElementById("importPlanBtn")?.addEventListener("click", function () {
+    const text = document.getElementById("importPlanText")?.value || '';
+    if (!text.trim()) {
+      showImportPlanError(t().importPlanError);
+      return;
+    }
+    const ok = loadImportedPlan(text);
+    if (ok) {
+      const btn = this;
+      const prev = btn.textContent;
+      btn.textContent = t().importPlanSuccess;
+      setTimeout(() => { btn.textContent = prev; }, 2000);
+    }
   });
 });
 
@@ -745,5 +1131,7 @@ window.selectDishRecipe = selectDishRecipe;
 window.showBoosterMenu = showBoosterMenu;
 window.closeBoosterMenu = closeBoosterMenu;
 window.addBoosterToMeal = addBoosterToMeal;
+window.removeAttachedAddon = removeAttachedAddon;
+window.removeStandaloneAddon = removeStandaloneAddon;
 window.deleteUserRecipeById = deleteUserRecipeById;
 window.switchLang = switchLang;

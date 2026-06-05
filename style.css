@@ -402,6 +402,80 @@ form button[type="reset"]:hover {
   background: #e2e8f0;
 }
 
+/* Импорт плана */
+.import-plan-panel {
+  margin: 20px 0;
+  padding: 0;
+}
+
+.import-plan-panel details {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+
+.import-plan-panel summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text);
+  font-size: 15px;
+  list-style: none;
+}
+
+.import-plan-panel summary::-webkit-details-marker {
+  display: none;
+}
+
+.import-plan-hint {
+  margin: 10px 0 8px;
+  font-size: 13px;
+  color: var(--gray);
+}
+
+.import-plan-text {
+  width: 100%;
+  min-height: 120px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.5;
+  resize: vertical;
+  background: var(--card-bg);
+  color: var(--text);
+}
+
+.import-plan-text:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.import-plan-actions {
+  margin-top: 10px;
+}
+
+.import-plan-actions button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.import-plan-actions button:hover {
+  opacity: 0.9;
+}
+
+.import-plan-error {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #e53e3e;
+}
+
 /* Приёмы пищи */
 .meal-section {
   margin: 16px 0;
@@ -489,6 +563,48 @@ form button[type="reset"]:hover {
   background: rgba(50, 60, 70, 0.4);
   color: #ccc;
   border-color: rgba(58, 134, 255, 0.2);
+}
+
+.daily-summary--good {
+  border-color: rgba(56, 161, 105, 0.4);
+  background: rgba(56, 161, 105, 0.08);
+}
+
+.daily-summary--warn {
+  border-color: rgba(214, 158, 46, 0.4);
+  background: rgba(214, 158, 46, 0.08);
+}
+
+.daily-summary--bad {
+  border-color: rgba(229, 62, 62, 0.4);
+  background: rgba(229, 62, 62, 0.08);
+}
+
+.calorie-delta {
+  font-weight: 600;
+}
+
+.daily-summary--good .calorie-delta { color: #38a169; }
+.daily-summary--warn .calorie-delta { color: #d69e2e; }
+.daily-summary--bad .calorie-delta { color: #e53e3e; }
+
+.recipe-link {
+  font-size: 13px;
+  color: var(--accent);
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(58, 134, 255, 0.25);
+  background: rgba(58, 134, 255, 0.06);
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.recipe-link:hover {
+  background: rgba(58, 134, 255, 0.12);
+  border-color: rgba(58, 134, 255, 0.4);
+  text-decoration: underline;
 }
 
 /* Футер */
@@ -869,21 +985,24 @@ footer {
 
 .weekly-kcal-chart {
   margin: 12px 0 20px;
+  padding: 14px 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
 }
 
 .chart-label {
   font-size: 15px;
   font-weight: 600;
   color: var(--text);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .chart-bars {
   display: flex;
   align-items: flex-end;
-  gap: 6px;
-  height: 110px;
-  padding-top: 4px;
+  gap: 8px;
+  height: 130px;
 }
 
 .chart-bar-wrap {
@@ -893,13 +1012,14 @@ footer {
   align-items: center;
   justify-content: flex-end;
   height: 100%;
-  gap: 4px;
+  gap: 6px;
   min-width: 0;
+  cursor: default;
 }
 
 .chart-kcal {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
   color: var(--text);
   line-height: 1.2;
   white-space: nowrap;
@@ -911,16 +1031,51 @@ footer {
   color: var(--gray);
 }
 
-.chart-bar {
+.chart-bar-track {
+  position: relative;
   width: 100%;
-  max-width: 36px;
+  max-width: 40px;
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 0;
+}
+
+.chart-bar-target-line {
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  height: 2px;
+  background: var(--gray);
+  opacity: 0.45;
+  border-radius: 1px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.chart-bar {
+  position: relative;
+  z-index: 2;
+  width: 100%;
   background: var(--accent);
   border-radius: 4px 4px 0 0;
   min-height: 4px;
   flex-shrink: 0;
+  transition: height 0.25s ease;
 }
 
+.chart-bar--good { background: #38a169; }
+.chart-bar--warn { background: #d69e2e; }
+.chart-bar--bad { background: #e53e3e; }
+
 .chart-bar-cheat .chart-bar {
+  background: linear-gradient(180deg, #ff6b6b, #ee5a24);
+}
+
+.chart-bar-cheat .chart-bar--good,
+.chart-bar-cheat .chart-bar--warn,
+.chart-bar-cheat .chart-bar--bad {
   background: linear-gradient(180deg, #ff6b6b, #ee5a24);
 }
 
@@ -952,11 +1107,27 @@ footer {
 }
 
 .addon-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 12px;
   color: var(--gray);
   margin-left: 30px;
   margin-bottom: 4px;
   padding: 2px 0;
+}
+
+.remove-addon-btn {
+  flex-shrink: 0;
+  margin-left: auto;
+  font-size: 11px;
+  line-height: 1;
+  padding: 2px 6px;
+  opacity: 0.7;
+}
+
+.remove-addon-btn:hover {
+  opacity: 1;
 }
 
 .add-booster-btn {
