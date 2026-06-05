@@ -177,8 +177,8 @@ header p {
   position: relative;
   z-index: 1;
   border: 1px solid var(--border);
-  backdrop-filter: blur(12px); /* Усилено */
-  background: rgba(var(--card-bg-rgb), 0.9); /* Больше прозрачности */
+  backdrop-filter: blur(12px);
+  background: rgba(var(--card-bg-rgb), 0.9);
   border: 1px solid rgba(58, 134, 255, 0.18);
 }
 
@@ -318,35 +318,6 @@ form button[type="reset"]:hover {
 .tab-buttons {
   display: flex;
   gap: 8px;
-  overflow-x: auto;
-  padding: 4px 0 12px;
-  scrollbar-width: thin;
-}
-
-.tab-button {
-  padding: 8px 12px;
-  border: 1px solid var(--border);
-  background: transparent;
-  border-radius: 6px;
-  font-size: 13px;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.tab-button.active {
-  background: var(--accent);
-  color: white;
-  border-color: var(--accent);
-}
-
-.tab-button:hover:not(.active) {
-  background: rgba(58, 134, 255, 0.1);
-}
-
-.tab-buttons {
-  display: flex;
-  gap: 8px;
   flex-wrap: wrap;
   margin-bottom: 16px;
 }
@@ -437,6 +408,9 @@ form button[type="reset"]:hover {
 }
 
 .meal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   font-weight: 600;
   color: var(--accent);
   font-size: 16px;
@@ -465,6 +439,24 @@ form button[type="reset"]:hover {
   font-size: 15px;
   flex: 1;
   min-width: 140px;
+}
+
+.meal-item > .dish-select {
+  flex: 1;
+  min-width: 120px;
+  max-width: 220px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 13px;
+  background: var(--card-bg);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.meal-item > .dish-select:focus {
+  outline: none;
+  border-color: var(--accent);
 }
 
 .meal-item > .info {
@@ -597,6 +589,11 @@ footer {
     font-size: 15px;
   }
 
+  .meal-item > .dish-select {
+    width: 100%;
+    max-width: none;
+  }
+
   .tab-buttons {
     gap: 6px;
   }
@@ -622,4 +619,353 @@ footer {
     margin-top: 24px;
     backdrop-filter: blur(8px);
   }
+}
+
+/* === НОВЫЕ СТИЛИ: Читмил и бюджет === */
+
+/* Выделение дня с читмилом */
+.tab-button.cheat-day {
+  background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+  color: white;
+  border: none;
+  font-weight: 600;
+  box-shadow: 0 0 8px rgba(255, 107, 107, 0.4);
+}
+
+/* Подсказка бюджета — цветовая индикация */
+.budget-low {
+  color: #48bb78;
+}
+
+.budget-medium {
+  color: #ecc94b;
+}
+
+.budget-high {
+  color: #f56565;
+}
+
+/* Форма: поле "Бюджет" */
+.form-group label[for="budget"] {
+  font-weight: 500;
+  color: var(--text);
+  font-size: 14px;
+}
+
+#budget {
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 15px;
+  background: var(--card-bg);
+  color: var(--text);
+  transition: border-color 0.2s;
+}
+
+#budget:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(58, 134, 255, 0.2);
+}
+
+/* Чекбокс читмила */
+#cheatDay {
+  margin-right: 8px;
+  transform: scale(1.2);
+}
+
+#nutritionForm .form-group:last-child label {
+  font-size: 14px;
+  color: var(--gray);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+#nutritionForm .form-group:last-child label:hover {
+  color: var(--text);
+}
+
+/* === МЕНЮ ДОБАВОК === */
+.booster-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.booster-menu-content {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 300px;
+  text-align: center;
+  box-shadow: 0 6px 24px var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.booster-menu-content h4 {
+  margin-bottom: 16px;
+  color: var(--text);
+  font-size: 16px;
+}
+
+.booster-item {
+  display: block;
+  margin: 8px 0;
+  padding: 10px;
+  background: rgba(58, 134, 255, 0.08);
+  border: 1px solid rgba(58, 134, 255, 0.2);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text);
+  transition: all 0.2s;
+}
+
+.booster-item:hover {
+  background: rgba(58, 134, 255, 0.15);
+  transform: scale(1.02);
+}
+
+/* Секции формы и профиль */
+.form-section {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.form-section.section-collapsed {
+  display: none;
+}
+
+.section-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.strategy-section .form-group label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.strategy-section .field-hint {
+  margin: 4px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text);
+  opacity: 0.82;
+}
+
+.strategy-section .checkbox-row {
+  gap: 4px;
+}
+
+.strategy-section .checkbox-row label {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.field-hint {
+  margin: 4px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text);
+  opacity: 0.82;
+}
+
+.profile-summary {
+  background: rgba(58, 134, 255, 0.08);
+  border: 1px solid rgba(58, 134, 255, 0.2);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.btn-secondary {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.checkbox-row label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.user-recipes-panel {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.user-recipes-panel h3 {
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.user-recipe-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.user-recipe-form input,
+.user-recipe-form select {
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card-bg);
+  color: var(--text);
+  font-size: 14px;
+}
+
+.user-recipe-form button {
+  grid-column: 1 / -1;
+}
+
+.user-recipes-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.user-recipes-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.user-recipes-list .empty-hint {
+  color: var(--gray);
+  justify-content: center;
+}
+
+.weekly-kcal-chart {
+  margin: 12px 0 20px;
+}
+
+.chart-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 110px;
+  padding-top: 4px;
+}
+
+.chart-bar-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  gap: 4px;
+  min-width: 0;
+}
+
+.chart-kcal {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.chart-day {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--gray);
+}
+
+.chart-bar {
+  width: 100%;
+  max-width: 36px;
+  background: var(--accent);
+  border-radius: 4px 4px 0 0;
+  min-height: 4px;
+  flex-shrink: 0;
+}
+
+.chart-bar-cheat .chart-bar {
+  background: linear-gradient(180deg, #ff6b6b, #ee5a24);
+}
+
+.chart-bar-cheat .chart-kcal {
+  color: #ee5a24;
+}
+
+.day-target {
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: var(--gray);
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.booster-close {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background: #e53e3e;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.addon-item {
+  font-size: 12px;
+  color: var(--gray);
+  margin-left: 30px;
+  margin-bottom: 4px;
+  padding: 2px 0;
+}
+
+.add-booster-btn {
+  font-size: 16px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.add-booster-btn:hover {
+  opacity: 1;
+  transform: scale(1.1);
 }

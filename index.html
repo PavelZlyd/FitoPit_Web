@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥗</text></svg>">
+  <link rel="manifest" href="manifest.json">
 </head>
 <body>
 <div class="background"></div>
@@ -21,8 +22,8 @@
     <p>Создай персональный план питания за 1 клик</p>
     <div class="controls">
       <div class="lang-toggle">
-        <button onclick="switchLang('ru')" data-lang="ru">🇷🇺</button>
-        <button onclick="switchLang('en')" data-lang="en">🇬🇧</button>
+        <button type="button" data-lang="ru">🇷🇺</button>
+        <button type="button" data-lang="en">🇬🇧</button>
       </div>
       <div class="theme-toggle">
         <button onclick="toggleTheme()">🌙</button>
@@ -31,95 +32,182 @@
   </header>
 
   <main class="content">
+    <div id="profileSummary" class="profile-summary" style="display: none;">
+      <p id="profileSummaryText"></p>
+      <button type="button" id="editProfileBtn" class="btn-secondary">✏️ Изменить профиль</button>
+    </div>
+
     <form id="nutritionForm">
-      <div class="form-group">
-        <label for="age">Возраст</label>
-        <input type="number" id="age" name="age" min="14" max="100" required placeholder="25" value="25">
-      </div>
-
-      <div class="form-group">
-        <label for="gender">Пол</label>
-        <select id="gender" name="gender" required>
-          <option value="male">Мужской</option>
-          <option value="female">Женский</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="weight">Вес (кг)</label>
-        <input type="number" id="weight" name="weight" min="40" max="200" step="0.1" required placeholder="70" value="70">
-      </div>
-
-      <div class="form-group">
-        <label for="height">Рост (см)</label>
-        <input type="number" id="height" name="height" min="140" max="220" required placeholder="175" value="175">
-      </div>
-
-      <div class="form-group">
-        <label for="activity">Активность</label>
-        <select id="activity" name="activity" required>
-          <option value="1.2">Минимальная (сидячая работа)</option>
-          <option value="1.375">Низкая</option>
-          <option value="1.55" selected>Средняя (3-5 тренировки)</option>
-          <option value="1.725">Высокая</option>
-          <option value="1.9">Очень высокая</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="goal">Цель</label>
-        <select id="goal" name="goal" required>
-          <option value="maintain" selected>Поддержание веса</option>
-          <option value="lose">Похудение</option>
-          <option value="gain">Набор массы</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="diet">Диета</label>
-        <select id="diet" name="diet" required>
-          <option value="normal" selected>Обычная</option>
-          <option value="vegetarian">Вегетарианская</option>
-          <option value="vegan">Веганская</option>
-          <option value="glutenfree">Без глютена</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="breakfastType">Завтрак</label>
-        <select id="breakfastType" name="breakfastType" required>
-          <option value="normal" selected>Обычный</option>
-          <option value="light">Лёгкий</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Аллергии</label>
-        <div class="checkbox-group" id="allergies">
-          <div class="checkbox-item"><input type="checkbox" id="allergy-dairy" value="dairy"><label for="allergy-dairy">Молочные</label></div>
-          <div class="checkbox-item"><input type="checkbox" id="allergy-nuts" value="nuts"><label for="allergy-nuts">Орехи</label></div>
-          <div class="checkbox-item"><input type="checkbox" id="allergy-gluten" value="gluten"><label for="allergy-gluten">Глютен</label></div>
-          <div class="checkbox-item"><input type="checkbox" id="allergy-eggs" value="eggs"><label for="allergy-eggs">Яйца</label></div>
-          <div class="checkbox-item"><input type="checkbox" id="allergy-fish" value="fish"><label for="allergy-fish">Рыба</label></div>
-          <div class="checkbox-item"><input type="checkbox" id="allergy-soy" value="soy"><label for="allergy-soy">Соя</label></div>
+      <section id="profileSection" class="form-section">
+        <h3 class="section-title" data-i18n="sectionProfile">Профиль</h3>
+        <div class="form-group" data-field="age">
+          <label for="age">Возраст</label>
+          <input type="number" id="age" name="age" min="14" max="100" required placeholder="25">
         </div>
-      </div>
+        <div class="form-group" data-field="gender">
+          <label for="gender">Пол</label>
+          <select id="gender" name="gender" required>
+            <option value="male">Мужской</option>
+            <option value="female">Женский</option>
+          </select>
+        </div>
+        <div class="form-group" data-field="weight">
+          <label for="weight">Вес (кг)</label>
+          <input type="number" id="weight" name="weight" min="40" max="200" step="0.1" required placeholder="70">
+        </div>
+        <div class="form-group" data-field="height">
+          <label for="height">Рост (см)</label>
+          <input type="number" id="height" name="height" min="140" max="220" required placeholder="175">
+        </div>
+        <div class="form-group" data-field="activity">
+          <label for="activity">Активность</label>
+          <select id="activity" name="activity" required>
+            <option value="1.2">Минимальная (сидячая работа)</option>
+            <option value="1.375">Низкая</option>
+            <option value="1.55" selected>Средняя (3-5 тренировки)</option>
+            <option value="1.725">Высокая</option>
+            <option value="1.9">Очень высокая</option>
+          </select>
+        </div>
+        <div class="form-group" data-field="goal">
+          <label for="goal">Цель</label>
+          <select id="goal" name="goal" required>
+            <option value="maintain" selected>Поддержание веса</option>
+            <option value="lose">Похудение</option>
+            <option value="gain">Набор массы</option>
+          </select>
+        </div>
+      </section>
 
-      <div>
-        <button type="submit">🎯 Создать план</button>
-        <button type="reset">🗑 Очистить</button>
+      <section id="prefsSection" class="form-section">
+        <h3 class="section-title" data-i18n="sectionPrefs">Предпочтения</h3>
+        <div class="form-group" data-field="diet">
+          <label for="diet">Диета</label>
+          <select id="diet" name="diet" required>
+            <option value="normal" selected>Обычная</option>
+            <option value="vegetarian">Вегетарианская</option>
+            <option value="vegan">Веганская</option>
+            <option value="glutenfree">Без глютена</option>
+          </select>
+        </div>
+        <div class="form-group" data-field="breakfastType">
+          <label for="breakfastType">Завтрак</label>
+          <select id="breakfastType" name="breakfastType" required>
+            <option value="normal" selected>Обычный</option>
+            <option value="light">Лёгкий</option>
+          </select>
+        </div>
+        <div class="form-group" data-field="cookingPref">
+          <label for="cookingPref">Каши и крупы</label>
+          <select id="cookingPref" name="cookingPref">
+            <option value="any" selected>Любой способ</option>
+            <option value="milk">На молоке</option>
+            <option value="water">На воде</option>
+          </select>
+        </div>
+        <div class="form-group" data-field="budget">
+          <label for="budget">Бюджет питания</label>
+          <select id="budget" name="budget" required>
+            <option value="low">Низкий</option>
+            <option value="medium" selected>Средний</option>
+            <option value="high">Высокий</option>
+          </select>
+        </div>
+        <div class="form-group" data-field="allergies">
+          <label>Аллергии</label>
+          <div class="checkbox-group" id="allergies">
+            <div class="checkbox-item"><input type="checkbox" id="allergy-dairy" value="dairy"><label for="allergy-dairy">Молочные</label></div>
+            <div class="checkbox-item"><input type="checkbox" id="allergy-nuts" value="nuts"><label for="allergy-nuts">Орехи</label></div>
+            <div class="checkbox-item"><input type="checkbox" id="allergy-gluten" value="gluten"><label for="allergy-gluten">Глютен</label></div>
+            <div class="checkbox-item"><input type="checkbox" id="allergy-eggs" value="eggs"><label for="allergy-eggs">Яйца</label></div>
+            <div class="checkbox-item"><input type="checkbox" id="allergy-fish" value="fish"><label for="allergy-fish">Рыба</label></div>
+            <div class="checkbox-item"><input type="checkbox" id="allergy-soy" value="soy"><label for="allergy-soy">Соя</label></div>
+            <div class="checkbox-item"><input type="checkbox" id="allergy-sesame" value="sesame"><label for="allergy-sesame">Кунжут</label></div>
+          </div>
+        </div>
+        <div class="form-group" data-field="excludedKeywords">
+          <label for="excludedKeywords">Исключить продукты (через запятую)</label>
+          <input type="text" id="excludedKeywords" name="excludedKeywords" placeholder="грибы, печень, курица">
+        </div>
+        <div class="form-group checkbox-row">
+          <label><input type="checkbox" id="enableSecondBreakfast"> Второй завтрак каждый день</label>
+        </div>
+        <div class="form-group checkbox-row">
+          <label><input type="checkbox" id="enableSecondDinner"> Второй ужин каждый день</label>
+        </div>
+      </section>
+
+      <section id="strategySection" class="form-section strategy-section">
+        <h3 class="section-title" data-i18n="sectionStrategy">Стратегия недели</h3>
+        <div class="form-group">
+          <label for="weeklyStrategy">Калории по дням</label>
+          <select id="weeklyStrategy" name="weeklyStrategy">
+            <option value="flat" selected>Ровная неделя</option>
+            <option value="cycle">Циклическая</option>
+          </select>
+          <p class="field-hint" data-i18n="strategyCaloriesHint">
+            Ровная неделя — одинаковая норма каждый день. Циклическая — пн–чт чуть меньше, суббота чуть больше.
+          </p>
+        </div>
+        <div class="form-group checkbox-row">
+          <label><input type="checkbox" id="cheatDay"> Один читмил в неделю</label>
+          <p class="field-hint" data-i18n="strategyCheatHint">В этот день вместо обычного меню — разрешённые «вкусняшки».</p>
+        </div>
+        <div class="form-group" id="cheatDayChoiceGroup">
+          <label for="cheatDayChoice">День читмила</label>
+          <select id="cheatDayChoice" name="cheatDayChoice">
+            <option value="random" selected>Случайный день</option>
+            <option value="0">Понедельник</option>
+            <option value="1">Вторник</option>
+            <option value="2">Среда</option>
+            <option value="3">Четверг</option>
+            <option value="4">Пятница</option>
+            <option value="5">Суббота</option>
+            <option value="6">Воскресенье</option>
+          </select>
+        </div>
+      </section>
+
+      <div class="form-actions">
+        <button type="submit" id="submitBtn">🎯 Создать план</button>
+        <button type="reset" id="resetBtn">🗑 Очистить</button>
       </div>
     </form>
 
+    <section id="userRecipesSection" class="user-recipes-panel">
+      <h3 data-i18n="myRecipes">Моя база блюд</h3>
+      <form id="userRecipeForm" class="user-recipe-form">
+        <input type="text" id="userRecipeTitle" placeholder="Название блюда" required>
+        <input type="number" id="userRecipeKcal" placeholder="ккал/100г" min="20" max="900" required>
+        <input type="number" id="userRecipeProtein" placeholder="Белки/100г" min="0" step="0.1">
+        <input type="number" id="userRecipeFat" placeholder="Жиры/100г" min="0" step="0.1">
+        <input type="number" id="userRecipeCarbs" placeholder="Углеводы/100г" min="0" step="0.1">
+        <select id="userRecipeBudget">
+          <option value="low">Бюджет: низкий</option>
+          <option value="medium" selected>Бюджет: средний</option>
+          <option value="high">Бюджет: высокий</option>
+        </select>
+        <select id="userRecipeSlot" multiple size="3">
+          <option value="breakfast" selected>Завтрак</option>
+          <option value="lunchFirst">Суп</option>
+          <option value="lunchSecond">Обед</option>
+          <option value="dinnerMain">Ужин</option>
+          <option value="dinnerSide">Гарнир</option>
+          <option value="snack">Перекус</option>
+        </select>
+        <button type="submit">➕ Добавить блюдо</button>
+      </form>
+      <ul id="userRecipesList" class="user-recipes-list"></ul>
+    </section>
+
     <div id="result" style="display: none;">
       <h2>Твой план питания</h2>
-      <p>Ежедневные калории: <strong id="calories">0</strong> ккал <span id="calorieStatus"></span></p>
-
+      <p>Базовые калории: <strong id="calories">0</strong> ккал <span id="calorieStatus"></span></p>
+      <div id="weeklyKcalChart" class="weekly-kcal-chart"></div>
       <div id="tabs-container"></div>
       <div id="mealPlan"></div>
-
       <div class="plan-actions">
-        <button id="copyPlan">📋 Копировать план</button>
+        <button type="button" id="copyPlan">📋 Копировать план</button>
       </div>
     </div>
   </main>
@@ -131,6 +219,7 @@
 
 <!-- Скрипты -->
 <script src="data.js"></script>
+<script src="userStore.js"></script>
 <script src="generator.js"></script>
 <script src="ui.js"></script>
 

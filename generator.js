@@ -1,358 +1,546 @@
-// generator.js
+// Генератор планов питания
 
-// Функция: случайный выбор
 function getRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-// Функция: проверка, подходит ли рецепт по диете и аллергиям
-function isRecipeAllowed(recipe, diet, allergies) {
-  if (!recipe.diet.includes(diet)) return false;
-  return !recipe.allergens.some(aller => allergies.includes(aller));
+function roundPortionWeight(grams, isAddon = false) {
+  if (isAddon) return Math.max(10, Math.round(grams / 10) * 10);
+  if (grams < 200) return Math.max(50, Math.round(grams / 25) * 25);
+  if (grams <= 400) return Math.max(100, Math.round(grams / 50) * 50);
+  return Math.min(600, Math.max(100, Math.round(grams / 50) * 50));
 }
 
-// Получить фолбэк-блюдо
-function getFallbackMeal(diet, allergies) {
+function roundCalories(cal) {
+  return Math.round(cal / 10) * 10;
+}
+
+function isExcluded(recipe, constraints) {
+  const title = (recipe.title || '').toLowerCase();
+  const titles = constraints.excludedTitles || [];
+  const keywords = (constraints.excludedKeywords || '')
+    .split(',')
+    .map(k => k.trim().toLowerCase())
+    .filter(Boolean);
+  if (titles.some(t => title === t.toLowerCase())) return true;
+  if (keywords.some(k => title.includes(k))) return true;
+  return false;
+}
+
+function isBudgetAllowed(recipeBudget, userBudget) {
+  if (!recipeBudget || !userBudget) return true;
+  if (userBudget === 'low') return recipeBudget !== 'high';
+  if (userBudget === 'medium') return recipeBudget !== 'high';
+  return true;
+}
+
+function isRecipeAllowed(recipe, constraints) {
+  const { diet, allergies = [], budget } = constraints;
+  if (!recipe.diet?.includes(diet)) return false;
+  if (recipe.allergens?.some(a => allergies.includes(a))) return false;
+  if (!isBudgetAllowed(recipe.budget, budget)) return false;
+  if (isExcluded(recipe, constraints)) return false;
+  return true;
+}
+
+function getBudgetWeight(recipe, userBudget) {
+  if (!recipe.budget || !userBudget) return 1;
+  if (userBudget === 'low') {
+    if (recipe.budget === 'low') return 3;
+    if (recipe.budget === 'medium') return 1;
+    return 0;
+  }
+  if (userBudget === 'high') {
+    if (recipe.budget === 'high') return 3;
+    if (recipe.budget === 'medium') return 2;
+    return 1;
+  }
+  if (recipe.budget === 'medium') return 2;
+  if (recipe.budget === 'low') return 2;
+  return 1;
+}
+
+function getWeightedRandom(arr, userBudget) {
+  if (!arr.length) return null;
+  const weights = arr.map(r => getBudgetWeight(r, userBudget));
+  const total = weights.reduce((s, w) => s + w, 0);
+  if (total === 0) return getRandom(arr);
+  let r = Math.random() * total;
+  for (let i = 0; i < arr.length; i++) {
+    r -= weights[i];
+    if (r <= 0) return arr[i];
+  }
+  return arr[arr.length - 1];
+}
+
+function getCookingBase(title) {
+  const t = title.toLowerCase();
+  if (t.includes('овсянка') || t.includes('гречневая каша')) {
+    return t.replace(/\s+на\s+(молоке|воде)/, '').trim();
+  }
+  return null;
+}
+
+function applyCookingPref(pool, cookingPref) {
+  if (!cookingPref || cookingPref === 'any') return pool;
+  const groups = new Map();
+  const standalone = [];
+  for (const r of pool) {
+    const base = getCookingBase(r.title);
+    if (!base) {
+      standalone.push(r);
+      continue;
+    }
+    if (!groups.has(base)) groups.set(base, []);
+    groups.get(base).push(r);
+  }
+  const result = [...standalone];
+  for (const variants of groups.values()) {
+    const match = variants.find(v => {
+      const t = v.title.toLowerCase();
+      if (cookingPref === 'milk') return t.includes('молок');
+      if (cookingPref === 'water') return t.includes('вод');
+      return true;
+    });
+    result.push(match || variants[0]);
+  }
+  return result.length ? result : pool;
+}
+
+function filterAllowed(options, constraints) {
+  if (!Array.isArray(options)) return [];
+  let pool = options.filter(r => isRecipeAllowed(r, constraints));
+  pool = applyCookingPref(pool, constraints.cookingPref);
+  return pool;
+}
+
+function pickRecipe(options, constraints) {
+  const allowed = filterAllowed(options, constraints);
+  if (!allowed.length) return null;
+  return getWeightedRandom(allowed, constraints.budget);
+}
+
+function getActiveDB() {
+  return typeof getMergedRecipesDB === 'function' ? getMergedRecipesDB() : recipesDB;
+}
+
+function getFallbackMeal(diet) {
+  const weight = 200;
+  const calories = roundCalories((50 * weight) / 100);
   return {
     title: "Лёгкий салат",
     kcalPer100g: 50,
     proteinPer100g: 2.0,
     fatPer100g: 3.0,
     carbsPer100g: 4.0,
-    diet: ["vegan"],
+    diet: ["vegan", "normal", "vegetarian", "glutenfree"],
     allergens: [],
-    weight: 200,
-    calories: 100,
-    protein: 4.0,
-    fat: 6.0,
-    carbs: 8.0,
+    weight,
+    calories,
+    protein: parseFloat(((2.0 * weight) / 100).toFixed(1)),
+    fat: parseFloat(((3.0 * weight) / 100).toFixed(1)),
+    carbs: parseFloat(((4.0 * weight) / 100).toFixed(1)),
     type: "main"
   };
 }
 
-// Получить emoji по названию
-function getEmojiForTitle(title) {
-  const lowerTitle = title.toLowerCase();
-  for (const [key, emoji] of Object.entries(window.emojiMap || {})) {
-    if (lowerTitle.includes(key)) return emoji;
-  }
-  return '🍽️';
-}
-
-// Универсальная генерация блюда с гарниром
-function generateMealWithSides(targetCalories, mainOptions, sideOptions, diet, allergies, mainRatio = 0.6) {
-  const meals = [];
-
-  if (!Array.isArray(mainOptions) || mainOptions.length === 0) return [];
-  if (!Array.isArray(sideOptions) || sideOptions.length === 0) return [];
-
-  const main = getRandom(mainOptions);
-  const calMainTarget = Math.round(targetCalories * mainRatio);
-  let weightMain = Math.round((calMainTarget / main.kcalPer100g) * 100);
-  weightMain = Math.min(500, Math.max(100, weightMain));
-  const calMain = Math.round((main.kcalPer100g * weightMain) / 100);
-  const proteinMain = parseFloat(((main.proteinPer100g * weightMain) / 100).toFixed(1));
-  const fatMain = parseFloat(((main.fatPer100g * weightMain) / 100).toFixed(1));
-  const carbsMain = parseFloat(((main.carbsPer100g * weightMain) / 100).toFixed(1));
-  meals.push({ ...main, weight: weightMain, calories: calMain, protein: proteinMain, fat: fatMain, carbs: carbsMain });
-
-  const side = getRandom(sideOptions);
-  const remaining = targetCalories - calMain;
-  let weightSide = Math.round((remaining / side.kcalPer100g) * 100);
-  weightSide = Math.min(400, Math.max(100, weightSide));
-  const calSide = Math.round((side.kcalPer100g * weightSide) / 100);
-  const proteinSide = parseFloat(((side.proteinPer100g * weightSide) / 100).toFixed(1));
-  const fatSide = parseFloat(((side.fatPer100g * weightSide) / 100).toFixed(1));
-  const carbsSide = parseFloat(((side.carbsPer100g * weightSide) / 100).toFixed(1));
-  meals.push({ ...side, weight: weightSide, calories: calSide, protein: proteinSide, fat: fatSide, carbs: carbsSide });
-
-  return meals;
-}
-
-// Генерация простого блюда
-function generateSimpleMeal(targetCalories, options, diet, allergies) {
-  if (!Array.isArray(options)) return null;
-
-  // Проверяем, включён ли "лёгкий завтрак"
-  const breakfastType = document.getElementById?.('breakfastType')?.value || 'normal';
-
-  let filtered = [...options];
-  if (breakfastType === 'light') {
-    const lightKeywords = ['йогурт', 'творог', 'фрукт', 'яблоко', 'банан', 'авокадо', 'чиа', 'пудинг', 'тост', 'смузи', 'кефир', 'омлет'];
-    filtered = options.filter(r =>
-      lightKeywords.some(kw => r.title.toLowerCase().includes(kw))
-    );
-    if (filtered.length === 0) {
-      filtered = options;
-      targetCalories = Math.min(targetCalories, 400);
-    }
-  }
-
-  const allowed = filtered.filter(r => isRecipeAllowed(r, diet, allergies));
-  if (allowed.length === 0) return null;
-
-  const recipe = getRandom(allowed);
-
-  let maxWeight = 500;
-  if (breakfastType === 'light') {
-    maxWeight = 300;
-    if (recipe.type === "main") maxWeight = 250;
-  }
-  if (recipe.title.toLowerCase().includes("каша") || recipe.title.toLowerCase().includes("овсянка")) {
+function buildMealFromRecipe(recipe, targetCalories, opts = {}) {
+  const breakfastType = opts.breakfastType || 'normal';
+  let maxWeight = opts.maxWeight || 500;
+  if (breakfastType === 'light') maxWeight = 300;
+  const tl = recipe.title.toLowerCase();
+  if (tl.includes('каша') || tl.includes('овсянка')) {
     maxWeight = breakfastType === 'light' ? 200 : 350;
   }
 
   let weight = Math.round((targetCalories / recipe.kcalPer100g) * 100);
-  weight = Math.min(maxWeight, Math.max(100, weight));
-
-  const calories = Math.round((recipe.kcalPer100g * weight) / 100);
-  const protein = parseFloat(((recipe.proteinPer100g * weight) / 100).toFixed(1));
-  const fat = parseFloat(((recipe.fatPer100g * weight) / 100).toFixed(1));
-  const carbs = parseFloat(((recipe.carbsPer100g * weight) / 100).toFixed(1));
-
-  return { ...recipe, weight, calories, protein, fat, carbs };
+  weight = Math.min(maxWeight, Math.max(50, roundPortionWeight(weight)));
+  const calories = roundCalories((recipe.kcalPer100g * weight) / 100);
+  return {
+    ...recipe,
+    weight,
+    calories,
+    protein: parseFloat(((recipe.proteinPer100g * weight) / 100).toFixed(1)),
+    fat: parseFloat(((recipe.fatPer100g * weight) / 100).toFixed(1)),
+    carbs: parseFloat(((recipe.carbsPer100g * weight) / 100).toFixed(1))
+  };
 }
 
-// Обед: суп + основное + гарнир
-function generateLunch(targetCalories, diet, allergies) {
-  const meals = [];
+function generateSimpleMeal(targetCalories, options, constraints, opts = {}) {
+  if (!Array.isArray(options)) return null;
 
-  const firstCourses = Array.isArray(recipesDB.lunch?.first)
-    ? recipesDB.lunch.first.filter(r => isRecipeAllowed(r, diet, allergies))
-    : [];
-
-  const incompleteMains = Array.isArray(recipesDB.lunch?.second)
-    ? recipesDB.lunch.second.filter(r => isRecipeAllowed(r, diet, allergies) && r.type === "main" && !r.complete)
-    : [];
-
-  const completeMeals = Array.isArray(recipesDB.lunch?.second)
-    ? recipesDB.lunch.second.filter(r => isRecipeAllowed(r, diet, allergies) && r.complete)
-    : [];
-
-  const sideCourses = Array.isArray(recipesDB.dinner?.side)
-    ? recipesDB.dinner.side.filter(r => isRecipeAllowed(r, diet, allergies))
-    : [];
-
-  if (firstCourses.length > 0) {
-    const first = getRandom(firstCourses);
-    const weightFirst = Math.min(600, Math.max(100, Math.round((targetCalories * 0.4 / first.kcalPer100g) * 100)));
-    const calFirst = Math.round((first.kcalPer100g * weightFirst) / 100);
-    const proteinFirst = parseFloat(((first.proteinPer100g * weightFirst) / 100).toFixed(1));
-    const fatFirst = parseFloat(((first.fatPer100g * weightFirst) / 100).toFixed(1));
-    const carbsFirst = parseFloat(((first.carbsPer100g * weightFirst) / 100).toFixed(1));
-    meals.push({ ...first, weight: weightFirst, calories: calFirst, protein: proteinFirst, fat: fatFirst, carbs: carbsFirst });
+  let filtered = [...options];
+  const breakfastType = opts.breakfastType || constraints.breakfastType || 'normal';
+  if (opts.lightFilter || breakfastType === 'light') {
+    const lightKeywords = ['йогурт', 'творог', 'фрукт', 'яблок', 'банан', 'груш', 'апельсин', 'мандарин', 'киви', 'ягод', 'виноград', 'авокадо', 'чиа', 'пудинг', 'тост', 'смузи', 'кефир', 'омлет'];
+    filtered = options.filter(r =>
+      lightKeywords.some(kw => r.title.toLowerCase().includes(kw))
+    );
+    if (!filtered.length) filtered = options;
   }
 
-  let remainingAfterFirst = targetCalories - (meals[0]?.calories || 0);
-
-  const useCompleteMeal = completeMeals.length > 0 && Math.random() < 0.4;
-  if (useCompleteMeal) {
-    const complete = getRandom(completeMeals);
-    const weight = Math.min(600, Math.max(200, Math.round((remainingAfterFirst / complete.kcalPer100g) * 100)));
-    const calories = Math.round((complete.kcalPer100g * weight) / 100);
-    const protein = parseFloat(((complete.proteinPer100g * weight) / 100).toFixed(1));
-    const fat = parseFloat(((complete.fatPer100g * weight) / 100).toFixed(1));
-    const carbs = parseFloat(((complete.carbsPer100g * weight) / 100).toFixed(1));
-    meals.push({ ...complete, weight, calories, protein, fat, carbs });
-  } else if (incompleteMains.length > 0 && sideCourses.length > 0) {
-    const combined = generateMealWithSides(remainingAfterFirst, incompleteMains, sideCourses, diet, allergies, 0.5);
-    meals.push(...combined);
-  }
-
-  addCalorieBooster(meals, targetCalories, diet, allergies);
-  return meals.length > 0 ? meals : [getFallbackMeal(diet, allergies)];
+  const recipe = pickRecipe(filtered, constraints);
+  if (!recipe) return null;
+  return buildMealFromRecipe(recipe, targetCalories, { breakfastType });
 }
 
-// Ужин: основное + гарнир
-function generateDinner(targetCalories, diet, allergies) {
+function generateMealWithSides(targetCalories, mainOptions, sideOptions, constraints, mainRatio = 0.6) {
+  const allowedMain = filterAllowed(mainOptions, constraints);
+  const allowedSide = filterAllowed(sideOptions, constraints);
+  if (!allowedMain.length || !allowedSide.length) return [];
+
+  const main = getWeightedRandom(allowedMain, constraints.budget);
+  const calMainTarget = Math.round(targetCalories * mainRatio);
+  let weightMain = roundPortionWeight((calMainTarget / main.kcalPer100g) * 100);
+  weightMain = Math.min(500, Math.max(100, weightMain));
+  const calMain = roundCalories((main.kcalPer100g * weightMain) / 100);
+
+  const meals = [{
+    ...main,
+    weight: weightMain,
+    calories: calMain,
+    protein: parseFloat(((main.proteinPer100g * weightMain) / 100).toFixed(1)),
+    fat: parseFloat(((main.fatPer100g * weightMain) / 100).toFixed(1)),
+    carbs: parseFloat(((main.carbsPer100g * weightMain) / 100).toFixed(1))
+  }];
+
+  const side = getWeightedRandom(allowedSide, constraints.budget);
+  const remaining = targetCalories - calMain;
+  let weightSide = roundPortionWeight((remaining / side.kcalPer100g) * 100);
+  weightSide = Math.min(400, Math.max(100, weightSide));
+  const calSide = roundCalories((side.kcalPer100g * weightSide) / 100);
+  meals.push({
+    ...side,
+    weight: weightSide,
+    calories: calSide,
+    protein: parseFloat(((side.proteinPer100g * weightSide) / 100).toFixed(1)),
+    fat: parseFloat(((side.fatPer100g * weightSide) / 100).toFixed(1)),
+    carbs: parseFloat(((side.carbsPer100g * weightSide) / 100).toFixed(1))
+  });
+  return meals;
+}
+
+function generateLunch(targetCalories, db, constraints) {
   const meals = [];
+  const firstCourses = filterAllowed(db.lunch?.first || [], constraints);
+  const incompleteMains = (db.lunch?.second || []).filter(
+    r => isRecipeAllowed(r, constraints) && r.type === 'main' && !r.complete
+  );
+  const completeMeals = (db.lunch?.second || []).filter(
+    r => isRecipeAllowed(r, constraints) && r.complete
+  );
+  const sideCourses = filterAllowed(db.dinner?.side || [], constraints);
 
-  const mains = Array.isArray(recipesDB.dinner?.main)
-    ? recipesDB.dinner.main.filter(r => isRecipeAllowed(r, diet, allergies) && !r.complete)
-    : [];
-
-  const sides = Array.isArray(recipesDB.dinner?.side)
-    ? recipesDB.dinner.side.filter(r => isRecipeAllowed(r, diet, allergies))
-    : [];
-
-  const completeMeals = Array.isArray(recipesDB.dinner?.main)
-    ? recipesDB.dinner.main.filter(r => isRecipeAllowed(r, diet, allergies) && r.complete)
-    : [];
-
-  const useCompleteMeal = completeMeals.length > 0 && Math.random() < 0.5;
-  if (useCompleteMeal) {
-    const complete = getRandom(completeMeals);
-    const weight = Math.min(600, Math.max(200, Math.round((targetCalories / complete.kcalPer100g) * 100)));
-    const calories = Math.round((complete.kcalPer100g * weight) / 100);
-    const protein = parseFloat(((complete.proteinPer100g * weight) / 100).toFixed(1));
-    const fat = parseFloat(((complete.fatPer100g * weight) / 100).toFixed(1));
-    const carbs = parseFloat(((complete.carbsPer100g * weight) / 100).toFixed(1));
-    meals.push({ ...complete, weight, calories, protein, fat, carbs });
-  } else if (mains.length > 0 && sides.length > 0) {
-    const combined = generateMealWithSides(targetCalories, mains, sides, diet, allergies, 0.6);
-    meals.push(...combined);
+  if (firstCourses.length && Math.random() < 0.7) {
+    const first = getWeightedRandom(firstCourses, constraints.budget);
+    let weightFirst = roundPortionWeight((targetCalories * 0.4 / first.kcalPer100g) * 100);
+    weightFirst = Math.min(600, Math.max(100, weightFirst));
+    const calFirst = roundCalories((first.kcalPer100g * weightFirst) / 100);
+    meals.push({
+      ...first,
+      weight: weightFirst,
+      calories: calFirst,
+      protein: parseFloat(((first.proteinPer100g * weightFirst) / 100).toFixed(1)),
+      fat: parseFloat(((first.fatPer100g * weightFirst) / 100).toFixed(1)),
+      carbs: parseFloat(((first.carbsPer100g * weightFirst) / 100).toFixed(1))
+    });
   }
 
-  const totalCalories = meals.reduce((sum, m) => sum + m.calories, 0);
+  const remainingAfterFirst = targetCalories - (meals[0]?.calories || 0);
+  if (completeMeals.length && Math.random() < 0.4) {
+    const complete = getWeightedRandom(completeMeals, constraints.budget);
+    let weight = roundPortionWeight((remainingAfterFirst / complete.kcalPer100g) * 100);
+    weight = Math.min(600, Math.max(200, weight));
+    const calories = roundCalories((complete.kcalPer100g * weight) / 100);
+    meals.push({
+      ...complete,
+      weight,
+      calories,
+      protein: parseFloat(((complete.proteinPer100g * weight) / 100).toFixed(1)),
+      fat: parseFloat(((complete.fatPer100g * weight) / 100).toFixed(1)),
+      carbs: parseFloat(((complete.carbsPer100g * weight) / 100).toFixed(1))
+    });
+  } else if (incompleteMains.length && sideCourses.length) {
+    meals.push(...generateMealWithSides(remainingAfterFirst, incompleteMains, sideCourses, constraints, 0.5));
+  }
+
+  addCalorieBooster(meals, targetCalories, constraints);
+  return meals.length ? meals : [getFallbackMeal(constraints.diet)];
+}
+
+function generateDinner(targetCalories, db, constraints) {
+  const meals = [];
+  const mains = (db.dinner?.main || []).filter(
+    r => isRecipeAllowed(r, constraints) && !r.complete
+  );
+  const sides = filterAllowed(db.dinner?.side || [], constraints);
+  const completeMeals = (db.dinner?.main || []).filter(
+    r => isRecipeAllowed(r, constraints) && r.complete
+  );
+
+  if (completeMeals.length && Math.random() < 0.5) {
+    const complete = getWeightedRandom(completeMeals, constraints.budget);
+    let weight = roundPortionWeight((targetCalories / complete.kcalPer100g) * 100);
+    weight = Math.min(600, Math.max(200, weight));
+    const calories = roundCalories((complete.kcalPer100g * weight) / 100);
+    meals.push({
+      ...complete,
+      weight,
+      calories,
+      protein: parseFloat(((complete.proteinPer100g * weight) / 100).toFixed(1)),
+      fat: parseFloat(((complete.fatPer100g * weight) / 100).toFixed(1)),
+      carbs: parseFloat(((complete.carbsPer100g * weight) / 100).toFixed(1))
+    });
+  } else if (mains.length && sides.length) {
+    meals.push(...generateMealWithSides(targetCalories, mains, sides, constraints, 0.6));
+  }
+
+  const totalCalories = meals.reduce((s, m) => s + m.calories, 0);
   if (totalCalories < targetCalories * 0.8) {
     const extraOptions = [
-      ...(sides.length > 0 ? sides : []),
-      ...recipesDB.snack.filter(r => isRecipeAllowed(r, diet, allergies) && r.kcalPer100g > 80)
+      ...sides,
+      ...(db.snack || []).filter(r => isRecipeAllowed(r, constraints) && r.kcalPer100g > 80)
     ];
-    if (extraOptions.length > 0) {
-      const extra = getRandom(extraOptions);
+    if (extraOptions.length) {
+      const extra = getWeightedRandom(extraOptions, constraints.budget);
       const needed = targetCalories - totalCalories;
-      const weightExtra = Math.min(300, Math.max(100, Math.round((needed / extra.kcalPer100g) * 100)));
-      const calories = Math.round((extra.kcalPer100g * weightExtra) / 100);
-      const protein = parseFloat(((extra.proteinPer100g * weightExtra) / 100).toFixed(1));
-      const fat = parseFloat(((extra.fatPer100g * weightExtra) / 100).toFixed(1));
-      const carbs = parseFloat(((extra.carbsPer100g * weightExtra) / 100).toFixed(1));
-      meals.push({ ...extra, weight: weightExtra, calories, protein, fat, carbs, isExtra: true });
+      let weightExtra = roundPortionWeight((needed / extra.kcalPer100g) * 100);
+      weightExtra = Math.min(300, Math.max(100, weightExtra));
+      const calories = roundCalories((extra.kcalPer100g * weightExtra) / 100);
+      meals.push({
+        ...extra,
+        weight: weightExtra,
+        calories,
+        protein: parseFloat(((extra.proteinPer100g * weightExtra) / 100).toFixed(1)),
+        fat: parseFloat(((extra.fatPer100g * weightExtra) / 100).toFixed(1)),
+        carbs: parseFloat(((extra.carbsPer100g * weightExtra) / 100).toFixed(1)),
+        isExtra: true
+      });
     }
   }
 
-  addCalorieBooster(meals, targetCalories, diet, allergies);
-  return meals.length > 0 ? meals : [getFallbackMeal(diet, allergies)];
+  addCalorieBooster(meals, targetCalories, constraints);
+  return meals.length ? meals : [getFallbackMeal(constraints.diet)];
 }
 
-// Перекус
-function generateSnack(targetCalories, diet, allergies) {
-  const options = Array.isArray(recipesDB.snack)
-    ? recipesDB.snack.filter(r => isRecipeAllowed(r, diet, allergies))
-    : [];
-
-  return generateSimpleMeal(targetCalories, options, diet, allergies) || getFallbackMeal(diet, allergies);
+function generateSnack(targetCalories, db, constraints) {
+  return generateSimpleMeal(targetCalories, db.snack || [], constraints) || getFallbackMeal(constraints.diet);
 }
 
-// Полный приём пищи
-function generateFullMeal(targetCalories, diet, allergies) {
-  const allMains = [
-    ...(Array.isArray(recipesDB.lunch?.second) ? recipesDB.lunch.second : []),
-    ...(Array.isArray(recipesDB.dinner?.main) ? recipesDB.dinner.main : [])
-  ].filter(r => isRecipeAllowed(r, diet, allergies));
-
-  const sides = Array.isArray(recipesDB.dinner?.side)
-    ? recipesDB.dinner.side.filter(r => isRecipeAllowed(r, diet, allergies))
-    : [];
-
-  return generateMealWithSides(targetCalories, allMains, sides, diet, allergies, 0.6);
-}
-
-// Добавление калорийной добавки
-function addCalorieBooster(meals, targetCalories, diet, allergies) {
-  const boosters = Array.isArray(calorieBoosters)
-    ? calorieBoosters.filter(r => isRecipeAllowed(r, diet, allergies))
-    : [];
-
-  if (boosters.length === 0) return;
-
-  let totalCalories = meals.reduce((sum, m) => sum + m.calories, 0);
-  const needed = targetCalories - totalCalories;
-
-  if (needed < targetCalories * 0.05) return;
-
-  let added = 0;
-  while (added < 2 && needed > 30) {
-    const booster = getRandom(boosters);
-    let weightBooster;
-
-    if (booster.title.includes("масло")) weightBooster = 15;
-    else if (booster.title.includes("сыр") || booster.title.includes("фета")) weightBooster = 30;
-    else if (booster.title.includes("орехи")) weightBooster = 20;
-    else if (booster.title.includes("мед")) weightBooster = 10;
-    else weightBooster = Math.min(50, Math.round((needed / booster.kcalPer100g) * 100));
-
-    const calories = Math.round((booster.kcalPer100g * weightBooster) / 100);
-    if (calories < 20) break;
-
-    const protein = parseFloat(((booster.proteinPer100g * weightBooster) / 100).toFixed(1));
-    const fat = parseFloat(((booster.fatPer100g * weightBooster) / 100).toFixed(1));
-    const carbs = parseFloat(((booster.carbsPer100g * weightBooster) / 100).toFixed(1));
-
-    meals.push({ ...booster, weight: weightBooster, calories, protein, fat, carbs, isAddOn: true });
-    totalCalories += calories;
-    added++;
-    break;
+function getBoosterPortionWeight(booster, needed = null) {
+  const bt = (booster.title || '').toLowerCase();
+  if (bt.includes('масло')) return 15;
+  if (bt.includes('фета')) return 30;
+  if (bt.includes('сыр') && !bt.includes('творог')) return 30;
+  if (bt.includes('орех') || bt.includes('сухофрукт') || bt.includes('изюм')) return 25;
+  if (bt.includes('мед') || bt.includes('мёд')) return 10;
+  if (bt.includes('авокадо')) return 50;
+  if (bt.includes('банан')) return 100;
+  if (bt.includes('яблок') || bt.includes('груш')) return 150;
+  if (bt.includes('кефир')) return 200;
+  if (bt.includes('творог')) return 100;
+  if (bt.includes('сметан')) return 30;
+  if (bt.includes('хлебец')) return 30;
+  if (bt.includes('хумус') || bt.includes('гуакамоле')) return 40;
+  if (needed != null) {
+    return Math.min(50, roundPortionWeight((needed / booster.kcalPer100g) * 100, true));
   }
+  return 20;
 }
 
-// ✅ НОВАЯ ФУНКЦИЯ: Генерация одного приёма пищи
+function addCalorieBooster(meals, targetCalories, constraints) {
+  const boosters = Array.isArray(calorieBoosters)
+    ? calorieBoosters.filter(r => isRecipeAllowed(r, constraints))
+    : [];
+  if (!boosters.length) return;
+
+  const totalCalories = meals.reduce((s, m) => s + m.calories, 0);
+  const needed = targetCalories - totalCalories;
+  if (needed < targetCalories * 0.05 || needed <= 30) return;
+
+  const booster = getWeightedRandom(boosters, constraints.budget);
+  const bt = booster.title.toLowerCase();
+  const hasFixedWeight = ['масло', 'фета', 'сыр', 'орех', 'сухофрукт', 'изюм', 'мед', 'мёд', 'авокадо',
+    'банан', 'яблок', 'груш', 'кефир', 'творог', 'сметан', 'хлебец', 'хумус', 'гуакамоле', 'хлеб']
+    .some(k => bt.includes(k));
+  const weightBooster = hasFixedWeight
+    ? getBoosterPortionWeight(booster)
+    : getBoosterPortionWeight(booster, needed);
+
+  const calories = roundCalories((booster.kcalPer100g * weightBooster) / 100);
+  if (calories < 20) return;
+
+  meals.push({
+    ...booster,
+    weight: weightBooster,
+    calories,
+    protein: parseFloat(((booster.proteinPer100g * weightBooster) / 100).toFixed(1)),
+    fat: parseFloat(((booster.fatPer100g * weightBooster) / 100).toFixed(1)),
+    carbs: parseFloat(((booster.carbsPer100g * weightBooster) / 100).toFixed(1)),
+    isAddOn: true
+  });
+}
+
+function getDishRecipeOptions(mealType, dish, constraints, isCheatDay) {
+  if (isCheatDay) {
+    return filterAllowed(
+      typeof cheatMealRecipes !== 'undefined' ? cheatMealRecipes : [],
+      constraints
+    );
+  }
+
+  const db = getActiveDB();
+  let pool = [];
+
+  // Для одиночных приёмов пищи пул определяется слотом, а не dish.type
+  // (у завтрака type может быть "main"/"side", но это всё равно завтраки)
+  switch (mealType) {
+    case 'breakfast':
+    case 'secondBreakfast':
+      pool = db.breakfast || [];
+      break;
+    case 'snack':
+      pool = db.snack || [];
+      break;
+    case 'secondDinner':
+      pool = [...(db.snack || []), ...(db.dinner?.side || [])];
+      break;
+    case 'lunch':
+      if (dish.complete || dish.type === 'complete') {
+        pool = (db.lunch?.second || []).filter(r => r.complete);
+      } else if (dish.type === 'first') {
+        pool = db.lunch?.first || [];
+      } else if (dish.type === 'side') {
+        pool = db.dinner?.side || [];
+      } else if (dish.type === 'main') {
+        pool = (db.lunch?.second || []).filter(r => r.type === 'main' && !r.complete);
+      } else {
+        pool = [
+          ...(db.lunch?.first || []),
+          ...(db.lunch?.second || []),
+          ...(db.dinner?.side || [])
+        ];
+      }
+      break;
+    case 'dinner':
+      if (dish.complete || dish.type === 'complete') {
+        pool = (db.dinner?.main || []).filter(r => r.complete);
+      } else if (dish.type === 'side' || dish.isExtra) {
+        pool = [
+          ...(db.dinner?.side || []),
+          ...(db.snack || []).filter(r => r.kcalPer100g > 80)
+        ];
+      } else if (dish.type === 'snack') {
+        pool = (db.snack || []).filter(r => r.kcalPer100g > 80);
+      } else if (dish.type === 'main') {
+        pool = (db.dinner?.main || []).filter(r => !r.complete);
+      } else {
+        pool = [
+          ...(db.dinner?.main || []),
+          ...(db.dinner?.side || [])
+        ];
+      }
+      break;
+    default:
+      pool = [];
+  }
+
+  const allowed = filterAllowed(pool, constraints);
+  return allowed.sort((a, b) => a.title.localeCompare(b.title, 'ru'));
+}
+
+function replaceDishWithRecipe(mealType, dish, recipeTitle, targetCalories, constraints, opts = {}) {
+  const options = getDishRecipeOptions(mealType, dish, constraints, !!opts.isCheatDay);
+  const recipe = options.find(r => r.title === recipeTitle);
+  if (!recipe) return dish;
+
+  const buildOpts = {};
+  if (mealType === 'breakfast' || mealType === 'secondBreakfast') {
+    buildOpts.breakfastType = constraints.breakfastType || 'normal';
+    if (mealType === 'secondBreakfast') buildOpts.maxWeight = 300;
+  }
+
+  const newDish = buildMealFromRecipe(recipe, targetCalories, buildOpts);
+  if (dish.addons) newDish.addons = dish.addons;
+  return newDish;
+}
+
+function normalizeMealArray(meal, diet = 'normal') {
+  const arr = Array.isArray(meal) ? meal : (meal ? [meal] : []);
+  const filtered = arr.filter(Boolean);
+  return filtered.length ? filtered : [getFallbackMeal(diet)];
+}
+
 function generateMeal(mealType, constraints, userData) {
-  const { diet, allergies } = constraints;
+  const db = getActiveDB();
   const targetCalories = getTargetCaloriesForMeal(mealType, userData);
 
   switch (mealType) {
     case 'breakfast':
     case 'secondBreakfast':
-      return [generateSimpleMeal(targetCalories, recipesDB.breakfast || [], diet, allergies)];
-
+      return normalizeMealArray(
+        generateSimpleMeal(targetCalories, db.breakfast || [], constraints, {
+          breakfastType: userData.breakfastType,
+          lightFilter: mealType === 'secondBreakfast'
+        }),
+        constraints.diet
+      );
     case 'lunch':
-      return generateLunch(targetCalories, diet, allergies);
-
+      return generateLunch(targetCalories, db, constraints);
     case 'snack':
-      return [generateSnack(targetCalories, diet, allergies)];
-
+      return normalizeMealArray(generateSnack(targetCalories, db, constraints), constraints.diet);
     case 'dinner':
-      return generateDinner(targetCalories, diet, allergies);
-
-    case 'secondDinner':
-      const options = [...(recipesDB.snack || []), ...(recipesDB.dinner?.side || [])];
-      return [generateSimpleMeal(targetCalories, options, diet, allergies)];
-
+      return generateDinner(targetCalories, db, constraints);
+    case 'secondDinner': {
+      const options = [...(db.snack || []), ...(db.dinner?.side || [])];
+      return normalizeMealArray(
+        generateSimpleMeal(targetCalories, options, constraints),
+        constraints.diet
+      );
+    }
     default:
-      return [getFallbackMeal(diet, allergies)];
+      return [getFallbackMeal(constraints.diet)];
   }
 }
 
-// ✅ Генерация целого дня с умным secondBreakfast
-function generateDayMeals(constraints, userData) {
-  const { diet, allergies } = constraints;
-  const dailyCalories = userData.dailyCalories;
+const CHEAT_MEAL_RATIOS = {
+  breakfast: 0.16,
+  lunch: 0.35,
+  snack: 0.1,
+  dinner: 0.24,
+  secondDinner: 0.05
+};
 
-  // Базовые пропорции — без второго завтрака
-  const baseRatios = {
-    breakfast: 0.16,
-    lunch: 0.35,
-    snack: 0.1,
-    dinner: 0.24,
-    secondDinner: 0.05
-  };
+function generateCheatMeal(mealType, constraints, dailyCalories) {
+  const ratio = CHEAT_MEAL_RATIOS[mealType] || 0.1;
+  const targetCalories = Math.round(dailyCalories * ratio * 1.4);
+  const allowed = (typeof cheatMealRecipes !== 'undefined' ? cheatMealRecipes : [])
+    .filter(r => isRecipeAllowed(r, constraints));
+  const recipe = allowed.length ? getWeightedRandom(allowed, 'high') : getFallbackMeal(constraints.diet);
+  let weight = roundPortionWeight((targetCalories / recipe.kcalPer100g) * 100);
+  weight = Math.min(400, Math.max(150, weight));
+  const calories = roundCalories((recipe.kcalPer100g * weight) / 100);
+  return [{
+    ...recipe,
+    weight,
+    calories,
+    protein: parseFloat(((recipe.proteinPer100g * weight) / 100).toFixed(1)),
+    fat: parseFloat(((recipe.fatPer100g * weight) / 100).toFixed(1)),
+    carbs: parseFloat(((recipe.carbsPer100g * weight) / 100).toFixed(1))
+  }];
+}
 
-  if (userData.breakfastType === 'light') {
-    baseRatios.breakfast *= 0.7;
-    baseRatios.lunch *= 1.1;
+function generateCheatDay(constraints, dailyCalories) {
+  const day = { isCheatDay: true, dayCaloriesTarget: Math.round(dailyCalories * 1.15) };
+
+  for (const mealType of Object.keys(CHEAT_MEAL_RATIOS)) {
+    day[mealType] = generateCheatMeal(mealType, constraints, dailyCalories);
   }
-
-  // Добавляем secondBreakfast только если нужно
-  let ratios = { ...baseRatios };
-  let day = {};
-
-  // Генерируем все приёмы пищи
-  for (const [mealType, ratio] of Object.entries(ratios)) {
-    const targetCalories = Math.round(dailyCalories * ratio);
-    day[mealType] = generateMeal(mealType, constraints, userData);
-  }
-
-  // Считаем общие калории
-  const totalCalories = Object.values(day).flat().reduce((sum, m) => sum + m.calories, 0);
-  const deficit = dailyCalories - totalCalories;
-
-  // Если дефицит > 15% от нормы — добавляем второй завтрак
-  if (deficit > dailyCalories * 0.1) {
-    const targetCalories = Math.min(Math.round(deficit * 0.8), 300); // не больше 300 ккал
-    const meal = generateMeal('secondBreakfast', constraints, userData);
-    if (meal && meal[0]?.calories > 50) {
-      day.secondBreakfast = meal;
-    }
-  }
-
   return day;
 }
 
-// Вспомогательная: расчёт калорий для приёма пищи
-function getTargetCaloriesForMeal(type, userData) {
-  const { dailyCalories, breakfastType } = userData;
-  const baseRatios = {
+function getBaseRatios(userData) {
+  const ratios = {
     breakfast: 0.16,
     secondBreakfast: 0.1,
     lunch: 0.35,
@@ -360,11 +548,111 @@ function getTargetCaloriesForMeal(type, userData) {
     dinner: 0.24,
     secondDinner: 0.05
   };
-  if (breakfastType === 'light' && type === 'breakfast') {
-    return Math.round(dailyCalories * baseRatios.breakfast * 0.7);
+  if (userData.breakfastType === 'light') {
+    ratios.breakfast *= 0.7;
+    ratios.lunch *= 1.1;
   }
-  return Math.round(dailyCalories * baseRatios[type]);
+  if (!userData.enableSecondBreakfast) ratios.secondBreakfast = 0;
+  if (!userData.enableSecondDinner) ratios.secondDinner = 0;
+  const total = Object.values(ratios).reduce((s, v) => s + v, 0);
+  if (total > 0 && total !== 1) {
+    for (const k of Object.keys(ratios)) ratios[k] /= total;
+  }
+  return ratios;
 }
 
-// Проверка загрузки
-console.log("✅ generator.js: generateDayMeals =", typeof generateDayMeals);
+function getTargetCaloriesForMeal(type, userData) {
+  const ratios = getBaseRatios(userData);
+  return Math.round(userData.dailyCalories * (ratios[type] || 0.1));
+}
+
+function computeWeeklyTargets(baseCalories, strategy, cheatDayIndex, cheatEnabled) {
+  const targets = Array(7).fill(baseCalories);
+  if (strategy === 'cycle') {
+    for (let i = 0; i < 7; i++) {
+      if (i <= 3) targets[i] = Math.round(baseCalories * 0.92);
+      else if (i === 5) targets[i] = Math.round(baseCalories * 1.05);
+      else if (i === 6) targets[i] = Math.round(baseCalories * 1.02);
+    }
+  }
+  if (cheatEnabled && cheatDayIndex >= 0 && cheatDayIndex < 7) {
+    for (let i = 0; i < 7; i++) {
+      if (i !== cheatDayIndex && strategy !== 'flat') {
+        targets[i] = Math.round(targets[i] * 0.97);
+      }
+    }
+  }
+  return targets;
+}
+
+function resolveCheatDayIndex(userData) {
+  if (!userData.cheatDayEnabled) return -1;
+  const choice = userData.cheatDayChoice;
+  if (choice === 'random' || choice === '' || choice == null) {
+    return Math.floor(Math.random() * 7);
+  }
+  return parseInt(choice, 10);
+}
+
+function generateDayMeals(constraints, userData) {
+  const dailyCalories = userData.dailyCalories;
+
+  if (userData.isCheatDaySlot) {
+    const day = generateCheatDay(constraints, dailyCalories);
+    day.dayCaloriesTarget = dailyCalories;
+    return day;
+  }
+
+  const ratios = getBaseRatios(userData);
+  const day = { isCheatDay: false, dayCaloriesTarget: dailyCalories };
+  const mealTypes = ['breakfast', 'lunch', 'snack', 'dinner'];
+
+  if (userData.enableSecondBreakfast) mealTypes.splice(1, 0, 'secondBreakfast');
+  if (userData.enableSecondDinner) mealTypes.push('secondDinner');
+
+  for (const mealType of mealTypes) {
+    if (ratios[mealType] > 0) {
+      day[mealType] = generateMeal(mealType, constraints, userData);
+    }
+  }
+
+  if (!userData.enableSecondBreakfast) {
+    const flatMeals = Object.values(day).flat().filter(m => m && m.calories);
+    const totalCalories = flatMeals.reduce((s, m) => s + (m.calories || 0), 0);
+    const deficit = dailyCalories - totalCalories;
+    if (deficit > dailyCalories * 0.1) {
+      const meal = generateMeal('secondBreakfast', constraints, userData);
+      if (meal[0]?.calories > 50) day.secondBreakfast = meal;
+    }
+  }
+
+  return day;
+}
+
+function generateWeeklyPlan(constraints, userData) {
+  const baseCalories = userData.dailyCalories;
+  const cheatDayIndex = resolveCheatDayIndex(userData);
+  const weeklyTargets = computeWeeklyTargets(
+    baseCalories,
+    userData.weeklyStrategy || 'flat',
+    cheatDayIndex,
+    userData.cheatDayEnabled
+  );
+
+  const plan = [];
+  for (let i = 0; i < 7; i++) {
+    const dayUserData = {
+      ...userData,
+      dailyCalories: weeklyTargets[i],
+      isCheatDaySlot: userData.cheatDayEnabled && i === cheatDayIndex
+    };
+    const day = generateDayMeals(constraints, dayUserData);
+    day.dayIndex = i;
+    day.dayCaloriesTarget = weeklyTargets[i];
+    plan.push(day);
+  }
+
+  plan.cheatDayIndex = cheatDayIndex;
+  plan.weeklyTargets = weeklyTargets;
+  return plan;
+}
