@@ -194,6 +194,8 @@ header p {
 form {
   display: grid;
   gap: 16px;
+  width: 100%;
+  min-width: 0;
 }
 
 .form-group {
@@ -210,6 +212,9 @@ form {
 
 .form-group input,
 .form-group select {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   padding: 12px 14px;
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -281,7 +286,6 @@ form button[type="submit"]:hover {
 form button[type="reset"] {
   background: #e2e8f0;
   color: #4a5568;
-  margin-left: 12px;
 }
 
 form button[type="reset"]:hover {
@@ -680,7 +684,29 @@ footer {
 
   .checkbox-item {
     font-size: 15px;
-    min-width: 120px;
+    min-width: 0;
+    flex: 1 1 45%;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions button {
+    width: 100%;
+    margin-top: 0;
+  }
+
+  .form-actions button[type="submit"] {
+    margin-top: 8px;
+  }
+
+  .user-recipe-form {
+    grid-template-columns: 1fr;
+  }
+
+  #cheatDay {
+    transform: none;
   }
 
   .meal-item {
@@ -855,6 +881,7 @@ footer {
   margin-bottom: 24px;
   padding-bottom: 16px;
   border-bottom: 1px solid var(--border);
+  min-width: 0;
 }
 
 .form-section.section-collapsed {
@@ -898,6 +925,7 @@ footer {
   line-height: 1.5;
   color: var(--text);
   opacity: 0.82;
+  overflow-wrap: break-word;
 }
 
 .profile-summary {
@@ -951,6 +979,9 @@ footer {
 
 .user-recipe-form input,
 .user-recipe-form select {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   padding: 10px;
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -1093,6 +1124,12 @@ footer {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  width: 100%;
+}
+
+.form-actions button {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .booster-close {
