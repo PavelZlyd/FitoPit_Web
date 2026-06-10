@@ -32,6 +32,12 @@
   </header>
 
   <main class="content">
+    <nav class="site-tabs" aria-label="Разделы сайта">
+      <button type="button" class="site-tab active" data-panel="plan" data-i18n="tabPlan">План питания</button>
+      <button type="button" class="site-tab" data-panel="feedback" data-i18n="tabFeedback">Обратная связь</button>
+    </nav>
+
+    <div id="planPanel" class="site-panel">
     <div id="profileSummary" class="profile-summary" style="display: none;">
       <p id="profileSummaryText"></p>
       <button type="button" id="editProfileBtn" class="btn-secondary">✏️ Изменить профиль</button>
@@ -215,6 +221,12 @@
     <div id="result" style="display: none;">
       <h2>Твой план питания</h2>
       <p>Базовые калории: <strong id="calories">0</strong> ккал <span id="calorieStatus"></span></p>
+      <p id="macroTargetsLine" class="macro-targets-line" style="display: none;">
+        <span data-i18n="macroNorms">Норма БЖУ в день</span>:
+        <strong id="macroProtein">0</strong> <span data-i18n="macroProtein">Б</span> •
+        <strong id="macroFat">0</strong> <span data-i18n="macroFat">Ж</span> •
+        <strong id="macroCarbs">0</strong> <span data-i18n="macroCarbs">У</span>
+      </p>
       <div id="weeklyKcalChart" class="weekly-kcal-chart"></div>
       <div id="tabs-container"></div>
       <div id="mealPlan"></div>
@@ -222,6 +234,40 @@
         <button type="button" id="copyPlan">📋 Копировать план</button>
       </div>
     </div>
+    </div>
+
+    <section id="feedbackPanel" class="site-panel feedback-panel" style="display: none;">
+      <h3 data-i18n="feedbackTitle">Предложить блюдо или оставить отзыв</h3>
+      <p class="feedback-hint" data-i18n="feedbackHint">
+        Расскажи, какое блюдо хочешь видеть в базе, или поделись идеей по улучшению сервиса.
+      </p>
+      <form id="feedbackForm" class="feedback-form">
+        <div class="form-group">
+          <label for="feedbackType" data-i18n="feedbackTypeLabel">Тип сообщения</label>
+          <select id="feedbackType" name="type" required>
+            <option value="dish" data-i18n="feedbackTypeDish">Предложить блюдо</option>
+            <option value="improvement" data-i18n="feedbackTypeImprove">Идея по улучшению</option>
+            <option value="other" data-i18n="feedbackTypeOther">Другое</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="feedbackDish" data-i18n="feedbackDishLabel">Название блюда (если есть)</label>
+          <input type="text" id="feedbackDish" name="dish" placeholder="Например: куриный суп с лапшой">
+        </div>
+        <div class="form-group">
+          <label for="feedbackMessage" data-i18n="feedbackMessageLabel">Сообщение</label>
+          <textarea id="feedbackMessage" name="message" rows="4" required placeholder="Опиши блюдо, ингредиенты или пожелание…"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="feedbackContact" data-i18n="feedbackContactLabel">Контакт (необязательно)</label>
+          <input type="text" id="feedbackContact" name="contact" placeholder="Email или Telegram">
+        </div>
+        <div class="form-actions">
+          <button type="submit" id="feedbackSubmitBtn" data-i18n="feedbackSubmit">Отправить</button>
+        </div>
+        <p id="feedbackStatus" class="feedback-status" style="display: none;"></p>
+      </form>
+    </section>
   </main>
 
   <footer>

@@ -611,6 +611,103 @@ form button[type="reset"]:hover {
   text-decoration: underline;
 }
 
+/* Вкладки сайта */
+.site-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 4px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.site-tab {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--gray);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.site-tab:hover {
+  color: var(--text);
+  background: rgba(58, 134, 255, 0.08);
+}
+
+.site-tab.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.macro-targets-line {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: var(--gray);
+}
+
+.macro-targets-line strong {
+  color: var(--text);
+}
+
+/* Обратная связь */
+.feedback-panel {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.feedback-panel h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  color: var(--text);
+}
+
+.feedback-hint {
+  margin: 0 0 16px;
+  font-size: 14px;
+  color: var(--gray);
+  line-height: 1.5;
+}
+
+.feedback-form .form-group textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+  background: var(--input-bg, #fff);
+  color: var(--text);
+}
+
+.feedback-form .form-group textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.feedback-status {
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.feedback-status--ok {
+  color: #38a169;
+}
+
+.feedback-status--error {
+  color: #e53e3e;
+}
+
 /* Футер */
 footer {
   text-align: center;

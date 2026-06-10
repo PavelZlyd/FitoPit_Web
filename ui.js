@@ -3,8 +3,12 @@
 let weeklyPlan = [];
 let weeklyTargets = [];
 let baseDailyCalories = 0;
+let macroTargets = { protein: 0, fat: 0, carbs: 0 };
 let profileEditMode = true;
 let activeDayIndex = 0;
+
+// Укажи email для отправки через FormSubmit (https://formsubmit.co), иначе — только localStorage
+const FEEDBACK_EMAIL = '';
 
 const MEAL_ORDER = ['breakfast', 'secondBreakfast', 'lunch', 'snack', 'dinner', 'secondDinner'];
 
@@ -57,7 +61,32 @@ const translations = {
     importPlanPlaceholder: "🍽 FitoPit — Твой план питания…",
     importPlanSuccess: "✅ План загружен",
     importPlanError: "Не удалось распознать план. Проверь, что текст скопирован из FitoPit.",
-    copyFailed: "❌ Не удалось скопировать"
+    copyFailed: "❌ Не удалось скопировать",
+    tabPlan: "План питания",
+    tabFeedback: "Обратная связь",
+    macroNorms: "Норма БЖУ в день",
+    macroProtein: "Б",
+    macroFat: "Ж",
+    macroCarbs: "У",
+    macroGrams: "г",
+    macroDeltaOnTarget: "в норме",
+    macroDeltaOver: "выше нормы",
+    macroDeltaUnder: "ниже нормы",
+    feedbackTitle: "Предложить блюдо или оставить отзыв",
+    feedbackHint: "Расскажи, какое блюдо хочешь видеть в базе, или поделись идеей по улучшению сервиса.",
+    feedbackTypeLabel: "Тип сообщения",
+    feedbackTypeDish: "Предложить блюдо",
+    feedbackTypeImprove: "Идея по улучшению",
+    feedbackTypeOther: "Другое",
+    feedbackDishLabel: "Название блюда (если есть)",
+    feedbackMessageLabel: "Сообщение",
+    feedbackContactLabel: "Контакт (необязательно)",
+    feedbackSubmit: "Отправить",
+    feedbackSuccess: "✅ Спасибо! Мы получили твоё сообщение.",
+    feedbackError: "❌ Не удалось отправить. Попробуй позже.",
+    feedbackDishPlaceholder: "Например: куриный суп с лапшой",
+    feedbackMessagePlaceholder: "Опиши блюдо, ингредиенты или пожелание…",
+    feedbackContactPlaceholder: "Email или Telegram"
   },
   en: {
     title: "Your Meal Plan",
@@ -107,7 +136,32 @@ const translations = {
     importPlanPlaceholder: "🍽 FitoPit — Your Meal Plan…",
     importPlanSuccess: "✅ Plan loaded",
     importPlanError: "Could not parse the plan. Make sure the text was copied from FitoPit.",
-    copyFailed: "❌ Copy failed"
+    copyFailed: "❌ Copy failed",
+    tabPlan: "Meal plan",
+    tabFeedback: "Feedback",
+    macroNorms: "Daily macro targets",
+    macroProtein: "P",
+    macroFat: "F",
+    macroCarbs: "C",
+    macroGrams: "g",
+    macroDeltaOnTarget: "on target",
+    macroDeltaOver: "above target",
+    macroDeltaUnder: "below target",
+    feedbackTitle: "Suggest a dish or leave feedback",
+    feedbackHint: "Tell us which dish you'd like in the database, or share an idea to improve the service.",
+    feedbackTypeLabel: "Message type",
+    feedbackTypeDish: "Suggest a dish",
+    feedbackTypeImprove: "Improvement idea",
+    feedbackTypeOther: "Other",
+    feedbackDishLabel: "Dish name (optional)",
+    feedbackMessageLabel: "Message",
+    feedbackContactLabel: "Contact (optional)",
+    feedbackSubmit: "Send",
+    feedbackSuccess: "✅ Thanks! We received your message.",
+    feedbackError: "❌ Could not send. Please try again later.",
+    feedbackDishPlaceholder: "e.g. chicken noodle soup",
+    feedbackMessagePlaceholder: "Describe the dish, ingredients, or your suggestion…",
+    feedbackContactPlaceholder: "Email or Telegram"
   }
 };
 
@@ -172,6 +226,7 @@ function switchLang(lang) {
   if (dailyCalories > 0) updateCalorieStatus(dailyCalories);
   if (weeklyPlan.length > 0) displayWeeklyPlan(weeklyPlan, baseDailyCalories, activeDayIndex);
   renderUserRecipesList();
+  updateFeedbackFormLabels();
 }
 
 function calculateCalories(weight, height, age, gender, activity, goal) {
@@ -182,6 +237,106 @@ function calculateCalories(weight, height, age, gender, activity, goal) {
   if (goal === "lose") calories *= 0.8;
   if (goal === "gain") calories *= 1.2;
   return Math.round(calories);
+}
+
+function calculateMacroTargets(weight, dailyCalories, goal) {
+  const proteinPerKg = goal === "lose" ? 2.0 : goal === "gain" ? 2.2 : 1.6;
+  const fatKcalShare = goal === "maintain" ? 0.30 : 0.25;
+
+  const protein = Math.round(weight * proteinPerKg);
+  const fat = Math.round((dailyCalories * fatKcalShare) / 9);
+  const carbs = Math.max(0, Math.round((dailyCalories - protein * 4 - fat * 9) / 4));
+
+  return { protein, fat, carbs };
+}
+
+function renderMacroTargetsLine() {
+  const line = document.getElementById("macroTargetsLine");
+  if (!line || !macroTargets.protein) return;
+
+  line.style.display = "block";
+  document.getElementById("macroProtein").textContent = macroTargets.protein;
+  document.getElementById("macroFat").textContent = macroTargets.fat;
+  document.getElementById("macroCarbs").textContent = macroTargets.carbs;
+}
+
+function getMacroDeltaInfo(actual, target) {
+  const delta = Math.round((actual - target) * 10) / 10;
+  const tolerance = Math.max(10, target * 0.1);
+  const abs = Math.abs(delta);
+  let status = "good";
+  if (abs > tolerance * 2) status = "bad";
+  else if (abs > tolerance) status = "warn";
+  return { delta, status };
+}
+
+function formatMacroDelta(delta) {
+  const tr = t();
+  const rounded = Math.round(delta);
+  if (rounded === 0) return tr.macroDeltaOnTarget;
+  const sign = rounded > 0 ? "+" : "";
+  const suffix = rounded > 0 ? tr.macroDeltaOver : tr.macroDeltaUnder;
+  return `${sign}${rounded} ${tr.macroGrams} (${suffix})`;
+}
+
+function formatMacroLine(label, actual, target) {
+  const { delta } = getMacroDeltaInfo(actual, target);
+  return `${label}: ${actual.toFixed(1)} / ${target} ${t().macroGrams} — ${formatMacroDelta(delta)}`;
+}
+
+function switchSitePanel(panelId) {
+  document.querySelectorAll(".site-tab").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.panel === panelId);
+  });
+  document.getElementById("planPanel").style.display = panelId === "plan" ? "block" : "none";
+  document.getElementById("feedbackPanel").style.display = panelId === "feedback" ? "block" : "none";
+  localStorage.setItem("fitopit_active_panel", panelId);
+}
+
+function updateFeedbackFormLabels() {
+  const tr = t();
+  const dish = document.getElementById("feedbackDish");
+  const message = document.getElementById("feedbackMessage");
+  const contact = document.getElementById("feedbackContact");
+  if (dish) dish.placeholder = tr.feedbackDishPlaceholder;
+  if (message) message.placeholder = tr.feedbackMessagePlaceholder;
+  if (contact) contact.placeholder = tr.feedbackContactPlaceholder;
+}
+
+async function submitFeedback(form) {
+  const tr = t();
+  const payload = {
+    type: form.type.value,
+    dish: form.dish.value.trim(),
+    message: form.message.value.trim(),
+    contact: form.contact.value.trim(),
+    lang: currentLang,
+    submittedAt: new Date().toISOString()
+  };
+
+  saveFeedbackSubmission(payload);
+
+  if (FEEDBACK_EMAIL) {
+    try {
+      const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(FEEDBACK_EMAIL)}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          _subject: "FitoPit — обратная связь",
+          type: payload.type,
+          dish: payload.dish,
+          message: payload.message,
+          contact: payload.contact,
+          lang: payload.lang
+        })
+      });
+      if (!res.ok) throw new Error("send failed");
+    } catch {
+      return { ok: false, message: tr.feedbackError };
+    }
+  }
+
+  return { ok: true, message: tr.feedbackSuccess };
 }
 
 function getFormData(form) {
@@ -487,6 +642,7 @@ function persistCurrentPlan() {
     weeklyTargets: weeklyPlan.weeklyTargets || weeklyTargets,
     cheatDayIndex: weeklyPlan.cheatDayIndex,
     baseDailyCalories,
+    macroTargets,
     activeDayIndex
   });
 }
@@ -500,6 +656,13 @@ function restoreLastPlan() {
   weeklyPlan.weeklyTargets = saved.weeklyTargets || saved.days.map(d => d.dayCaloriesTarget);
   weeklyTargets = weeklyPlan.weeklyTargets;
   baseDailyCalories = saved.baseDailyCalories || 0;
+  macroTargets = saved.macroTargets || macroTargets;
+  if (!macroTargets.protein && baseDailyCalories) {
+    const profile = loadProfile();
+    if (profile.weight && profile.goal) {
+      macroTargets = calculateMacroTargets(profile.weight, baseDailyCalories, profile.goal);
+    }
+  }
   activeDayIndex = Math.max(0, Math.min(6, saved.activeDayIndex ?? 0));
   displayWeeklyPlan(weeklyPlan, baseDailyCalories, activeDayIndex);
   return true;
@@ -522,6 +685,7 @@ function displayWeeklyPlan(plan, dailyCalories, dayIndex = activeDayIndex) {
 
   resultDiv.style.display = "block";
   document.getElementById("calories").textContent = Math.round(dailyCalories);
+  renderMacroTargetsLine();
   renderWeeklyKcalChart(plan);
 
   tabsContainer.innerHTML = `
@@ -597,9 +761,15 @@ function displayWeeklyPlan(plan, dailyCalories, dayIndex = activeDayIndex) {
         <strong>${tr.total}</strong><br>
         Калории: ${dayTotal} / ${dayTarget} ккал<br>
         <span class="calorie-delta">${formatCalorieDelta(delta)}</span><br>
-        Б: ${sumProperty(day, 'protein').toFixed(1)}г,
-        Ж: ${sumProperty(day, 'fat').toFixed(1)}г,
-        У: ${sumProperty(day, 'carbs').toFixed(1)}г
+        ${macroTargets.protein ? `
+        ${formatMacroLine(tr.macroProtein, sumProperty(day, 'protein'), macroTargets.protein)}<br>
+        ${formatMacroLine(tr.macroFat, sumProperty(day, 'fat'), macroTargets.fat)}<br>
+        ${formatMacroLine(tr.macroCarbs, sumProperty(day, 'carbs'), macroTargets.carbs)}
+        ` : `
+        ${tr.macroProtein}: ${sumProperty(day, 'protein').toFixed(1)}${tr.macroGrams},
+        ${tr.macroFat}: ${sumProperty(day, 'fat').toFixed(1)}${tr.macroGrams},
+        ${tr.macroCarbs}: ${sumProperty(day, 'carbs').toFixed(1)}${tr.macroGrams}
+        `}
       </div>
     </div>
   `;
@@ -792,6 +962,10 @@ function loadImportedPlan(text) {
   baseDailyCalories = Math.round(
     weeklyTargets.reduce((s, v) => s + v, 0) / weeklyTargets.length
   ) || baseDailyCalories;
+  const profile = loadProfile();
+  if (profile.weight && profile.goal && baseDailyCalories) {
+    macroTargets = calculateMacroTargets(profile.weight, baseDailyCalories, profile.goal);
+  }
   activeDayIndex = 0;
 
   displayWeeklyPlan(weeklyPlan, baseDailyCalories, activeDayIndex);
@@ -804,6 +978,11 @@ function generateCopyText(plan) {
   const tr = t();
   const days = Array.isArray(plan) ? plan.filter(d => d && typeof d === 'object') : [];
   let text = `🍽 FitoPit — ${tr.title}\n\n`;
+  if (macroTargets.protein) {
+    text += `${tr.macroNorms}: ${tr.macroProtein} ${macroTargets.protein}${tr.macroGrams}, `;
+    text += `${tr.macroFat} ${macroTargets.fat}${tr.macroGrams}, `;
+    text += `${tr.macroCarbs} ${macroTargets.carbs}${tr.macroGrams}\n\n`;
+  }
   days.forEach((day, i) => {
     const target = day.dayCaloriesTarget || weeklyTargets[i] || baseDailyCalories;
     text += `${tr.day} ${i + 1}${isCheatDay(day) ? ` (${tr.cheatDay})` : ''} — ${target} ккал\n`;
@@ -1011,6 +1190,7 @@ function createPlanFromForm() {
     userData.gender, userData.activity, userData.goal
   );
   baseDailyCalories = userData.dailyCalories;
+  macroTargets = calculateMacroTargets(userData.weight, baseDailyCalories, userData.goal);
 
   const constraints = buildConstraints(userData);
   weeklyPlan = generateWeeklyPlan(constraints, userData);
@@ -1048,6 +1228,16 @@ document.addEventListener("DOMContentLoaded", () => {
   updateSurveyVisibility();
   renderUserRecipesList();
   restoreLastPlan();
+  updateFeedbackFormLabels();
+
+  const savedPanel = localStorage.getItem("fitopit_active_panel") || "plan";
+  switchSitePanel(savedPanel);
+
+  document.querySelectorAll(".site-tab").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (btn.dataset.panel) switchSitePanel(btn.dataset.panel);
+    });
+  });
 
   document.getElementById("editProfileBtn")?.addEventListener("click", () => {
     profileEditMode = true;
@@ -1107,6 +1297,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     btn.textContent = ok ? t().copied : t().copyFailed;
     setTimeout(() => { btn.textContent = t().copy; }, 2000);
+  });
+
+  document.getElementById("feedbackForm")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const statusEl = document.getElementById("feedbackStatus");
+    const btn = document.getElementById("feedbackSubmitBtn");
+    if (btn) btn.disabled = true;
+
+    const result = await submitFeedback(e.target);
+    if (statusEl) {
+      statusEl.textContent = result.message;
+      statusEl.style.display = "block";
+      statusEl.className = `feedback-status feedback-status--${result.ok ? "ok" : "error"}`;
+    }
+    if (result.ok) e.target.reset();
+
+    if (btn) btn.disabled = false;
   });
 
   document.getElementById("importPlanBtn")?.addEventListener("click", function () {

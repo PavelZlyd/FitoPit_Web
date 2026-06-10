@@ -2,6 +2,7 @@
 const PROFILE_KEY = 'fitopit_profile';
 const RECIPES_KEY = 'fitopit_user_recipes';
 const PLAN_KEY = 'fitopit_last_plan';
+const FEEDBACK_KEY = 'fitopit_feedback';
 
 const DEFAULT_PROFILE = {
   age: null,
@@ -143,15 +144,26 @@ function importUserData(json) {
   if (data.recipes) saveUserRecipes(data.recipes);
 }
 
-function saveLastPlan({ days, weeklyTargets, cheatDayIndex, baseDailyCalories, activeDayIndex }) {
+function saveLastPlan({ days, weeklyTargets, cheatDayIndex, baseDailyCalories, macroTargets, activeDayIndex }) {
   if (!days?.length) return;
   localStorage.setItem(PLAN_KEY, JSON.stringify({
     days,
     weeklyTargets: weeklyTargets || days.map(d => d.dayCaloriesTarget),
     cheatDayIndex: cheatDayIndex ?? -1,
     baseDailyCalories: baseDailyCalories || 0,
+    macroTargets: macroTargets || null,
     activeDayIndex: activeDayIndex ?? 0
   }));
+}
+
+function saveFeedbackSubmission(entry) {
+  try {
+    const list = JSON.parse(localStorage.getItem(FEEDBACK_KEY) || '[]');
+    list.push(entry);
+    localStorage.setItem(FEEDBACK_KEY, JSON.stringify(list));
+  } catch {
+    localStorage.setItem(FEEDBACK_KEY, JSON.stringify([entry]));
+  }
 }
 
 function loadLastPlan() {
