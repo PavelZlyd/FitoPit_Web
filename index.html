@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="FitoPit — персональный недельный план питания за 1 клик с учётом цели, диеты, аллергий и уровня активности." />
+  <meta name="theme-color" content="#3a86ff" />
   <title>FitoPit — Персональный план питания</title>
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -334,6 +336,12 @@
   const saved = localStorage.getItem('theme');
   if (saved) {
     document.documentElement.setAttribute('data-theme', saved);
+  }
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    });
   }
 </script>
 </body>

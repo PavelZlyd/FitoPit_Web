@@ -48,15 +48,8 @@
     {
       "src": "icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "screenshots/screenshot-1.png",
       "type": "image/png",
-      "sizes": "1080x1920",
-      "form_factor": "mobile"
+      "purpose": "any maskable"
     }
   ]
 }

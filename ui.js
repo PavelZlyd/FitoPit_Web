@@ -8,7 +8,7 @@ let profileEditMode = true;
 let activeDayIndex = 0;
 
 // Укажи email для отправки через FormSubmit (https://formsubmit.co), иначе — только localStorage
-const FEEDBACK_EMAIL = '';
+const FEEDBACK_EMAIL = 'Zlydin.pm@dvfu.ru';
 
 const MEAL_ORDER = ['breakfast', 'secondBreakfast', 'lunch', 'snack', 'dinner', 'secondDinner'];
 
