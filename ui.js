@@ -18,7 +18,7 @@ import {
   recalcMealFromWeight,
   replaceDishWithRecipe
 } from './generator.js';
-import { buildShoppingList, formatShoppingListText, roundShoppingWeight } from './shoppingList.js';
+import { buildShoppingList, formatShoppingListText, planHasIngredientData, roundShoppingWeight, SHOPPING_MODES } from './shoppingList.js';
 import {
   addPlanToHistory,
   addUserRecipe,
@@ -43,6 +43,7 @@ let baseDailyCalories = 0;
 let macroTargets = { protein: 0, fat: 0, carbs: 0 };
 let profileEditMode = true;
 let activeDayIndex = 0;
+let shoppingListMode = localStorage.getItem('fitopit_shopping_mode') || SHOPPING_MODES.INGREDIENTS;
 
 // Укажи email для отправки через FormSubmit (https://formsubmit.co), иначе — только localStorage
 const FEEDBACK_EMAIL = 'Zlydin.pm@dvfu.ru';
@@ -125,9 +126,13 @@ const translations = {
     feedbackMessagePlaceholder: "Опиши блюдо, ингредиенты или пожелание…",
     feedbackContactPlaceholder: "Email или Telegram",
     shoppingListTitle: "Список покупок на неделю",
-    shoppingListHint: "Суммарный вес блюд по неделе — ориентир для закупок.",
+    shoppingListHint: "Суммарный вес продуктов по неделе — ориентир для закупок.",
+    shoppingListHintDishes: "Суммарный вес блюд по неделе — ориентир для закупок.",
     shoppingListEmpty: "Нет позиций для списка.",
     shoppingListOccurrences: "раз",
+    shoppingModeDishes: "По блюдам",
+    shoppingModeIngredients: "По продуктам",
+    shoppingModeLabel: "Режим списка",
     copyShoppingList: "🛒 Копировать список покупок",
     shoppingListCopied: "✅ Список скопирован",
     printPlan: "🖨 Печать",
@@ -216,9 +221,13 @@ const translations = {
     feedbackMessagePlaceholder: "Describe the dish, ingredients, or your suggestion…",
     feedbackContactPlaceholder: "Email or Telegram",
     shoppingListTitle: "Weekly shopping list",
-    shoppingListHint: "Total dish weights for the week — a guide for grocery shopping.",
+    shoppingListHint: "Total ingredient weights for the week — a guide for grocery shopping.",
+    shoppingListHintDishes: "Total dish weights for the week — a guide for grocery shopping.",
     shoppingListEmpty: "No items for the list.",
     shoppingListOccurrences: "×",
+    shoppingModeDishes: "By dishes",
+    shoppingModeIngredients: "By ingredients",
+    shoppingModeLabel: "List mode",
     copyShoppingList: "🛒 Copy shopping list",
     shoppingListCopied: "✅ List copied",
     printPlan: "🖨 Print",
@@ -766,7 +775,9 @@ function renderShoppingList(plan) {
   const panel = document.getElementById('shoppingListPanel');
   if (!panel) return;
   const tr = t();
-  const items = buildShoppingList(plan);
+  const hasIngredients = planHasIngredientData(plan);
+  const mode = hasIngredients ? shoppingListMode : SHOPPING_MODES.DISHES;
+  const items = buildShoppingList(plan, mode);
   if (!items.length) {
     panel.style.display = 'none';
     panel.innerHTML = '';
@@ -775,11 +786,19 @@ function renderShoppingList(plan) {
 
   const unit = currentLang === 'ru' ? 'г' : 'g';
   const timesLabel = tr.shoppingListOccurrences;
+  const hint = mode === SHOPPING_MODES.INGREDIENTS ? tr.shoppingListHint : tr.shoppingListHintDishes;
+
   panel.style.display = 'block';
   panel.innerHTML = `
     <details open>
       <summary>${tr.shoppingListTitle}</summary>
-      <p class="shopping-list-hint">${tr.shoppingListHint}</p>
+      ${hasIngredients ? `
+        <div class="shopping-list-mode" role="group" aria-label="${tr.shoppingModeLabel}">
+          <button type="button" class="shopping-mode-btn ${mode === SHOPPING_MODES.INGREDIENTS ? 'active' : ''}" data-shopping-mode="${SHOPPING_MODES.INGREDIENTS}">${tr.shoppingModeIngredients}</button>
+          <button type="button" class="shopping-mode-btn ${mode === SHOPPING_MODES.DISHES ? 'active' : ''}" data-shopping-mode="${SHOPPING_MODES.DISHES}">${tr.shoppingModeDishes}</button>
+        </div>
+      ` : ''}
+      <p class="shopping-list-hint">${hint}</p>
       <ul class="shopping-list">
         ${items.map((item) => `
           <li>
@@ -791,6 +810,14 @@ function renderShoppingList(plan) {
       </ul>
     </details>
   `;
+
+  panel.querySelectorAll('[data-shopping-mode]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      shoppingListMode = btn.dataset.shoppingMode;
+      localStorage.setItem('fitopit_shopping_mode', shoppingListMode);
+      renderShoppingList(plan);
+    });
+  });
 }
 
 function showPlanHistoryStatus(message, ok = true) {
@@ -879,7 +906,9 @@ function deletePlanHistoryEntry(id) {
 }
 
 function getShoppingListText() {
-  return formatShoppingListText(buildShoppingList(weeklyPlan), t(), currentLang);
+  const hasIngredients = planHasIngredientData(weeklyPlan);
+  const mode = hasIngredients ? shoppingListMode : SHOPPING_MODES.DISHES;
+  return formatShoppingListText(buildShoppingList(weeklyPlan, mode), t(), currentLang);
 }
 
 function displayWeeklyPlan(plan, dailyCalories, dayIndex = activeDayIndex) {
@@ -1062,6 +1091,7 @@ function buildImportedMeal(title, weight, calories, opts = {}) {
     complete: recipe?.complete,
     url: recipe?.url,
     image: recipe?.image,
+    ingredients: recipe?.ingredients ? recipe.ingredients.map((i) => ({ ...i })) : undefined,
     weight: w,
     calories: cal,
     protein: recipe ? parseFloat(((recipe.proteinPer100g * w) / 100).toFixed(1)) : 0,

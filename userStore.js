@@ -110,6 +110,7 @@ function cloneRecipe(r) {
     complete: r.complete,
     url: r.url,
     image: r.image,
+    ingredients: r.ingredients ? r.ingredients.map((i) => ({ ...i })) : undefined,
     isUser: !!r.isUser
   };
 }

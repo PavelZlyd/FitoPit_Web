@@ -17,7 +17,21 @@
         ],
         "type": "main",
         "budget": "medium",
-        "url": "https://eda.ru/recepty/omlet"
+        "url": "https://eda.ru/recepty/omlet",
+        "ingredients": [
+          {
+            "name": "Яйца",
+            "gramsPer100g": 55
+          },
+          {
+            "name": "Сыр",
+            "gramsPer100g": 18
+          },
+          {
+            "name": "Молоко",
+            "gramsPer100g": 20
+          }
+        ]
       },
       {
         "title": "Омлет без масла",
@@ -34,7 +48,17 @@
         ],
         "type": "main",
         "budget": "low",
-        "url": "https://eda.ru/recepty/omlet"
+        "url": "https://eda.ru/recepty/omlet",
+        "ingredients": [
+          {
+            "name": "Яйца",
+            "gramsPer100g": 70
+          },
+          {
+            "name": "Молоко",
+            "gramsPer100g": 15
+          }
+        ]
       },
       {
         "title": "Гречневая каша на воде",
@@ -50,7 +74,21 @@
         ],
         "allergens": [],
         "type": "side",
-        "budget": "low"
+        "budget": "low",
+        "ingredients": [
+          {
+            "name": "Гречка",
+            "gramsPer100g": 35
+          },
+          {
+            "name": "Вода",
+            "gramsPer100g": 60
+          },
+          {
+            "name": "Соль",
+            "gramsPer100g": 1
+          }
+        ]
       },
       {
         "title": "Гречневая каша на молоке",
@@ -66,7 +104,21 @@
           "dairy"
         ],
         "type": "side",
-        "budget": "medium"
+        "budget": "medium",
+        "ingredients": [
+          {
+            "name": "Гречка",
+            "gramsPer100g": 30
+          },
+          {
+            "name": "Молоко",
+            "gramsPer100g": 65
+          },
+          {
+            "name": "Соль",
+            "gramsPer100g": 1
+          }
+        ]
       },
       {
         "title": "Творог с ягодами",
@@ -82,7 +134,17 @@
           "dairy"
         ],
         "type": "main",
-        "budget": "medium"
+        "budget": "medium",
+        "ingredients": [
+          {
+            "name": "Творог",
+            "gramsPer100g": 75
+          },
+          {
+            "name": "Ягоды",
+            "gramsPer100g": 20
+          }
+        ]
       },
       {
         "title": "Бутерброд с авокадо",
@@ -117,7 +179,25 @@
         ],
         "type": "main",
         "budget": "medium",
-        "url": "https://eda.ru/recepty/syrniki"
+        "url": "https://eda.ru/recepty/syrniki",
+        "ingredients": [
+          {
+            "name": "Творог",
+            "gramsPer100g": 55
+          },
+          {
+            "name": "Яйца",
+            "gramsPer100g": 12
+          },
+          {
+            "name": "Мука",
+            "gramsPer100g": 15
+          },
+          {
+            "name": "Сахар",
+            "gramsPer100g": 5
+          }
+        ]
       },
       {
         "title": "Овсянка на воде",
@@ -245,7 +325,13 @@
         ],
         "type": "main",
         "budget": "low",
-        "url": "https://eda.ru/recepty/yachnitsa-glazunya"
+        "url": "https://eda.ru/recepty/yachnitsa-glazunya",
+        "ingredients": [
+          {
+            "name": "Яйца",
+            "gramsPer100g": 85
+          }
+        ]
       },
       {
         "title": "Рисовая каша на молоке",
@@ -262,7 +348,21 @@
         ],
         "type": "side",
         "budget": "low",
-        "url": "https://eda.ru/recepty/risovaya-kasha-na-moloke"
+        "url": "https://eda.ru/recepty/risovaya-kasha-na-moloke",
+        "ingredients": [
+          {
+            "name": "Рис",
+            "gramsPer100g": 25
+          },
+          {
+            "name": "Молоко",
+            "gramsPer100g": 70
+          },
+          {
+            "name": "Сахар",
+            "gramsPer100g": 3
+          }
+        ]
       },
       {
         "title": "Мюсли с йогуртом",
@@ -300,7 +400,25 @@
         ],
         "type": "main",
         "budget": "medium",
-        "url": "https://eda.ru/recepty/tvorozhnaya-zapekanka"
+        "url": "https://eda.ru/recepty/tvorozhnaya-zapekanka",
+        "ingredients": [
+          {
+            "name": "Творог",
+            "gramsPer100g": 50
+          },
+          {
+            "name": "Яйца",
+            "gramsPer100g": 12
+          },
+          {
+            "name": "Манка",
+            "gramsPer100g": 10
+          },
+          {
+            "name": "Сахар",
+            "gramsPer100g": 8
+          }
+        ]
       }
     ],
     "lunch": {
@@ -317,7 +435,33 @@
           "allergens": [],
           "type": "first",
           "budget": "medium",
-          "url": "https://eda.ru/recepty/borsh"
+          "url": "https://eda.ru/recepty/borsh",
+          "ingredients": [
+            {
+              "name": "Говядина",
+              "gramsPer100g": 12
+            },
+            {
+              "name": "Свёкла",
+              "gramsPer100g": 20
+            },
+            {
+              "name": "Капуста",
+              "gramsPer100g": 18
+            },
+            {
+              "name": "Картофель",
+              "gramsPer100g": 12
+            },
+            {
+              "name": "Морковь",
+              "gramsPer100g": 8
+            },
+            {
+              "name": "Лук",
+              "gramsPer100g": 5
+            }
+          ]
         },
         {
           "title": "Куриный суп",
@@ -331,7 +475,29 @@
           "allergens": [],
           "type": "first",
           "budget": "medium",
-          "url": "https://eda.ru/recepty/kurinyy-sup"
+          "url": "https://eda.ru/recepty/kurinyy-sup",
+          "ingredients": [
+            {
+              "name": "Курица",
+              "gramsPer100g": 15
+            },
+            {
+              "name": "Картофель",
+              "gramsPer100g": 12
+            },
+            {
+              "name": "Морковь",
+              "gramsPer100g": 8
+            },
+            {
+              "name": "Лук",
+              "gramsPer100g": 5
+            },
+            {
+              "name": "Лапша",
+              "gramsPer100g": 8
+            }
+          ]
         },
         {
           "title": "Щи",
@@ -345,7 +511,25 @@
           "allergens": [],
           "type": "first",
           "budget": "low",
-          "url": "https://eda.ru/recepty/schi"
+          "url": "https://eda.ru/recepty/schi",
+          "ingredients": [
+            {
+              "name": "Капуста",
+              "gramsPer100g": 25
+            },
+            {
+              "name": "Морковь",
+              "gramsPer100g": 8
+            },
+            {
+              "name": "Лук",
+              "gramsPer100g": 6
+            },
+            {
+              "name": "Томатная паста",
+              "gramsPer100g": 5
+            }
+          ]
         },
         {
           "title": "Суп-пюре из цветной капусты",
@@ -420,7 +604,25 @@
           ],
           "type": "first",
           "budget": "medium",
-          "url": "https://eda.ru/recepty/uha"
+          "url": "https://eda.ru/recepty/uha",
+          "ingredients": [
+            {
+              "name": "Рыба",
+              "gramsPer100g": 18
+            },
+            {
+              "name": "Картофель",
+              "gramsPer100g": 15
+            },
+            {
+              "name": "Морковь",
+              "gramsPer100g": 8
+            },
+            {
+              "name": "Лук",
+              "gramsPer100g": 5
+            }
+          ]
         },
         {
           "title": "Томатный суп",
@@ -512,7 +714,25 @@
           "type": "main",
           "complete": false,
           "budget": "medium",
-          "url": "https://eda.ru/recepty/gulyash"
+          "url": "https://eda.ru/recepty/gulyash",
+          "ingredients": [
+            {
+              "name": "Говядина",
+              "gramsPer100g": 55
+            },
+            {
+              "name": "Лук",
+              "gramsPer100g": 12
+            },
+            {
+              "name": "Морковь",
+              "gramsPer100g": 10
+            },
+            {
+              "name": "Томатная паста",
+              "gramsPer100g": 8
+            }
+          ]
         },
         {
           "title": "Куриные котлеты на пару",
@@ -528,7 +748,25 @@
           ],
           "type": "main",
           "complete": false,
-          "budget": "low"
+          "budget": "low",
+          "ingredients": [
+            {
+              "name": "Куриный фарш",
+              "gramsPer100g": 70
+            },
+            {
+              "name": "Яйца",
+              "gramsPer100g": 10
+            },
+            {
+              "name": "Лук",
+              "gramsPer100g": 8
+            },
+            {
+              "name": "Хлеб",
+              "gramsPer100g": 5
+            }
+          ]
         },
         {
           "title": "Куриные котлеты жареные",
@@ -560,7 +798,17 @@
           ],
           "type": "main",
           "complete": false,
-          "budget": "medium"
+          "budget": "medium",
+          "ingredients": [
+            {
+              "name": "Филе рыбы",
+              "gramsPer100g": 88
+            },
+            {
+              "name": "Лимон",
+              "gramsPer100g": 3
+            }
+          ]
         },
         {
           "title": "Тушёная фасоль",
@@ -639,7 +887,29 @@
           "type": "main",
           "complete": true,
           "budget": "medium",
-          "url": "https://eda.ru/recepty/plov"
+          "url": "https://eda.ru/recepty/plov",
+          "ingredients": [
+            {
+              "name": "Рис",
+              "gramsPer100g": 35
+            },
+            {
+              "name": "Баранина",
+              "gramsPer100g": 25
+            },
+            {
+              "name": "Морковь",
+              "gramsPer100g": 18
+            },
+            {
+              "name": "Лук",
+              "gramsPer100g": 12
+            },
+            {
+              "name": "Масло растительное",
+              "gramsPer100g": 5
+            }
+          ]
         },
         {
           "title": "Лазанья",
@@ -740,7 +1010,25 @@
           "type": "main",
           "complete": false,
           "budget": "medium",
-          "url": "https://eda.ru/recepty/tefteli"
+          "url": "https://eda.ru/recepty/tefteli",
+          "ingredients": [
+            {
+              "name": "Говяжий фарш",
+              "gramsPer100g": 45
+            },
+            {
+              "name": "Рис",
+              "gramsPer100g": 12
+            },
+            {
+              "name": "Лук",
+              "gramsPer100g": 10
+            },
+            {
+              "name": "Томатная паста",
+              "gramsPer100g": 15
+            }
+          ]
         },
         {
           "title": "Ленивые голубцы",
@@ -829,7 +1117,29 @@
           "type": "main",
           "complete": true,
           "budget": "medium",
-          "url": "https://eda.ru/recepty/salat-grecheskiy"
+          "url": "https://eda.ru/recepty/salat-grecheskiy",
+          "ingredients": [
+            {
+              "name": "Помидоры",
+              "gramsPer100g": 25
+            },
+            {
+              "name": "Огурцы",
+              "gramsPer100g": 20
+            },
+            {
+              "name": "Сыр фета",
+              "gramsPer100g": 18
+            },
+            {
+              "name": "Маслины",
+              "gramsPer100g": 10
+            },
+            {
+              "name": "Масло оливковое",
+              "gramsPer100g": 8
+            }
+          ]
         }
       ]
     },
@@ -846,7 +1156,17 @@
           ],
           "allergens": [],
           "type": "main",
-          "budget": "medium"
+          "budget": "medium",
+          "ingredients": [
+            {
+              "name": "Курица",
+              "gramsPer100g": 85
+            },
+            {
+              "name": "Специи",
+              "gramsPer100g": 2
+            }
+          ]
         },
         {
           "title": "Рыба на пару",
@@ -861,7 +1181,17 @@
             "fish"
           ],
           "type": "main",
-          "budget": "medium"
+          "budget": "medium",
+          "ingredients": [
+            {
+              "name": "Филе рыбы",
+              "gramsPer100g": 88
+            },
+            {
+              "name": "Лимон",
+              "gramsPer100g": 3
+            }
+          ]
         },
         {
           "title": "Тушёные овощи",
@@ -993,7 +1323,17 @@
           "allergens": [],
           "type": "main",
           "budget": "medium",
-          "url": "https://eda.ru/recepty/kurinaya-grudka"
+          "url": "https://eda.ru/recepty/kurinaya-grudka",
+          "ingredients": [
+            {
+              "name": "Куриная грудка",
+              "gramsPer100g": 92
+            },
+            {
+              "name": "Специи",
+              "gramsPer100g": 2
+            }
+          ]
         },
         {
           "title": "Треска в духовке",
@@ -1070,7 +1410,21 @@
             "dairy"
           ],
           "type": "side",
-          "budget": "medium"
+          "budget": "medium",
+          "ingredients": [
+            {
+              "name": "Картофель",
+              "gramsPer100g": 75
+            },
+            {
+              "name": "Молоко",
+              "gramsPer100g": 15
+            },
+            {
+              "name": "Масло сливочное",
+              "gramsPer100g": 5
+            }
+          ]
         },
         {
           "title": "Гречка",
@@ -1086,7 +1440,17 @@
           ],
           "allergens": [],
           "type": "side",
-          "budget": "low"
+          "budget": "low",
+          "ingredients": [
+            {
+              "name": "Гречка",
+              "gramsPer100g": 40
+            },
+            {
+              "name": "Вода",
+              "gramsPer100g": 55
+            }
+          ]
         },
         {
           "title": "Рис",
@@ -1102,7 +1466,17 @@
           ],
           "allergens": [],
           "type": "side",
-          "budget": "low"
+          "budget": "low",
+          "ingredients": [
+            {
+              "name": "Рис",
+              "gramsPer100g": 38
+            },
+            {
+              "name": "Вода",
+              "gramsPer100g": 58
+            }
+          ]
         },
         {
           "title": "Тушёная капуста",
@@ -1160,7 +1534,25 @@
           ],
           "allergens": [],
           "type": "side",
-          "budget": "low"
+          "budget": "low",
+          "ingredients": [
+            {
+              "name": "Огурцы",
+              "gramsPer100g": 30
+            },
+            {
+              "name": "Помидоры",
+              "gramsPer100g": 30
+            },
+            {
+              "name": "Перец",
+              "gramsPer100g": 15
+            },
+            {
+              "name": "Масло растительное",
+              "gramsPer100g": 8
+            }
+          ]
         },
         {
           "title": "Салат Цезарь (без куриного)",
@@ -1228,7 +1620,13 @@
         ],
         "allergens": [],
         "type": "snack",
-        "budget": "low"
+        "budget": "low",
+        "ingredients": [
+          {
+            "name": "Банан",
+            "gramsPer100g": 100
+          }
+        ]
       },
       {
         "title": "Яблоко",
@@ -1244,7 +1642,13 @@
         ],
         "allergens": [],
         "type": "snack",
-        "budget": "low"
+        "budget": "low",
+        "ingredients": [
+          {
+            "name": "Яблоко",
+            "gramsPer100g": 100
+          }
+        ]
       },
       {
         "title": "Груша",
@@ -1677,7 +2081,13 @@
         "vegan"
       ],
       "allergens": [],
-      "budget": "low"
+      "budget": "low",
+      "ingredients": [
+        {
+          "name": "Банан",
+          "gramsPer100g": 100
+        }
+      ]
     },
     {
       "title": "Яблоко",
@@ -1692,7 +2102,13 @@
         "glutenfree"
       ],
       "allergens": [],
-      "budget": "low"
+      "budget": "low",
+      "ingredients": [
+        {
+          "name": "Яблоко",
+          "gramsPer100g": 100
+        }
+      ]
     },
     {
       "title": "Груша",
@@ -1843,7 +2259,25 @@
         "eggs"
       ],
       "type": "main",
-      "budget": "high"
+      "budget": "high",
+      "ingredients": [
+        {
+          "name": "Булочка",
+          "gramsPer100g": 25
+        },
+        {
+          "name": "Говяжий фарш",
+          "gramsPer100g": 30
+        },
+        {
+          "name": "Сыр",
+          "gramsPer100g": 10
+        },
+        {
+          "name": "Картофель фри",
+          "gramsPer100g": 28
+        }
+      ]
     },
     {
       "title": "Пицца",
@@ -1860,7 +2294,25 @@
         "gluten"
       ],
       "type": "main",
-      "budget": "high"
+      "budget": "high",
+      "ingredients": [
+        {
+          "name": "Тесто",
+          "gramsPer100g": 40
+        },
+        {
+          "name": "Сыр моцарелла",
+          "gramsPer100g": 22
+        },
+        {
+          "name": "Томатный соус",
+          "gramsPer100g": 15
+        },
+        {
+          "name": "Колбаса",
+          "gramsPer100g": 12
+        }
+      ]
     },
     {
       "title": "Паста карбонара",
@@ -1878,7 +2330,29 @@
       ],
       "type": "main",
       "budget": "high",
-      "url": "https://eda.ru/recepty/karbonara"
+      "url": "https://eda.ru/recepty/karbonara",
+      "ingredients": [
+        {
+          "name": "Паста",
+          "gramsPer100g": 45
+        },
+        {
+          "name": "Бекон",
+          "gramsPer100g": 18
+        },
+        {
+          "name": "Яйца",
+          "gramsPer100g": 12
+        },
+        {
+          "name": "Сыр пармезан",
+          "gramsPer100g": 10
+        },
+        {
+          "name": "Сливки",
+          "gramsPer100g": 8
+        }
+      ]
     },
     {
       "title": "Торт",

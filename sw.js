@@ -1,5 +1,5 @@
 // FitoPit Service Worker — офлайн-кэш приложения
-const CACHE_VERSION = 'fitopit-v4';
+const CACHE_VERSION = 'fitopit-v5';
 
 // Файлы ядра приложения (app shell), которые кэшируем при установке
 const APP_SHELL = [
