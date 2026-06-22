@@ -1,4 +1,36 @@
 // ui.js — Интерфейс и управление питанием
+import {
+  calorieBoosters,
+  cheatMealRecipes,
+  emojiMap,
+  noRecipeLinkTitles,
+  recipeLinkMap
+} from './data.js';
+import {
+  balanceDayCalories,
+  generateCheatMeal,
+  generateDayMeals,
+  generateMeal,
+  generateWeeklyPlan,
+  getBoosterPortionWeight,
+  getDishRecipeOptions,
+  isRecipeAllowed,
+  recalcMealFromWeight,
+  replaceDishWithRecipe
+} from './generator.js';
+import {
+  addUserRecipe,
+  clearLastPlan,
+  deleteUserRecipe,
+  getMergedRecipesDB,
+  getUserRecipes,
+  isProfileComplete,
+  loadLastPlan,
+  loadProfile,
+  saveFeedbackSubmission,
+  saveLastPlan,
+  saveProfile
+} from './userStore.js';
 
 let weeklyPlan = [];
 let weeklyTargets = [];
@@ -403,19 +435,11 @@ function applyProfileToForm(profile) {
   });
 }
 
-function profileFromForm() {
-  const form = document.getElementById("nutritionForm");
-  const data = getFormData(form);
-  data.allergies = getSelectedAllergies();
-  return data;
-}
-
 function updateSurveyVisibility() {
   const profile = loadProfile();
   const complete = isProfileComplete(profile) && !profileEditMode;
 
   const summary = document.getElementById("profileSummary");
-  const form = document.getElementById("nutritionForm");
   if (complete) {
     summary.style.display = "block";
     const tr = t();
@@ -452,7 +476,7 @@ function updateCalorieStatus(dailyCalories) {
 
 function getEmoji(title) {
   const lowerTitle = (title || '').toLowerCase();
-  for (const [key, emoji] of Object.entries(window.emojiMap || {})) {
+  for (const [key, emoji] of Object.entries(emojiMap)) {
     if (lowerTitle.includes(key)) return emoji;
   }
   return '🍽️';
@@ -489,11 +513,8 @@ function formatCalorieDelta(delta) {
 
 function getRecipeUrl(title, meal) {
   if (meal?.url) return meal.url;
-  const noLink = typeof noRecipeLinkTitles !== 'undefined' ? noRecipeLinkTitles : window.noRecipeLinkTitles;
-  if (noLink?.has?.(title)) return null;
-
-  const map = typeof recipeLinkMap !== 'undefined' ? recipeLinkMap : window.recipeLinkMap;
-  if (map?.[title]) return map[title];
+  if (noRecipeLinkTitles.has(title)) return null;
+  if (recipeLinkMap[title]) return recipeLinkMap[title];
 
   const query = currentLang === 'ru' ? `${title} рецепт` : `${title} recipe`;
   if (currentLang === 'ru') {
@@ -514,8 +535,7 @@ function isCheatDay(day) {
 
 function getFilteredBoosters() {
   const constraints = buildConstraints(getFormData(document.getElementById("nutritionForm")));
-  return (typeof calorieBoosters !== 'undefined' ? calorieBoosters : [])
-    .filter(b => typeof isRecipeAllowed === 'function' && isRecipeAllowed(b, constraints));
+  return calorieBoosters.filter(b => isRecipeAllowed(b, constraints));
 }
 
 function renderWeeklyKcalChart(plan) {
@@ -583,9 +603,7 @@ function regenerateMeal(dayIndex, mealType) {
     : generateMeal(mealType, constraints, userData);
   weeklyPlan[dayIndex][mealType] = Array.isArray(meal) ? meal.filter(Boolean) : [meal].filter(Boolean);
   const dayTarget = weeklyTargets[dayIndex] ?? baseDailyCalories;
-  if (typeof balanceDayCalories === 'function') {
-    balanceDayCalories(weeklyPlan[dayIndex], dayTarget, constraints);
-  }
+  balanceDayCalories(weeklyPlan[dayIndex], dayTarget, constraints);
   displayWeeklyPlan(weeklyPlan, baseDailyCalories, activeDayIndex);
 }
 
@@ -816,20 +834,17 @@ function getMealLabelMap() {
 }
 
 function findRecipeByTitle(title) {
-  const sources = [];
-  if (typeof getMergedRecipesDB === 'function') {
-    const db = getMergedRecipesDB();
-    sources.push(
-      ...(db.breakfast || []),
-      ...(db.lunch?.first || []),
-      ...(db.lunch?.second || []),
-      ...(db.dinner?.main || []),
-      ...(db.dinner?.side || []),
-      ...(db.snack || [])
-    );
-  }
-  if (typeof calorieBoosters !== 'undefined') sources.push(...calorieBoosters);
-  if (typeof cheatMealRecipes !== 'undefined') sources.push(...cheatMealRecipes);
+  const db = getMergedRecipesDB();
+  const sources = [
+    ...(db.breakfast || []),
+    ...(db.lunch?.first || []),
+    ...(db.lunch?.second || []),
+    ...(db.dinner?.main || []),
+    ...(db.dinner?.side || []),
+    ...(db.snack || []),
+    ...calorieBoosters,
+    ...cheatMealRecipes
+  ];
   return sources.find(r => r.title === title);
 }
 
@@ -1081,35 +1096,14 @@ function closeBoosterMenu() {
 }
 
 function getBoosterWeight(booster) {
-  if (typeof getBoosterPortionWeight === 'function') {
-    return getBoosterPortionWeight(booster);
-  }
-  const bt = booster.title.toLowerCase();
-  if (bt.includes('масло')) return 15;
-  if (bt.includes('фета')) return 30;
-  if (bt.includes('сыр') && !bt.includes('творог')) return 30;
-  if (bt.includes('орех') || bt.includes('сухофрукт')) return 25;
-  if (bt.includes('мед') || bt.includes('мёд')) return 10;
-  if (bt.includes('авокадо')) return 50;
-  if (bt.includes('банан')) return 100;
-  if (bt.includes('яблок') || bt.includes('груш')) return 150;
-  if (bt.includes('кефир')) return 200;
-  if (bt.includes('творог')) return 100;
-  if (bt.includes('сметан')) return 30;
-  if (bt.includes('хлебец')) return 30;
-  if (bt.includes('хумус') || bt.includes('гуакамоле')) return 40;
-  if (bt.includes('чай')) return 200;
-  if (bt.includes('сахар') || bt.includes('кубик')) return 5;
-  return 20;
+  return getBoosterPortionWeight(booster);
 }
 
 function removeAttachedAddon(dayIndex, mealType, mealIndex, addonIndex) {
   const meal = weeklyPlan[dayIndex]?.[mealType]?.[mealIndex];
   if (!meal?.addons?.length || addonIndex < 0 || addonIndex >= meal.addons.length) return;
   meal.addons.splice(addonIndex, 1);
-  if (typeof recalcMealFromWeight === 'function') {
-    recalcMealFromWeight(meal, meal.weight);
-  }
+  recalcMealFromWeight(meal, meal.weight);
   displayWeeklyPlan(weeklyPlan, baseDailyCalories, activeDayIndex);
 }
 
@@ -1128,9 +1122,7 @@ function addBoosterToMeal(dayIndex, mealType, mealIndex, boosterIndex) {
   if (!meal || !booster) return;
 
   const weight = getBoosterWeight(booster);
-  const roundedCalories = typeof roundCalories === 'function'
-    ? roundCalories((booster.kcalPer100g * weight) / 100)
-    : Math.round((booster.kcalPer100g * weight) / 100 / 10) * 10;
+  const roundedCalories = Math.round((booster.kcalPer100g * weight) / 100 / 10) * 10;
 
   const addon = {
     ...booster,

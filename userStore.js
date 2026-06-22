@@ -1,4 +1,6 @@
 // Локальное хранение профиля и пользовательских блюд
+import { recipesDB } from './data.js';
+
 const PROFILE_KEY = 'fitopit_profile';
 const RECIPES_KEY = 'fitopit_user_recipes';
 const PLAN_KEY = 'fitopit_last_plan';
@@ -178,3 +180,21 @@ function loadLastPlan() {
 function clearLastPlan() {
   localStorage.removeItem(PLAN_KEY);
 }
+
+export {
+  loadProfile,
+  saveProfile,
+  isProfileComplete,
+  getUserRecipes,
+  saveUserRecipes,
+  addUserRecipe,
+  updateUserRecipe,
+  deleteUserRecipe,
+  getMergedRecipesDB,
+  exportUserData,
+  importUserData,
+  saveLastPlan,
+  saveFeedbackSubmission,
+  loadLastPlan,
+  clearLastPlan
+};

@@ -1,4 +1,6 @@
 // Генератор планов питания
+import { cheatMealRecipes, calorieBoosters } from './data.js';
+import { getMergedRecipesDB } from './userStore.js';
 
 function getRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -121,10 +123,10 @@ function pickRecipe(options, constraints) {
 }
 
 function getActiveDB() {
-  return typeof getMergedRecipesDB === 'function' ? getMergedRecipesDB() : recipesDB;
+  return getMergedRecipesDB();
 }
 
-function getFallbackMeal(diet) {
+function getFallbackMeal(_diet) {
   const weight = 200;
   const calories = roundCalories((50 * weight) / 100);
   return {
@@ -351,9 +353,7 @@ function getBoosterPortionWeight(booster, needed = null) {
 }
 
 function addCalorieBooster(meals, targetCalories, constraints) {
-  const boosters = Array.isArray(calorieBoosters)
-    ? calorieBoosters.filter(r => isRecipeAllowed(r, constraints))
-    : [];
+  const boosters = calorieBoosters.filter(r => isRecipeAllowed(r, constraints));
   if (!boosters.length) return;
 
   const totalCalories = meals.reduce((s, m) => s + m.calories, 0);
@@ -386,10 +386,7 @@ function addCalorieBooster(meals, targetCalories, constraints) {
 
 function getDishRecipeOptions(mealType, dish, constraints, isCheatDay) {
   if (isCheatDay) {
-    return filterAllowed(
-      typeof cheatMealRecipes !== 'undefined' ? cheatMealRecipes : [],
-      constraints
-    );
+    return filterAllowed(cheatMealRecipes, constraints);
   }
 
   const db = getActiveDB();
@@ -517,8 +514,7 @@ const CHEAT_MEAL_RATIOS = {
 function generateCheatMeal(mealType, constraints, dailyCalories) {
   const ratio = CHEAT_MEAL_RATIOS[mealType] || 0.1;
   const targetCalories = Math.round(dailyCalories * ratio * 1.4);
-  const allowed = (typeof cheatMealRecipes !== 'undefined' ? cheatMealRecipes : [])
-    .filter(r => isRecipeAllowed(r, constraints));
+  const allowed = cheatMealRecipes.filter(r => isRecipeAllowed(r, constraints));
   const recipe = allowed.length ? getWeightedRandom(allowed, 'high') : getFallbackMeal(constraints.diet);
   let weight = roundPortionWeight((targetCalories / recipe.kcalPer100g) * 100);
   weight = Math.min(400, Math.max(150, weight));
@@ -750,3 +746,16 @@ function generateWeeklyPlan(constraints, userData) {
   plan.weeklyTargets = weeklyTargets;
   return plan;
 }
+
+export {
+  generateWeeklyPlan,
+  generateDayMeals,
+  generateMeal,
+  generateCheatMeal,
+  balanceDayCalories,
+  getDishRecipeOptions,
+  replaceDishWithRecipe,
+  getBoosterPortionWeight,
+  isRecipeAllowed,
+  recalcMealFromWeight
+};

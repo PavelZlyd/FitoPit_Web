@@ -1137,12 +1137,7 @@ const recipesDB = {
       "Мед (1 ч. л.)", "Чай", "Кубик сахара"
     ]);
 
-    if (typeof window !== 'undefined') {
-      window.recipeLinkMap = recipeLinkMap;
-      window.noRecipeLinkTitles = noRecipeLinkTitles;
-    }
-
-    // Emoji map (глобально для UI и генератора)
+    // Emoji map
     const emojiMap = {
       омлет: '🍳', каша: '🥣', творог: '🧀', авокадо: '🥑',
       сырники: '🟡', борщ: '🍲', суп: '🥘', щи: '🥗', капуста: '🥬', уха: '🐟', сайр: '🐟',
@@ -1156,4 +1151,12 @@ const recipesDB = {
       бургер: '🍔', пицца: '🍕', тортик: '🍰', мороженое: '🍦', карбонара: '🍝',
       чай: '🍵', сахар: '🍬'
     };
-    if (typeof window !== 'undefined') window.emojiMap = emojiMap;
+
+export {
+  recipesDB,
+  calorieBoosters,
+  cheatMealRecipes,
+  recipeLinkMap,
+  noRecipeLinkTitles,
+  emojiMap
+};
