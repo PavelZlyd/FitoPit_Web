@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="FitoPit — персональный недельный план питания за 1 клик с учётом цели, диеты, аллергий и уровня активности." />
   <meta name="theme-color" content="#3a86ff" />
+  <meta property="og:title" content="FitoPit — Персональный план питания" />
+  <meta property="og:description" content="Создай сбалансированный недельный рацион за 1 клик. Учитывает цели, диету, аллергии и уровень активности." />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="ru_RU" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="FitoPit — Персональный план питания" />
+  <meta name="twitter:description" content="Создай сбалансированный недельный рацион за 1 клик." />
   <title>FitoPit — Персональный план питания</title>
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -23,9 +30,9 @@
     </div>
     <p>Создай персональный план питания за 1 клик</p>
     <div class="controls">
-      <div class="lang-toggle">
-        <button type="button" data-lang="ru">🇷🇺</button>
-        <button type="button" data-lang="en">🇬🇧</button>
+      <div class="lang-toggle" role="group" aria-label="Выбор языка">
+        <button type="button" data-lang="ru" aria-label="Русский" aria-pressed="true">🇷🇺</button>
+        <button type="button" data-lang="en" aria-label="English" aria-pressed="false">🇬🇧</button>
       </div>
       <div class="theme-toggle">
         <button type="button" id="themeToggleBtn" aria-label="Переключить тему">🌙</button>
@@ -35,8 +42,8 @@
 
   <main class="content">
     <nav class="site-tabs" aria-label="Разделы сайта">
-      <button type="button" class="site-tab active" data-panel="plan" data-i18n="tabPlan">План питания</button>
-      <button type="button" class="site-tab" data-panel="feedback" data-i18n="tabFeedback">Обратная связь</button>
+      <button type="button" class="site-tab active" data-panel="plan" data-i18n="tabPlan" aria-selected="true">План питания</button>
+      <button type="button" class="site-tab" data-panel="feedback" data-i18n="tabFeedback" aria-selected="false">Обратная связь</button>
     </nav>
 
     <div id="planPanel" class="site-panel">
@@ -208,6 +215,19 @@
       <ul id="userRecipesList" class="user-recipes-list"></ul>
     </section>
 
+    <section id="planHistorySection" class="plan-history-panel">
+      <details>
+        <summary data-i18n="planHistorySummary">📚 История планов</summary>
+        <p class="plan-history-hint" data-i18n="planHistoryHint">Сохраняй удачные планы и загружай их позже.</p>
+        <div class="plan-history-save">
+          <input type="text" id="planHistoryName" data-i18n-placeholder="planHistoryNamePlaceholder" placeholder="Название (необязательно)">
+          <button type="button" id="savePlanHistoryBtn" data-i18n="savePlanHistory">💾 Сохранить текущий план</button>
+        </div>
+        <p id="planHistoryStatus" class="plan-history-status" style="display: none;"></p>
+        <ul id="planHistoryList" class="plan-history-list"></ul>
+      </details>
+    </section>
+
     <section id="importPlanSection" class="import-plan-panel">
       <details>
         <summary data-i18n="importPlanSummary">📥 Загрузить сохранённый план</summary>
@@ -230,10 +250,13 @@
         <strong id="macroCarbs">0</strong> <span data-i18n="macroCarbs">У</span>
       </p>
       <div id="weeklyKcalChart" class="weekly-kcal-chart"></div>
+      <div id="shoppingListPanel" class="shopping-list-panel" style="display: none;"></div>
       <div id="tabs-container"></div>
       <div id="mealPlan"></div>
       <div class="plan-actions">
         <button type="button" id="copyPlan">📋 Копировать план</button>
+        <button type="button" id="copyShoppingList" data-i18n="copyShoppingList">🛒 Копировать список покупок</button>
+        <button type="button" id="printPlan" data-i18n="printPlan">🖨 Печать</button>
       </div>
     </div>
     </div>

@@ -4,7 +4,9 @@ import { recipesDB } from './data.js';
 const PROFILE_KEY = 'fitopit_profile';
 const RECIPES_KEY = 'fitopit_user_recipes';
 const PLAN_KEY = 'fitopit_last_plan';
+const PLAN_HISTORY_KEY = 'fitopit_plan_history';
 const FEEDBACK_KEY = 'fitopit_feedback';
+const MAX_PLAN_HISTORY = 15;
 
 const DEFAULT_PROFILE = {
   age: null,
@@ -106,6 +108,8 @@ function cloneRecipe(r) {
     budget: r.budget || 'medium',
     type: r.type || 'main',
     complete: r.complete,
+    url: r.url,
+    image: r.image,
     isUser: !!r.isUser
   };
 }
@@ -181,6 +185,46 @@ function clearLastPlan() {
   localStorage.removeItem(PLAN_KEY);
 }
 
+function getPlanHistory() {
+  try {
+    const raw = localStorage.getItem(PLAN_HISTORY_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function savePlanHistory(list) {
+  localStorage.setItem(PLAN_HISTORY_KEY, JSON.stringify(list.slice(0, MAX_PLAN_HISTORY)));
+}
+
+function addPlanToHistory(snapshot) {
+  if (!snapshot?.days?.length) return null;
+  const entry = {
+    id: `plan_${Date.now()}`,
+    name: (snapshot.name || '').trim(),
+    savedAt: new Date().toISOString(),
+    days: snapshot.days,
+    weeklyTargets: snapshot.weeklyTargets,
+    cheatDayIndex: snapshot.cheatDayIndex ?? -1,
+    baseDailyCalories: snapshot.baseDailyCalories || 0,
+    macroTargets: snapshot.macroTargets || null,
+    activeDayIndex: snapshot.activeDayIndex ?? 0
+  };
+  const list = getPlanHistory();
+  list.unshift(entry);
+  savePlanHistory(list);
+  return entry;
+}
+
+function deletePlanFromHistory(id) {
+  savePlanHistory(getPlanHistory().filter((p) => p.id !== id));
+}
+
+function getPlanFromHistory(id) {
+  return getPlanHistory().find((p) => p.id === id) || null;
+}
+
 export {
   loadProfile,
   saveProfile,
@@ -196,5 +240,9 @@ export {
   saveLastPlan,
   saveFeedbackSubmission,
   loadLastPlan,
-  clearLastPlan
+  clearLastPlan,
+  getPlanHistory,
+  addPlanToHistory,
+  deletePlanFromHistory,
+  getPlanFromHistory
 };

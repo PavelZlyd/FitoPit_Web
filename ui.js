@@ -18,11 +18,16 @@ import {
   recalcMealFromWeight,
   replaceDishWithRecipe
 } from './generator.js';
+import { buildShoppingList, formatShoppingListText, roundShoppingWeight } from './shoppingList.js';
 import {
+  addPlanToHistory,
   addUserRecipe,
   clearLastPlan,
+  deletePlanFromHistory,
   deleteUserRecipe,
   getMergedRecipesDB,
+  getPlanFromHistory,
+  getPlanHistory,
   getUserRecipes,
   isProfileComplete,
   loadLastPlan,
@@ -118,7 +123,23 @@ const translations = {
     feedbackError: "❌ Не удалось отправить. Попробуй позже.",
     feedbackDishPlaceholder: "Например: куриный суп с лапшой",
     feedbackMessagePlaceholder: "Опиши блюдо, ингредиенты или пожелание…",
-    feedbackContactPlaceholder: "Email или Telegram"
+    feedbackContactPlaceholder: "Email или Telegram",
+    shoppingListTitle: "Список покупок на неделю",
+    shoppingListHint: "Суммарный вес блюд по неделе — ориентир для закупок.",
+    shoppingListEmpty: "Нет позиций для списка.",
+    shoppingListOccurrences: "раз",
+    copyShoppingList: "🛒 Копировать список покупок",
+    shoppingListCopied: "✅ Список скопирован",
+    printPlan: "🖨 Печать",
+    planHistorySummary: "📚 История планов",
+    planHistoryHint: "Сохраняй удачные планы и загружай их позже.",
+    planHistoryNamePlaceholder: "Название (необязательно)",
+    savePlanHistory: "💾 Сохранить текущий план",
+    planHistorySaved: "✅ План сохранён в историю",
+    planHistoryEmpty: "История пуста — сохрани текущий план.",
+    planHistoryLoad: "Загрузить",
+    planHistoryDelete: "Удалить",
+    planHistoryNoPlan: "Сначала создай план питания."
   },
   en: {
     title: "Your Meal Plan",
@@ -193,7 +214,23 @@ const translations = {
     feedbackError: "❌ Could not send. Please try again later.",
     feedbackDishPlaceholder: "e.g. chicken noodle soup",
     feedbackMessagePlaceholder: "Describe the dish, ingredients, or your suggestion…",
-    feedbackContactPlaceholder: "Email or Telegram"
+    feedbackContactPlaceholder: "Email or Telegram",
+    shoppingListTitle: "Weekly shopping list",
+    shoppingListHint: "Total dish weights for the week — a guide for grocery shopping.",
+    shoppingListEmpty: "No items for the list.",
+    shoppingListOccurrences: "×",
+    copyShoppingList: "🛒 Copy shopping list",
+    shoppingListCopied: "✅ List copied",
+    printPlan: "🖨 Print",
+    planHistorySummary: "📚 Plan history",
+    planHistoryHint: "Save successful plans and load them later.",
+    planHistoryNamePlaceholder: "Name (optional)",
+    savePlanHistory: "💾 Save current plan",
+    planHistorySaved: "✅ Plan saved to history",
+    planHistoryEmpty: "History is empty — save the current plan.",
+    planHistoryLoad: "Load",
+    planHistoryDelete: "Delete",
+    planHistoryNoPlan: "Create a meal plan first."
   }
 };
 
@@ -209,7 +246,9 @@ function switchLang(lang) {
   localStorage.setItem("lang", lang);
 
   document.querySelectorAll('.lang-toggle button').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.lang === lang);
+    const isActive = btn.dataset.lang === lang;
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
   });
 
   const tr = translations[lang];
@@ -254,10 +293,25 @@ function switchLang(lang) {
   const copyBtn = document.getElementById("copyPlan");
   if (copyBtn) copyBtn.textContent = tr.copy;
 
+  const copyShoppingBtn = document.getElementById("copyShoppingList");
+  if (copyShoppingBtn) copyShoppingBtn.textContent = tr.copyShoppingList;
+
+  const printBtn = document.getElementById("printPlan");
+  if (printBtn) printBtn.textContent = tr.printPlan;
+
+  const saveHistoryBtn = document.getElementById("savePlanHistoryBtn");
+  if (saveHistoryBtn) saveHistoryBtn.textContent = tr.savePlanHistory;
+
+  const historyNameInput = document.getElementById("planHistoryName");
+  if (historyNameInput) historyNameInput.placeholder = tr.planHistoryNamePlaceholder;
+
   const dailyCalories = parseInt(document.getElementById("calories")?.textContent || 0);
   if (dailyCalories > 0) updateCalorieStatus(dailyCalories);
-  if (weeklyPlan.length > 0) displayWeeklyPlan(weeklyPlan, baseDailyCalories, activeDayIndex);
+  if (weeklyPlan.length > 0) {
+    displayWeeklyPlan(weeklyPlan, baseDailyCalories, activeDayIndex);
+  }
   renderUserRecipesList();
+  renderPlanHistoryList();
   updateFeedbackFormLabels();
 }
 
@@ -318,7 +372,9 @@ function formatMacroLine(label, actual, target) {
 
 function switchSitePanel(panelId) {
   document.querySelectorAll(".site-tab").forEach(btn => {
-    btn.classList.toggle("active", btn.dataset.panel === panelId);
+    const isActive = btn.dataset.panel === panelId;
+    btn.classList.toggle("active", isActive);
+    btn.setAttribute("aria-selected", isActive ? "true" : "false");
   });
   document.getElementById("planPanel").style.display = panelId === "plan" ? "block" : "none";
   document.getElementById("feedbackPanel").style.display = panelId === "feedback" ? "block" : "none";
@@ -480,6 +536,13 @@ function getEmoji(title) {
     if (lowerTitle.includes(key)) return emoji;
   }
   return '🍽️';
+}
+
+function renderMealThumb(meal) {
+  if (meal?.image) {
+    return `<img class="meal-thumb" src="${escapeHtml(meal.image)}" alt="" loading="lazy" width="40" height="40">`;
+  }
+  return `<span class="emoji" aria-hidden="true">${getEmoji(meal.title)}</span>`;
 }
 
 function getMealLabel(type) {
@@ -686,6 +749,139 @@ function restoreLastPlan() {
   return true;
 }
 
+function formatHistoryDate(iso, lang) {
+  try {
+    return new Date(iso).toLocaleString(lang === 'ru' ? 'ru-RU' : 'en-US', {
+      day: 'numeric',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  } catch {
+    return iso;
+  }
+}
+
+function renderShoppingList(plan) {
+  const panel = document.getElementById('shoppingListPanel');
+  if (!panel) return;
+  const tr = t();
+  const items = buildShoppingList(plan);
+  if (!items.length) {
+    panel.style.display = 'none';
+    panel.innerHTML = '';
+    return;
+  }
+
+  const unit = currentLang === 'ru' ? 'г' : 'g';
+  const timesLabel = tr.shoppingListOccurrences;
+  panel.style.display = 'block';
+  panel.innerHTML = `
+    <details open>
+      <summary>${tr.shoppingListTitle}</summary>
+      <p class="shopping-list-hint">${tr.shoppingListHint}</p>
+      <ul class="shopping-list">
+        ${items.map((item) => `
+          <li>
+            <span class="shopping-list-title">${escapeHtml(item.title)}</span>
+            <span class="shopping-list-weight">${roundShoppingWeight(item.totalWeight)}${unit}</span>
+            ${item.occurrences > 1 ? `<span class="shopping-list-count">(${item.occurrences} ${timesLabel})</span>` : ''}
+          </li>
+        `).join('')}
+      </ul>
+    </details>
+  `;
+}
+
+function showPlanHistoryStatus(message, ok = true) {
+  const el = document.getElementById('planHistoryStatus');
+  if (!el) return;
+  if (!message) {
+    el.style.display = 'none';
+    el.textContent = '';
+    return;
+  }
+  el.textContent = message;
+  el.style.display = 'block';
+  el.className = `plan-history-status plan-history-status--${ok ? 'ok' : 'error'}`;
+}
+
+function renderPlanHistoryList() {
+  const listEl = document.getElementById('planHistoryList');
+  if (!listEl) return;
+  const tr = t();
+  const history = getPlanHistory();
+  if (!history.length) {
+    listEl.innerHTML = `<li class="plan-history-empty">${tr.planHistoryEmpty}</li>`;
+    return;
+  }
+
+  listEl.innerHTML = history.map((entry) => {
+    const label = entry.name || formatHistoryDate(entry.savedAt, currentLang);
+    const kcal = entry.baseDailyCalories
+      ? ` · ~${entry.baseDailyCalories} ${currentLang === 'ru' ? 'ккал' : 'kcal'}`
+      : '';
+    return `
+      <li class="plan-history-item">
+        <div class="plan-history-meta">
+          <strong>${escapeHtml(label)}</strong>
+          <span class="plan-history-date">${escapeHtml(formatHistoryDate(entry.savedAt, currentLang))}${kcal}</span>
+        </div>
+        <div class="plan-history-actions">
+          <button type="button" class="btn-secondary plan-history-load" data-plan-id="${escapeHtml(entry.id)}">${tr.planHistoryLoad}</button>
+          <button type="button" class="mini-btn plan-history-delete" data-plan-id="${escapeHtml(entry.id)}" title="${tr.planHistoryDelete}" aria-label="${tr.planHistoryDelete}">🗑</button>
+        </div>
+      </li>
+    `;
+  }).join('');
+}
+
+function saveCurrentPlanToHistory() {
+  const tr = t();
+  if (!weeklyPlan?.length) {
+    showPlanHistoryStatus(tr.planHistoryNoPlan, false);
+    return;
+  }
+  const name = document.getElementById('planHistoryName')?.value?.trim() || '';
+  addPlanToHistory({
+    name,
+    days: weeklyPlan,
+    weeklyTargets: weeklyPlan.weeklyTargets || weeklyTargets,
+    cheatDayIndex: weeklyPlan.cheatDayIndex,
+    baseDailyCalories,
+    macroTargets,
+    activeDayIndex
+  });
+  const nameInput = document.getElementById('planHistoryName');
+  if (nameInput) nameInput.value = '';
+  renderPlanHistoryList();
+  showPlanHistoryStatus(tr.planHistorySaved, true);
+  setTimeout(() => showPlanHistoryStatus(''), 2500);
+}
+
+function loadPlanFromHistoryEntry(id) {
+  const entry = getPlanFromHistory(id);
+  if (!entry?.days?.length) return;
+  weeklyPlan = entry.days;
+  weeklyPlan.cheatDayIndex = entry.cheatDayIndex ?? -1;
+  weeklyPlan.weeklyTargets = entry.weeklyTargets || entry.days.map((d) => d.dayCaloriesTarget);
+  weeklyTargets = weeklyPlan.weeklyTargets;
+  baseDailyCalories = entry.baseDailyCalories || baseDailyCalories;
+  macroTargets = entry.macroTargets || macroTargets;
+  activeDayIndex = Math.max(0, Math.min(6, entry.activeDayIndex ?? 0));
+  displayWeeklyPlan(weeklyPlan, baseDailyCalories, activeDayIndex);
+  document.getElementById('result')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function deletePlanHistoryEntry(id) {
+  deletePlanFromHistory(id);
+  renderPlanHistoryList();
+}
+
+function getShoppingListText() {
+  return formatShoppingListText(buildShoppingList(weeklyPlan), t(), currentLang);
+}
+
 function displayWeeklyPlan(plan, dailyCalories, dayIndex = activeDayIndex) {
   const activeTab = document.querySelector('.tab-button.active');
   if (activeTab) {
@@ -757,7 +953,7 @@ function displayWeeklyPlan(plan, dailyCalories, dayIndex = activeDayIndex) {
 
               return `
                 <div class="meal-item">
-                  <span class="emoji">${getEmoji(meal.title)}</span>
+                  ${renderMealThumb(meal)}
                   <span class="title">${escapeHtml(meal.title)}</span>
                   ${renderDishSelect(dayIndex, mealType, mealIndex, meal, constraints, isCheatDay(day))}
                   <span class="info">
@@ -816,6 +1012,7 @@ function displayWeeklyPlan(plan, dailyCalories, dayIndex = activeDayIndex) {
 
   updateCalorieStatus(dailyCalories);
   persistCurrentPlan();
+  renderShoppingList(plan);
 }
 
 const IMPORT_DAY_RE = /^(?:День|Day)\s+(\d+)(?:\s*\(([^)]+)\))?\s*[—–-]\s*(\d+)/i;
@@ -863,6 +1060,8 @@ function buildImportedMeal(title, weight, calories, opts = {}) {
     budget: recipe?.budget ?? 'medium',
     type: recipe?.type ?? (opts.isAddOn ? 'side' : 'main'),
     complete: recipe?.complete,
+    url: recipe?.url,
+    image: recipe?.image,
     weight: w,
     calories: cal,
     protein: recipe ? parseFloat(((recipe.proteinPer100g * w) / 100).toFixed(1)) : 0,
@@ -1220,6 +1419,7 @@ document.addEventListener("DOMContentLoaded", () => {
   updateSurveyVisibility();
   renderUserRecipesList();
   restoreLastPlan();
+  renderPlanHistoryList();
   updateFeedbackFormLabels();
 
   const savedPanel = localStorage.getItem("fitopit_active_panel") || "plan";
@@ -1289,6 +1489,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
     btn.textContent = ok ? t().copied : t().copyFailed;
     setTimeout(() => { btn.textContent = t().copy; }, 2000);
+  });
+
+  document.getElementById("copyShoppingList")?.addEventListener("click", async function () {
+    if (!weeklyPlan?.length) return;
+    const btn = this;
+    const text = getShoppingListText();
+    const ok = text ? await copyTextToClipboard(text) : false;
+    const prev = btn.textContent;
+    btn.textContent = ok ? t().shoppingListCopied : t().copyFailed;
+    setTimeout(() => { btn.textContent = prev; }, 2000);
+  });
+
+  document.getElementById("printPlan")?.addEventListener("click", () => {
+    if (!weeklyPlan?.length) return;
+    window.print();
+  });
+
+  document.getElementById("savePlanHistoryBtn")?.addEventListener("click", saveCurrentPlanToHistory);
+
+  document.getElementById("planHistoryList")?.addEventListener("click", (e) => {
+    const loadBtn = e.target.closest('.plan-history-load');
+    if (loadBtn?.dataset.planId) {
+      loadPlanFromHistoryEntry(loadBtn.dataset.planId);
+      return;
+    }
+    const deleteBtn = e.target.closest('.plan-history-delete');
+    if (deleteBtn?.dataset.planId) {
+      deletePlanHistoryEntry(deleteBtn.dataset.planId);
+    }
   });
 
   document.getElementById("feedbackForm")?.addEventListener("submit", async (e) => {
