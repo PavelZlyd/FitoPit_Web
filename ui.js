@@ -1430,7 +1430,7 @@ function createPlanFromForm() {
   updateSurveyVisibility();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+function initApp() {
   const savedTheme = localStorage.getItem("theme") || "light";
   document.documentElement.setAttribute("data-theme", savedTheme);
 
@@ -1581,7 +1581,13 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => { btn.textContent = prev; }, 2000);
     }
   });
-});
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initApp);
+} else {
+  initApp();
+}
 
 window.regenerateDay = regenerateDay;
 window.regenerateMeal = regenerateMeal;

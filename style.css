@@ -210,7 +210,7 @@ form {
   font-size: 14px;
 }
 
-.form-group input,
+.form-group input:not([type="checkbox"]),
 .form-group select {
   width: 100%;
   max-width: 100%;
@@ -224,7 +224,16 @@ form {
   transition: border-color 0.2s;
 }
 
-.form-group input:focus,
+.form-group input[type="checkbox"] {
+  width: auto;
+  max-width: none;
+  min-width: 0;
+  flex-shrink: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.form-group input:not([type="checkbox"]):focus,
 .form-group select:focus {
   outline: none;
   border-color: var(--accent);
@@ -1061,7 +1070,9 @@ footer {
 .checkbox-row label {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 8px;
+  width: auto;
   font-size: 14px;
   cursor: pointer;
 }
