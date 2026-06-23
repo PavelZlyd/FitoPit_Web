@@ -548,7 +548,6 @@ function updateSurveyVisibility() {
       `${tr.profileSummary}: ${profile.age} ${currentLang === 'ru' ? 'лет' : 'y'}, ${profile.weight} кг, ${profile.height} см — ${profile.goal}`;
     const profileSec = document.getElementById('profileSection');
     if (profileSec) profileSec.classList.add('section-collapsed');
-    document.getElementById("strategySection")?.classList.remove('section-collapsed');
     document.getElementById("submitBtn").textContent = t().submitQuick;
   } else {
     summary.style.display = "none";
