@@ -3,9 +3,9 @@ import {
   calorieBoosters,
   cheatMealRecipes,
   emojiMap,
-  noRecipeLinkTitles,
-  recipeLinkMap
+  noRecipeLinkTitles
 } from './data.js';
+import { scaleIngredientsForPortion } from './nutrition.js';
 import {
   balanceDayCalories,
   generateCheatMeal,
@@ -44,6 +44,7 @@ let macroTargets = { protein: 0, fat: 0, carbs: 0 };
 let profileEditMode = true;
 let activeDayIndex = 0;
 let shoppingListMode = localStorage.getItem('fitopit_shopping_mode') || SHOPPING_MODES.INGREDIENTS;
+let compositionCounter = 0;
 
 // Укажи email для отправки через FormSubmit (https://formsubmit.co), иначе — только localStorage
 const FEEDBACK_EMAIL = 'Zlydin.pm@dvfu.ru';
@@ -93,6 +94,9 @@ const translations = {
     deltaOver: "выше цели",
     deltaUnder: "ниже цели",
     recipeLink: "📖 Рецепт",
+    compositionBtn: "🧾 Состав",
+    compositionTitle: "Состав на порцию",
+    compositionToTaste: "по вкусу",
     importPlanSummary: "📥 Загрузить сохранённый план",
     importPlanHint: "Вставь текст, скопированный кнопкой «Копировать план».",
     importPlanBtn: "📥 Загрузить план",
@@ -188,6 +192,9 @@ const translations = {
     deltaOver: "above target",
     deltaUnder: "below target",
     recipeLink: "📖 Recipe",
+    compositionBtn: "🧾 Ingredients",
+    compositionTitle: "Per-portion ingredients",
+    compositionToTaste: "to taste",
     importPlanSummary: "📥 Load saved plan",
     importPlanHint: "Paste text copied with the «Copy Plan» button.",
     importPlanBtn: "📥 Load plan",
@@ -583,10 +590,8 @@ function formatCalorieDelta(delta) {
   return `${sign}${delta} ккал (${suffix})`;
 }
 
-function getRecipeUrl(title, meal) {
-  if (meal?.url) return meal.url;
+function getRecipeUrl(title) {
   if (noRecipeLinkTitles.has(title)) return null;
-  if (recipeLinkMap[title]) return recipeLinkMap[title];
 
   const query = currentLang === 'ru' ? `${title} рецепт` : `${title} recipe`;
   if (currentLang === 'ru') {
@@ -596,10 +601,81 @@ function getRecipeUrl(title, meal) {
 }
 
 function renderRecipeLink(meal) {
-  const url = getRecipeUrl(meal.title, meal);
+  const url = getRecipeUrl(meal.title);
   if (!url) return '';
   return `<a href="${escapeHtml(url)}" class="recipe-link" target="_blank" rel="noopener noreferrer">${t().recipeLink}</a>`;
 }
+
+const MASSLESS_INGREDIENTS = new Set(['Соль', 'Специи', 'Перец чёрный', 'Перец']);
+
+function parseUserIngredients(raw) {
+  if (!raw) return [];
+  return raw
+    .split(/\r?\n/)
+    .map((line) => {
+      const parts = line.split(/[:：]/);
+      if (parts.length < 2) return null;
+      const name = parts[0].trim();
+      const grams = parseFloat(parts[1].replace(',', '.'));
+      if (!name || !(grams >= 0)) return null;
+      const ing = { name, grams };
+      if (MASSLESS_INGREDIENTS.has(name)) ing.massless = true;
+      return ing;
+    })
+    .filter(Boolean);
+}
+
+function getPortionIngredients(meal) {
+  if (!meal?.ingredients?.length || !meal.weight) return [];
+  return scaleIngredientsForPortion(
+    { ingredients: meal.ingredients, yieldGrams: meal.yieldGrams || 100 },
+    meal.weight
+  );
+}
+
+function renderCompositionButton(meal) {
+  const items = getPortionIngredients(meal);
+  if (!items.length) return '';
+  // Простое блюдо из одного продукта (банан, яблоко) — состав очевиден, кнопку не показываем.
+  if (items.length === 1 && items[0].name.toLowerCase() === meal.title.trim().toLowerCase()) return '';
+  const rows = items
+    .map((ing) => `<li><span>${escapeHtml(ing.name)}</span><span>${formatIngredientAmount(ing)}</span></li>`)
+    .join('');
+  const popoverId = `comp-${compositionCounter++}`;
+  return `
+    <span class="composition-wrap">
+      <button type="button" class="composition-btn" aria-expanded="false"
+              onclick="toggleComposition('${popoverId}', this)">${t().compositionBtn}</button>
+      <div class="composition-popover" id="${popoverId}" role="tooltip" hidden>
+        <p class="composition-title">${t().compositionTitle}</p>
+        <ul>${rows}</ul>
+      </div>
+    </span>`;
+}
+
+function formatIngredientAmount(ing) {
+  if (ing.massless) return t().compositionToTaste;
+  const grams = Math.round(ing.grams);
+  return `${grams}${t().macroGrams}`;
+}
+
+window.toggleComposition = function (id, btn) {
+  const popover = document.getElementById(id);
+  if (!popover) return;
+  const willOpen = popover.hasAttribute('hidden');
+  document.querySelectorAll('.composition-popover').forEach((p) => p.setAttribute('hidden', ''));
+  document.querySelectorAll('.composition-btn').forEach((b) => b.setAttribute('aria-expanded', 'false'));
+  if (willOpen) {
+    popover.removeAttribute('hidden');
+    btn.setAttribute('aria-expanded', 'true');
+  }
+};
+
+document.addEventListener('click', (e) => {
+  if (e.target.closest('.composition-wrap')) return;
+  document.querySelectorAll('.composition-popover').forEach((p) => p.setAttribute('hidden', ''));
+  document.querySelectorAll('.composition-btn').forEach((b) => b.setAttribute('aria-expanded', 'false'));
+});
 
 function isCheatDay(day) {
   return !!day.isCheatDay;
@@ -990,6 +1066,7 @@ function displayWeeklyPlan(plan, dailyCalories, dayIndex = activeDayIndex) {
                     Б:${(meal.protein || 0).toFixed(1)}г Ж:${(meal.fat || 0).toFixed(1)}г У:${(meal.carbs || 0).toFixed(1)}г
                   </span>
                   ${renderRecipeLink(meal)}
+                  ${renderCompositionButton(meal)}
                   <button type="button" class="mini-btn add-booster-btn"
                           title="${tr.addBooster}"
                           onclick="showBoosterMenu(${dayIndex}, '${mealType}', ${mealIndex})">➕</button>
@@ -1089,8 +1166,8 @@ function buildImportedMeal(title, weight, calories, opts = {}) {
     budget: recipe?.budget ?? 'medium',
     type: recipe?.type ?? (opts.isAddOn ? 'side' : 'main'),
     complete: recipe?.complete,
-    url: recipe?.url,
     image: recipe?.image,
+    yieldGrams: recipe?.yieldGrams,
     ingredients: recipe?.ingredients ? recipe.ingredients.map((i) => ({ ...i })) : undefined,
     weight: w,
     calories: cal,
@@ -1494,8 +1571,17 @@ function initApp() {
   document.getElementById("userRecipeForm")?.addEventListener("submit", (e) => {
     e.preventDefault();
     const slots = Array.from(document.getElementById("userRecipeSlot").selectedOptions).map(o => o.value);
+    const ingredients = parseUserIngredients(document.getElementById("userRecipeIngredients")?.value);
+    if (!ingredients.length && !document.getElementById("userRecipeKcal").value) {
+      alert(currentLang === 'ru'
+        ? 'Укажите состав блюда или калорийность вручную.'
+        : 'Add ingredients or enter calories manually.');
+      return;
+    }
     addUserRecipe({
       title: document.getElementById("userRecipeTitle").value,
+      ingredients,
+      yieldGrams: document.getElementById("userRecipeYield").value || 0,
       kcalPer100g: document.getElementById("userRecipeKcal").value,
       proteinPer100g: document.getElementById("userRecipeProtein").value || 0,
       fatPer100g: document.getElementById("userRecipeFat").value || 0,

@@ -20,12 +20,26 @@ function addShoppingItem(items, title, weight, meta = {}) {
   items.set(key, existing);
 }
 
+function ingredientGramsForPortion(ing, meal) {
+  // Новый формат: абсолютные граммы сырого продукта + выход блюда (yieldGrams).
+  if (ing.grams != null) {
+    const yieldGrams = meal.yieldGrams > 0 ? meal.yieldGrams : meal.weight || 100;
+    return ing.grams * ((meal.weight || 0) / yieldGrams);
+  }
+  // Старый формат (граммы на 100 г готового блюда) — для сохранённых планов.
+  if (ing.gramsPer100g != null) {
+    return (ing.gramsPer100g / 100) * (meal.weight || 0);
+  }
+  return 0;
+}
+
 function collectMealEntries(meal, items, mode) {
   if (!meal?.title) return;
 
   if (mode === SHOPPING_MODES.INGREDIENTS && meal.ingredients?.length) {
     for (const ing of meal.ingredients) {
-      const grams = (ing.gramsPer100g / 100) * meal.weight;
+      if (ing.massless) continue; // соль и специи в массу/закупку не идут
+      const grams = ingredientGramsForPortion(ing, meal);
       addShoppingItem(items, ing.name, grams, { isIngredient: true });
     }
     return;

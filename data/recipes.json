@@ -3,10 +3,10 @@
     "breakfast": [
       {
         "title": "Омлет с сыром",
-        "kcalPer100g": 187,
-        "proteinPer100g": 12,
-        "fatPer100g": 14,
-        "carbsPer100g": 1.5,
+        "kcalPer100g": 208,
+        "proteinPer100g": 13.7,
+        "fatPer100g": 16.4,
+        "carbsPer100g": 1.6,
         "diet": [
           "normal",
           "vegetarian"
@@ -17,28 +17,37 @@
         ],
         "type": "main",
         "budget": "medium",
-        "url": "https://eda.ru/recepty/omlet",
         "ingredients": [
           {
             "name": "Яйца",
-            "gramsPer100g": 55
-          },
-          {
-            "name": "Сыр",
-            "gramsPer100g": 18
+            "grams": 110
           },
           {
             "name": "Молоко",
-            "gramsPer100g": 20
+            "grams": 40
+          },
+          {
+            "name": "Сыр",
+            "grams": 30
+          },
+          {
+            "name": "Масло сливочное",
+            "grams": 5
+          },
+          {
+            "name": "Соль",
+            "grams": 1,
+            "massless": true
           }
-        ]
+        ],
+        "yieldGrams": 165
       },
       {
         "title": "Омлет без масла",
-        "kcalPer100g": 140,
-        "proteinPer100g": 13,
-        "fatPer100g": 8,
-        "carbsPer100g": 1,
+        "kcalPer100g": 147,
+        "proteinPer100g": 11.4,
+        "fatPer100g": 10.5,
+        "carbsPer100g": 1.7,
         "diet": [
           "normal",
           "vegetarian"
@@ -48,24 +57,29 @@
         ],
         "type": "main",
         "budget": "low",
-        "url": "https://eda.ru/recepty/omlet",
         "ingredients": [
           {
             "name": "Яйца",
-            "gramsPer100g": 70
+            "grams": 110
           },
           {
             "name": "Молоко",
-            "gramsPer100g": 15
+            "grams": 30
+          },
+          {
+            "name": "Соль",
+            "grams": 1,
+            "massless": true
           }
-        ]
+        ],
+        "yieldGrams": 130
       },
       {
         "title": "Гречневая каша на воде",
-        "kcalPer100g": 90,
-        "proteinPer100g": 3,
-        "fatPer100g": 0.5,
-        "carbsPer100g": 18,
+        "kcalPer100g": 114,
+        "proteinPer100g": 4.3,
+        "fatPer100g": 1.1,
+        "carbsPer100g": 20.7,
         "diet": [
           "normal",
           "vegetarian",
@@ -78,24 +92,26 @@
         "ingredients": [
           {
             "name": "Гречка",
-            "gramsPer100g": 35
+            "grams": 60
           },
           {
             "name": "Вода",
-            "gramsPer100g": 60
+            "grams": 150
           },
           {
             "name": "Соль",
-            "gramsPer100g": 1
+            "grams": 1,
+            "massless": true
           }
-        ]
+        ],
+        "yieldGrams": 180
       },
       {
         "title": "Гречневая каша на молоке",
-        "kcalPer100g": 110,
-        "proteinPer100g": 3.5,
-        "fatPer100g": 1,
-        "carbsPer100g": 20,
+        "kcalPer100g": 142,
+        "proteinPer100g": 5.6,
+        "fatPer100g": 3.6,
+        "carbsPer100g": 21.2,
         "diet": [
           "normal",
           "vegetarian"
@@ -108,24 +124,30 @@
         "ingredients": [
           {
             "name": "Гречка",
-            "gramsPer100g": 30
+            "grams": 50
           },
           {
             "name": "Молоко",
-            "gramsPer100g": 65
+            "grams": 180
+          },
+          {
+            "name": "Сахар",
+            "grams": 5
           },
           {
             "name": "Соль",
-            "gramsPer100g": 1
+            "grams": 1,
+            "massless": true
           }
-        ]
+        ],
+        "yieldGrams": 210
       },
       {
         "title": "Творог с ягодами",
-        "kcalPer100g": 120,
-        "proteinPer100g": 10,
-        "fatPer100g": 5,
-        "carbsPer100g": 8,
+        "kcalPer100g": 103,
+        "proteinPer100g": 13,
+        "fatPer100g": 3.9,
+        "carbsPer100g": 4.8,
         "diet": [
           "normal",
           "vegetarian"
@@ -137,21 +159,22 @@
         "budget": "medium",
         "ingredients": [
           {
-            "name": "Творог",
-            "gramsPer100g": 75
+            "name": "Творог 5%",
+            "grams": 150
           },
           {
             "name": "Ягоды",
-            "gramsPer100g": 20
+            "grams": 50
           }
-        ]
+        ],
+        "yieldGrams": 200
       },
       {
         "title": "Бутерброд с авокадо",
-        "kcalPer100g": 210,
-        "proteinPer100g": 4,
-        "fatPer100g": 16,
-        "carbsPer100g": 12,
+        "kcalPer100g": 201,
+        "proteinPer100g": 4.7,
+        "fatPer100g": 9.5,
+        "carbsPer100g": 26.7,
         "diet": [
           "normal",
           "vegetarian",
@@ -161,14 +184,30 @@
           "gluten"
         ],
         "type": "main",
-        "budget": "high"
+        "budget": "high",
+        "yieldGrams": 110,
+        "ingredients": [
+          {
+            "name": "Хлеб",
+            "grams": 50
+          },
+          {
+            "name": "Авокадо",
+            "grams": 60
+          },
+          {
+            "name": "Соль",
+            "grams": 1,
+            "massless": true
+          }
+        ]
       },
       {
         "title": "Сырники",
-        "kcalPer100g": 160,
-        "proteinPer100g": 11,
-        "fatPer100g": 8,
-        "carbsPer100g": 10,
+        "kcalPer100g": 231,
+        "proteinPer100g": 17.8,
+        "fatPer100g": 9.7,
+        "carbsPer100g": 19.2,
         "diet": [
           "normal",
           "vegetarian"
@@ -179,32 +218,36 @@
         ],
         "type": "main",
         "budget": "medium",
-        "url": "https://eda.ru/recepty/syrniki",
         "ingredients": [
           {
             "name": "Творог",
-            "gramsPer100g": 55
+            "grams": 250
           },
           {
             "name": "Яйца",
-            "gramsPer100g": 12
+            "grams": 55
           },
           {
             "name": "Мука",
-            "gramsPer100g": 15
+            "grams": 40
           },
           {
             "name": "Сахар",
-            "gramsPer100g": 5
+            "grams": 20
+          },
+          {
+            "name": "Масло растительное",
+            "grams": 10
           }
-        ]
+        ],
+        "yieldGrams": 300
       },
       {
         "title": "Овсянка на воде",
-        "kcalPer100g": 65,
-        "proteinPer100g": 2.5,
-        "fatPer100g": 1,
-        "carbsPer100g": 12,
+        "kcalPer100g": 100,
+        "proteinPer100g": 3.3,
+        "fatPer100g": 1.9,
+        "carbsPer100g": 16.9,
         "diet": [
           "normal",
           "vegetarian",
@@ -213,14 +256,30 @@
         ],
         "allergens": [],
         "type": "main",
-        "budget": "low"
+        "budget": "low",
+        "yieldGrams": 220,
+        "ingredients": [
+          {
+            "name": "Овсяные хлопья",
+            "grams": 60
+          },
+          {
+            "name": "Вода",
+            "grams": 180
+          },
+          {
+            "name": "Соль",
+            "grams": 1,
+            "massless": true
+          }
+        ]
       },
       {
         "title": "Овсянка на молоке",
-        "kcalPer100g": 130,
-        "proteinPer100g": 4.5,
-        "fatPer100g": 3.2,
-        "carbsPer100g": 18,
+        "kcalPer100g": 150,
+        "proteinPer100g": 5.4,
+        "fatPer100g": 4.4,
+        "carbsPer100g": 21.5,
         "diet": [
           "normal",
           "vegetarian"
@@ -229,14 +288,34 @@
           "dairy"
         ],
         "type": "main",
-        "budget": "medium"
+        "budget": "medium",
+        "yieldGrams": 240,
+        "ingredients": [
+          {
+            "name": "Овсяные хлопья",
+            "grams": 60
+          },
+          {
+            "name": "Молоко",
+            "grams": 200
+          },
+          {
+            "name": "Сахар",
+            "grams": 5
+          },
+          {
+            "name": "Соль",
+            "grams": 1,
+            "massless": true
+          }
+        ]
       },
       {
         "title": "Овсянка с бананом и орехами",
-        "kcalPer100g": 150,
-        "proteinPer100g": 5,
-        "fatPer100g": 7,
-        "carbsPer100g": 19,
+        "kcalPer100g": 175,
+        "proteinPer100g": 5.6,
+        "fatPer100g": 6.5,
+        "carbsPer100g": 23.8,
         "diet": [
           "vegetarian"
         ],
@@ -244,14 +323,33 @@
           "nuts"
         ],
         "type": "main",
-        "budget": "high"
+        "budget": "high",
+        "yieldGrams": 280,
+        "ingredients": [
+          {
+            "name": "Овсяные хлопья",
+            "grams": 60
+          },
+          {
+            "name": "Молоко",
+            "grams": 180
+          },
+          {
+            "name": "Банан",
+            "grams": 80
+          },
+          {
+            "name": "Орехи",
+            "grams": 15
+          }
+        ]
       },
       {
         "title": "Яйца пашот с тостом",
-        "kcalPer100g": 140,
-        "proteinPer100g": 9,
-        "fatPer100g": 8,
-        "carbsPer100g": 8.5,
+        "kcalPer100g": 231,
+        "proteinPer100g": 12.9,
+        "fatPer100g": 10,
+        "carbsPer100g": 21.7,
         "diet": [
           "normal"
         ],
@@ -260,14 +358,30 @@
           "gluten"
         ],
         "type": "main",
-        "budget": "medium"
+        "budget": "medium",
+        "yieldGrams": 150,
+        "ingredients": [
+          {
+            "name": "Яйца",
+            "grams": 110
+          },
+          {
+            "name": "Тост",
+            "grams": 60
+          },
+          {
+            "name": "Соль",
+            "grams": 1,
+            "massless": true
+          }
+        ]
       },
       {
         "title": "Чиа-пудинг",
-        "kcalPer100g": 135,
-        "proteinPer100g": 5.5,
-        "fatPer100g": 8,
-        "carbsPer100g": 12,
+        "kcalPer100g": 124,
+        "proteinPer100g": 4.5,
+        "fatPer100g": 6.3,
+        "carbsPer100g": 13.3,
         "diet": [
           "vegetarian",
           "vegan",
@@ -275,14 +389,33 @@
         ],
         "allergens": [],
         "type": "main",
-        "budget": "high"
+        "budget": "high",
+        "yieldGrams": 250,
+        "ingredients": [
+          {
+            "name": "Семена чиа",
+            "grams": 30
+          },
+          {
+            "name": "Молоко",
+            "grams": 200
+          },
+          {
+            "name": "Мёд",
+            "grams": 10
+          },
+          {
+            "name": "Ягоды",
+            "grams": 30
+          }
+        ]
       },
       {
         "title": "Смузи-боул",
-        "kcalPer100g": 95,
-        "proteinPer100g": 2,
-        "fatPer100g": 3.5,
-        "carbsPer100g": 15,
+        "kcalPer100g": 98,
+        "proteinPer100g": 3.2,
+        "fatPer100g": 1.8,
+        "carbsPer100g": 18.1,
         "diet": [
           "vegetarian",
           "vegan",
@@ -291,14 +424,32 @@
         "allergens": [],
         "type": "main",
         "budget": "medium",
-        "url": "https://eda.ru/recepty/smuzi"
+        "yieldGrams": 280,
+        "ingredients": [
+          {
+            "name": "Банан",
+            "grams": 100
+          },
+          {
+            "name": "Ягоды",
+            "grams": 80
+          },
+          {
+            "name": "Йогурт",
+            "grams": 100
+          },
+          {
+            "name": "Гранола",
+            "grams": 20
+          }
+        ]
       },
       {
         "title": "Тост с арахисовой пастой",
-        "kcalPer100g": 200,
-        "proteinPer100g": 7,
-        "fatPer100g": 14,
-        "carbsPer100g": 13,
+        "kcalPer100g": 297,
+        "proteinPer100g": 10.1,
+        "fatPer100g": 12.5,
+        "carbsPer100g": 38.3,
         "diet": [
           "vegetarian"
         ],
@@ -308,14 +459,28 @@
         ],
         "type": "main",
         "budget": "high",
-        "url": "https://eda.ru/recepty/tost"
+        "yieldGrams": 120,
+        "ingredients": [
+          {
+            "name": "Тост",
+            "grams": 60
+          },
+          {
+            "name": "Арахисовая паста",
+            "grams": 25
+          },
+          {
+            "name": "Банан",
+            "grams": 40
+          }
+        ]
       },
       {
         "title": "Яичница-глазунья",
-        "kcalPer100g": 196,
-        "proteinPer100g": 13.6,
-        "fatPer100g": 15.3,
-        "carbsPer100g": 0.6,
+        "kcalPer100g": 208,
+        "proteinPer100g": 13.8,
+        "fatPer100g": 16.6,
+        "carbsPer100g": 0.8,
         "diet": [
           "normal",
           "vegetarian"
@@ -325,20 +490,29 @@
         ],
         "type": "main",
         "budget": "low",
-        "url": "https://eda.ru/recepty/yachnitsa-glazunya",
         "ingredients": [
           {
             "name": "Яйца",
-            "gramsPer100g": 85
+            "grams": 130
+          },
+          {
+            "name": "Масло растительное",
+            "grams": 5
+          },
+          {
+            "name": "Соль",
+            "grams": 1,
+            "massless": true
           }
-        ]
+        ],
+        "yieldGrams": 120
       },
       {
         "title": "Рисовая каша на молоке",
-        "kcalPer100g": 97,
-        "proteinPer100g": 2.5,
-        "fatPer100g": 2,
-        "carbsPer100g": 17.5,
+        "kcalPer100g": 144,
+        "proteinPer100g": 4,
+        "fatPer100g": 3,
+        "carbsPer100g": 25.4,
         "diet": [
           "normal",
           "vegetarian"
@@ -348,28 +522,33 @@
         ],
         "type": "side",
         "budget": "low",
-        "url": "https://eda.ru/recepty/risovaya-kasha-na-moloke",
         "ingredients": [
           {
             "name": "Рис",
-            "gramsPer100g": 25
+            "grams": 50
           },
           {
             "name": "Молоко",
-            "gramsPer100g": 70
+            "grams": 200
           },
           {
             "name": "Сахар",
-            "gramsPer100g": 3
+            "grams": 10
+          },
+          {
+            "name": "Соль",
+            "grams": 1,
+            "massless": true
           }
-        ]
+        ],
+        "yieldGrams": 230
       },
       {
         "title": "Мюсли с йогуртом",
-        "kcalPer100g": 145,
-        "proteinPer100g": 5.5,
-        "fatPer100g": 4.5,
-        "carbsPer100g": 21,
+        "kcalPer100g": 124,
+        "proteinPer100g": 5.3,
+        "fatPer100g": 2.3,
+        "carbsPer100g": 20.2,
         "diet": [
           "normal",
           "vegetarian"
@@ -381,14 +560,28 @@
         ],
         "type": "main",
         "budget": "medium",
-        "url": "https://eda.ru/recepty/musli"
+        "yieldGrams": 230,
+        "ingredients": [
+          {
+            "name": "Мюсли",
+            "grams": 50
+          },
+          {
+            "name": "Йогурт",
+            "grams": 150
+          },
+          {
+            "name": "Ягоды",
+            "grams": 30
+          }
+        ]
       },
       {
         "title": "Творожная запеканка",
-        "kcalPer100g": 168,
-        "proteinPer100g": 12.5,
-        "fatPer100g": 7,
-        "carbsPer100g": 14,
+        "kcalPer100g": 203,
+        "proteinPer100g": 16.4,
+        "fatPer100g": 6.7,
+        "carbsPer100g": 20.3,
         "diet": [
           "normal",
           "vegetarian"
@@ -400,278 +593,552 @@
         ],
         "type": "main",
         "budget": "medium",
-        "url": "https://eda.ru/recepty/tvorozhnaya-zapekanka",
         "ingredients": [
           {
             "name": "Творог",
-            "gramsPer100g": 50
+            "grams": 250
           },
           {
             "name": "Яйца",
-            "gramsPer100g": 12
+            "grams": 55
           },
           {
             "name": "Манка",
-            "gramsPer100g": 10
+            "grams": 40
           },
           {
             "name": "Сахар",
-            "gramsPer100g": 8
+            "grams": 30
+          },
+          {
+            "name": "Сметана 15%",
+            "grams": 20
           }
-        ]
+        ],
+        "yieldGrams": 330
       }
     ],
     "lunch": {
       "first": [
         {
           "title": "Борщ с мясом",
-          "kcalPer100g": 65,
-          "proteinPer100g": 3,
-          "fatPer100g": 2.5,
-          "carbsPer100g": 7,
+          "kcalPer100g": 40,
+          "proteinPer100g": 2,
+          "fatPer100g": 2.1,
+          "carbsPer100g": 3.3,
           "diet": [
             "normal"
           ],
           "allergens": [],
           "type": "first",
           "budget": "medium",
-          "url": "https://eda.ru/recepty/borsh",
           "ingredients": [
             {
               "name": "Говядина",
-              "gramsPer100g": 12
+              "grams": 60
             },
             {
               "name": "Свёкла",
-              "gramsPer100g": 20
+              "grams": 80
             },
             {
               "name": "Капуста",
-              "gramsPer100g": 18
+              "grams": 70
             },
             {
               "name": "Картофель",
-              "gramsPer100g": 12
+              "grams": 60
             },
             {
               "name": "Морковь",
-              "gramsPer100g": 8
+              "grams": 30
             },
             {
               "name": "Лук",
-              "gramsPer100g": 5
-            }
-          ]
-        },
-        {
-          "title": "Куриный суп",
-          "kcalPer100g": 70,
-          "proteinPer100g": 5,
-          "fatPer100g": 3,
-          "carbsPer100g": 5,
-          "diet": [
-            "normal"
-          ],
-          "allergens": [],
-          "type": "first",
-          "budget": "medium",
-          "url": "https://eda.ru/recepty/kurinyy-sup",
-          "ingredients": [
-            {
-              "name": "Курица",
-              "gramsPer100g": 15
-            },
-            {
-              "name": "Картофель",
-              "gramsPer100g": 12
-            },
-            {
-              "name": "Морковь",
-              "gramsPer100g": 8
-            },
-            {
-              "name": "Лук",
-              "gramsPer100g": 5
-            },
-            {
-              "name": "Лапша",
-              "gramsPer100g": 8
-            }
-          ]
-        },
-        {
-          "title": "Щи",
-          "kcalPer100g": 55,
-          "proteinPer100g": 2,
-          "fatPer100g": 2,
-          "carbsPer100g": 6,
-          "diet": [
-            "normal"
-          ],
-          "allergens": [],
-          "type": "first",
-          "budget": "low",
-          "url": "https://eda.ru/recepty/schi",
-          "ingredients": [
-            {
-              "name": "Капуста",
-              "gramsPer100g": 25
-            },
-            {
-              "name": "Морковь",
-              "gramsPer100g": 8
-            },
-            {
-              "name": "Лук",
-              "gramsPer100g": 6
+              "grams": 25
             },
             {
               "name": "Томатная паста",
-              "gramsPer100g": 5
+              "grams": 20
+            },
+            {
+              "name": "Масло растительное",
+              "grams": 10
+            },
+            {
+              "name": "Вода",
+              "grams": 600
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
             }
-          ]
+          ],
+          "yieldGrams": 850
         },
         {
-          "title": "Суп-пюре из цветной капусты",
-          "kcalPer100g": 80,
-          "proteinPer100g": 3.5,
-          "fatPer100g": 4,
-          "carbsPer100g": 7.5,
+          "title": "Куриный суп",
+          "kcalPer100g": 46,
+          "proteinPer100g": 2.7,
+          "fatPer100g": 1.4,
+          "carbsPer100g": 5.6,
           "diet": [
-            "vegetarian"
-          ],
-          "allergens": [
-            "dairy"
-          ],
-          "type": "first",
-          "budget": "medium"
-        },
-        {
-          "title": "Луковый суп",
-          "kcalPer100g": 75,
-          "proteinPer100g": 3,
-          "fatPer100g": 4.5,
-          "carbsPer100g": 7,
-          "diet": [
-            "vegetarian"
-          ],
-          "allergens": [
-            "dairy"
-          ],
-          "type": "first",
-          "budget": "medium"
-        },
-        {
-          "title": "Фасолевый суп",
-          "kcalPer100g": 90,
-          "proteinPer100g": 6,
-          "fatPer100g": 2,
-          "carbsPer100g": 12,
-          "diet": [
-            "vegetarian",
-            "vegan"
+            "normal"
           ],
           "allergens": [],
           "type": "first",
-          "budget": "low"
-        },
-        {
-          "title": "Суп с сайрой",
-          "kcalPer100g": 82,
-          "proteinPer100g": 7.5,
-          "fatPer100g": 3.5,
-          "carbsPer100g": 4,
-          "diet": [
-            "normal"
-          ],
-          "allergens": [
-            "fish"
-          ],
-          "type": "first",
-          "budget": "low"
-        },
-        {
-          "title": "Уха",
-          "kcalPer100g": 88,
-          "proteinPer100g": 8.5,
-          "fatPer100g": 4.5,
-          "carbsPer100g": 3.5,
-          "diet": [
-            "normal"
-          ],
-          "allergens": [
-            "fish"
-          ],
-          "type": "first",
           "budget": "medium",
-          "url": "https://eda.ru/recepty/uha",
           "ingredients": [
             {
-              "name": "Рыба",
-              "gramsPer100g": 18
+              "name": "Курица",
+              "grams": 80
             },
             {
               "name": "Картофель",
-              "gramsPer100g": 15
+              "grams": 70
             },
             {
               "name": "Морковь",
-              "gramsPer100g": 8
+              "grams": 30
             },
             {
               "name": "Лук",
-              "gramsPer100g": 5
+              "grams": 25
+            },
+            {
+              "name": "Лапша",
+              "grams": 40
+            },
+            {
+              "name": "Вода",
+              "grams": 600
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
             }
-          ]
-        },
-        {
-          "title": "Томатный суп",
-          "kcalPer100g": 70,
-          "proteinPer100g": 2,
-          "fatPer100g": 3,
-          "carbsPer100g": 8,
-          "diet": [
-            "vegetarian",
-            "vegan"
           ],
-          "allergens": [],
-          "type": "first",
-          "budget": "low"
+          "yieldGrams": 800
         },
         {
-          "title": "Солянка мясная",
-          "kcalPer100g": 98,
-          "proteinPer100g": 6.5,
-          "fatPer100g": 6,
-          "carbsPer100g": 4.5,
-          "diet": [
-            "normal"
-          ],
-          "allergens": [],
-          "type": "first",
-          "budget": "medium",
-          "url": "https://eda.ru/recepty/solyanka"
-        },
-        {
-          "title": "Гороховый суп",
-          "kcalPer100g": 72,
-          "proteinPer100g": 4.5,
-          "fatPer100g": 2.5,
-          "carbsPer100g": 9,
+          "title": "Щи",
+          "kcalPer100g": 25,
+          "proteinPer100g": 0.6,
+          "fatPer100g": 1.3,
+          "carbsPer100g": 2.7,
           "diet": [
             "normal"
           ],
           "allergens": [],
           "type": "first",
           "budget": "low",
-          "url": "https://eda.ru/recepty/gorohovyy-sup"
+          "ingredients": [
+            {
+              "name": "Капуста",
+              "grams": 120
+            },
+            {
+              "name": "Картофель",
+              "grams": 50
+            },
+            {
+              "name": "Морковь",
+              "grams": 30
+            },
+            {
+              "name": "Лук",
+              "grams": 25
+            },
+            {
+              "name": "Томатная паста",
+              "grams": 20
+            },
+            {
+              "name": "Масло растительное",
+              "grams": 10
+            },
+            {
+              "name": "Вода",
+              "grams": 600
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ],
+          "yieldGrams": 800
+        },
+        {
+          "title": "Суп-пюре из цветной капусты",
+          "kcalPer100g": 36,
+          "proteinPer100g": 1.4,
+          "fatPer100g": 1.6,
+          "carbsPer100g": 4.3,
+          "diet": [
+            "vegetarian"
+          ],
+          "allergens": [
+            "dairy"
+          ],
+          "type": "first",
+          "budget": "medium",
+          "yieldGrams": 700,
+          "ingredients": [
+            {
+              "name": "Цветная капуста",
+              "grams": 250
+            },
+            {
+              "name": "Картофель",
+              "grams": 80
+            },
+            {
+              "name": "Лук",
+              "grams": 30
+            },
+            {
+              "name": "Сливки",
+              "grams": 50
+            },
+            {
+              "name": "Вода",
+              "grams": 400
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
+        },
+        {
+          "title": "Луковый суп",
+          "kcalPer100g": 64,
+          "proteinPer100g": 2,
+          "fatPer100g": 3.6,
+          "carbsPer100g": 5.9,
+          "diet": [
+            "vegetarian"
+          ],
+          "allergens": [
+            "dairy"
+          ],
+          "type": "first",
+          "budget": "medium",
+          "yieldGrams": 750,
+          "ingredients": [
+            {
+              "name": "Лук",
+              "grams": 300
+            },
+            {
+              "name": "Масло сливочное",
+              "grams": 20
+            },
+            {
+              "name": "Хлеб",
+              "grams": 40
+            },
+            {
+              "name": "Сыр",
+              "grams": 30
+            },
+            {
+              "name": "Вода",
+              "grams": 500
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
+        },
+        {
+          "title": "Фасолевый суп",
+          "kcalPer100g": 53,
+          "proteinPer100g": 3,
+          "fatPer100g": 0.3,
+          "carbsPer100g": 9.3,
+          "diet": [
+            "vegetarian",
+            "vegan"
+          ],
+          "allergens": [],
+          "type": "first",
+          "budget": "low",
+          "yieldGrams": 800,
+          "ingredients": [
+            {
+              "name": "Фасоль",
+              "grams": 100
+            },
+            {
+              "name": "Картофель",
+              "grams": 80
+            },
+            {
+              "name": "Морковь",
+              "grams": 30
+            },
+            {
+              "name": "Лук",
+              "grams": 25
+            },
+            {
+              "name": "Томатная паста",
+              "grams": 15
+            },
+            {
+              "name": "Вода",
+              "grams": 600
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
+        },
+        {
+          "title": "Суп с сайрой",
+          "kcalPer100g": 56,
+          "proteinPer100g": 3.5,
+          "fatPer100g": 2.2,
+          "carbsPer100g": 5.6,
+          "diet": [
+            "normal"
+          ],
+          "allergens": [
+            "fish"
+          ],
+          "type": "first",
+          "budget": "low",
+          "yieldGrams": 800,
+          "ingredients": [
+            {
+              "name": "Сайра",
+              "grams": 120
+            },
+            {
+              "name": "Картофель",
+              "grams": 100
+            },
+            {
+              "name": "Морковь",
+              "grams": 30
+            },
+            {
+              "name": "Лук",
+              "grams": 25
+            },
+            {
+              "name": "Рис",
+              "grams": 30
+            },
+            {
+              "name": "Вода",
+              "grams": 600
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
+        },
+        {
+          "title": "Уха",
+          "kcalPer100g": 32,
+          "proteinPer100g": 3.5,
+          "fatPer100g": 0.8,
+          "carbsPer100g": 2.9,
+          "diet": [
+            "normal"
+          ],
+          "allergens": [
+            "fish"
+          ],
+          "type": "first",
+          "budget": "medium",
+          "ingredients": [
+            {
+              "name": "Рыба",
+              "grams": 150
+            },
+            {
+              "name": "Картофель",
+              "grams": 120
+            },
+            {
+              "name": "Морковь",
+              "grams": 30
+            },
+            {
+              "name": "Лук",
+              "grams": 25
+            },
+            {
+              "name": "Вода",
+              "grams": 600
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ],
+          "yieldGrams": 850
+        },
+        {
+          "title": "Томатный суп",
+          "kcalPer100g": 33,
+          "proteinPer100g": 0.8,
+          "fatPer100g": 2.2,
+          "carbsPer100g": 2.7,
+          "diet": [
+            "vegetarian",
+            "vegan"
+          ],
+          "allergens": [],
+          "type": "first",
+          "budget": "low",
+          "yieldGrams": 750,
+          "ingredients": [
+            {
+              "name": "Помидоры",
+              "grams": 300
+            },
+            {
+              "name": "Лук",
+              "grams": 30
+            },
+            {
+              "name": "Морковь",
+              "grams": 30
+            },
+            {
+              "name": "Томатная паста",
+              "grams": 20
+            },
+            {
+              "name": "Сливки",
+              "grams": 30
+            },
+            {
+              "name": "Масло оливковое",
+              "grams": 10
+            },
+            {
+              "name": "Вода",
+              "grams": 400
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
+        },
+        {
+          "title": "Солянка мясная",
+          "kcalPer100g": 49,
+          "proteinPer100g": 3.1,
+          "fatPer100g": 3.6,
+          "carbsPer100g": 1.1,
+          "diet": [
+            "normal"
+          ],
+          "allergens": [],
+          "type": "first",
+          "budget": "medium",
+          "yieldGrams": 800,
+          "ingredients": [
+            {
+              "name": "Говядина",
+              "grams": 80
+            },
+            {
+              "name": "Колбаса",
+              "grams": 60
+            },
+            {
+              "name": "Лук",
+              "grams": 30
+            },
+            {
+              "name": "Огурцы",
+              "grams": 50
+            },
+            {
+              "name": "Томатная паста",
+              "grams": 25
+            },
+            {
+              "name": "Маслины",
+              "grams": 20
+            },
+            {
+              "name": "Вода",
+              "grams": 550
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
+        },
+        {
+          "title": "Гороховый суп",
+          "kcalPer100g": 48,
+          "proteinPer100g": 2.9,
+          "fatPer100g": 0.3,
+          "carbsPer100g": 8.5,
+          "diet": [
+            "normal"
+          ],
+          "allergens": [],
+          "type": "first",
+          "budget": "low",
+          "yieldGrams": 800,
+          "ingredients": [
+            {
+              "name": "Горох",
+              "grams": 100
+            },
+            {
+              "name": "Картофель",
+              "grams": 80
+            },
+            {
+              "name": "Морковь",
+              "grams": 30
+            },
+            {
+              "name": "Лук",
+              "grams": 25
+            },
+            {
+              "name": "Вода",
+              "grams": 600
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
         },
         {
           "title": "Рассольник",
-          "kcalPer100g": 58,
-          "proteinPer100g": 2.8,
-          "fatPer100g": 2.2,
-          "carbsPer100g": 6.5,
+          "kcalPer100g": 34,
+          "proteinPer100g": 1.9,
+          "fatPer100g": 0.9,
+          "carbsPer100g": 4.6,
           "diet": [
             "normal"
           ],
@@ -680,14 +1147,49 @@
           ],
           "type": "first",
           "budget": "low",
-          "url": "https://eda.ru/recepty/rassolnik"
+          "yieldGrams": 850,
+          "ingredients": [
+            {
+              "name": "Говядина",
+              "grams": 60
+            },
+            {
+              "name": "Картофель",
+              "grams": 80
+            },
+            {
+              "name": "Огурцы",
+              "grams": 60
+            },
+            {
+              "name": "Морковь",
+              "grams": 30
+            },
+            {
+              "name": "Лук",
+              "grams": 25
+            },
+            {
+              "name": "Рис",
+              "grams": 25
+            },
+            {
+              "name": "Вода",
+              "grams": 600
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
         },
         {
           "title": "Окрошка",
-          "kcalPer100g": 52,
-          "proteinPer100g": 2.5,
-          "fatPer100g": 2,
-          "carbsPer100g": 5.5,
+          "kcalPer100g": 73,
+          "proteinPer100g": 4.2,
+          "fatPer100g": 3.9,
+          "carbsPer100g": 4.8,
           "diet": [
             "normal"
           ],
@@ -697,16 +1199,47 @@
           ],
           "type": "first",
           "budget": "medium",
-          "url": "https://eda.ru/recepty/okroshka"
+          "yieldGrams": 700,
+          "ingredients": [
+            {
+              "name": "Огурцы",
+              "grams": 100
+            },
+            {
+              "name": "Картофель",
+              "grams": 80
+            },
+            {
+              "name": "Яйца",
+              "grams": 55
+            },
+            {
+              "name": "Колбаса",
+              "grams": 60
+            },
+            {
+              "name": "Зелень",
+              "grams": 20
+            },
+            {
+              "name": "Кефир 1%",
+              "grams": 400
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
         }
       ],
       "second": [
         {
           "title": "Гуляш",
-          "kcalPer100g": 120,
-          "proteinPer100g": 14,
-          "fatPer100g": 6,
-          "carbsPer100g": 3,
+          "kcalPer100g": 170,
+          "proteinPer100g": 11.8,
+          "fatPer100g": 11.2,
+          "carbsPer100g": 5,
           "diet": [
             "normal"
           ],
@@ -714,31 +1247,48 @@
           "type": "main",
           "complete": false,
           "budget": "medium",
-          "url": "https://eda.ru/recepty/gulyash",
           "ingredients": [
             {
               "name": "Говядина",
-              "gramsPer100g": 55
+              "grams": 200
             },
             {
               "name": "Лук",
-              "gramsPer100g": 12
+              "grams": 40
             },
             {
               "name": "Морковь",
-              "gramsPer100g": 10
+              "grams": 30
             },
             {
               "name": "Томатная паста",
-              "gramsPer100g": 8
+              "grams": 30
+            },
+            {
+              "name": "Мука",
+              "grams": 10
+            },
+            {
+              "name": "Масло растительное",
+              "grams": 15
+            },
+            {
+              "name": "Вода",
+              "grams": 150
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
             }
-          ]
+          ],
+          "yieldGrams": 350
         },
         {
           "title": "Куриные котлеты на пару",
-          "kcalPer100g": 130,
-          "proteinPer100g": 16,
-          "fatPer100g": 6,
+          "kcalPer100g": 155,
+          "proteinPer100g": 15.5,
+          "fatPer100g": 7.9,
           "carbsPer100g": 5,
           "diet": [
             "normal"
@@ -752,28 +1302,38 @@
           "ingredients": [
             {
               "name": "Куриный фарш",
-              "gramsPer100g": 70
+              "grams": 250
             },
             {
               "name": "Яйца",
-              "gramsPer100g": 10
+              "grams": 30
             },
             {
               "name": "Лук",
-              "gramsPer100g": 8
+              "grams": 30
             },
             {
               "name": "Хлеб",
-              "gramsPer100g": 5
+              "grams": 25
+            },
+            {
+              "name": "Молоко",
+              "grams": 30
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
             }
-          ]
+          ],
+          "yieldGrams": 320
         },
         {
           "title": "Куриные котлеты жареные",
-          "kcalPer100g": 180,
-          "proteinPer100g": 16,
-          "fatPer100g": 12,
-          "carbsPer100g": 5,
+          "kcalPer100g": 220,
+          "proteinPer100g": 16.2,
+          "fatPer100g": 14.7,
+          "carbsPer100g": 4.9,
           "diet": [
             "normal"
           ],
@@ -782,14 +1342,42 @@
           ],
           "type": "main",
           "complete": false,
-          "budget": "high"
+          "budget": "high",
+          "yieldGrams": 300,
+          "ingredients": [
+            {
+              "name": "Куриный фарш",
+              "grams": 250
+            },
+            {
+              "name": "Яйца",
+              "grams": 30
+            },
+            {
+              "name": "Лук",
+              "grams": 30
+            },
+            {
+              "name": "Хлеб",
+              "grams": 25
+            },
+            {
+              "name": "Масло растительное",
+              "grams": 20
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
         },
         {
           "title": "Рыба на пару",
-          "kcalPer100g": 110,
-          "proteinPer100g": 20,
-          "fatPer100g": 2.5,
-          "carbsPer100g": 0,
+          "kcalPer100g": 111,
+          "proteinPer100g": 20.5,
+          "fatPer100g": 2.9,
+          "carbsPer100g": 0.6,
           "diet": [
             "normal"
           ],
@@ -802,34 +1390,72 @@
           "ingredients": [
             {
               "name": "Филе рыбы",
-              "gramsPer100g": 88
+              "grams": 250
             },
             {
               "name": "Лимон",
-              "gramsPer100g": 3
+              "grams": 15
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
             }
-          ]
+          ],
+          "yieldGrams": 220
         },
         {
           "title": "Тушёная фасоль",
-          "kcalPer100g": 130,
-          "proteinPer100g": 8,
-          "fatPer100g": 2,
-          "carbsPer100g": 20,
+          "kcalPer100g": 163,
+          "proteinPer100g": 8.3,
+          "fatPer100g": 3.8,
+          "carbsPer100g": 22.5,
           "diet": [
             "vegan"
           ],
           "allergens": [],
           "type": "main",
           "complete": false,
-          "budget": "low"
+          "budget": "low",
+          "yieldGrams": 330,
+          "ingredients": [
+            {
+              "name": "Фасоль",
+              "grams": 120
+            },
+            {
+              "name": "Лук",
+              "grams": 30
+            },
+            {
+              "name": "Морковь",
+              "grams": 30
+            },
+            {
+              "name": "Томатная паста",
+              "grams": 30
+            },
+            {
+              "name": "Масло растительное",
+              "grams": 10
+            },
+            {
+              "name": "Вода",
+              "grams": 150
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
         },
         {
           "title": "Тофу с соусом терияки",
-          "kcalPer100g": 145,
-          "proteinPer100g": 12,
-          "fatPer100g": 8,
-          "carbsPer100g": 7,
+          "kcalPer100g": 133,
+          "proteinPer100g": 8.4,
+          "fatPer100g": 9.6,
+          "carbsPer100g": 4.7,
           "diet": [
             "vegetarian",
             "vegan"
@@ -840,14 +1466,33 @@
           ],
           "type": "main",
           "complete": false,
-          "budget": "medium"
+          "budget": "medium",
+          "yieldGrams": 230,
+          "ingredients": [
+            {
+              "name": "Тофу",
+              "grams": 200
+            },
+            {
+              "name": "Соус терияки",
+              "grams": 40
+            },
+            {
+              "name": "Масло растительное",
+              "grams": 10
+            },
+            {
+              "name": "Кунжут",
+              "grams": 5
+            }
+          ]
         },
         {
           "title": "Чикен-каре",
-          "kcalPer100g": 135,
-          "proteinPer100g": 13,
-          "fatPer100g": 6,
-          "carbsPer100g": 8,
+          "kcalPer100g": 190,
+          "proteinPer100g": 11.8,
+          "fatPer100g": 14.6,
+          "carbsPer100g": 2.7,
           "diet": [
             "normal"
           ],
@@ -856,14 +1501,42 @@
           ],
           "type": "main",
           "complete": true,
-          "budget": "medium"
+          "budget": "medium",
+          "yieldGrams": 330,
+          "ingredients": [
+            {
+              "name": "Курица",
+              "grams": 200
+            },
+            {
+              "name": "Морковь",
+              "grams": 50
+            },
+            {
+              "name": "Лук",
+              "grams": 40
+            },
+            {
+              "name": "Сливки",
+              "grams": 60
+            },
+            {
+              "name": "Масло растительное",
+              "grams": 10
+            },
+            {
+              "name": "Специи",
+              "grams": 1,
+              "massless": true
+            }
+          ]
         },
         {
           "title": "Гуляш с картофелем",
-          "kcalPer100g": 160,
-          "proteinPer100g": 14,
-          "fatPer100g": 7,
-          "carbsPer100g": 10,
+          "kcalPer100g": 114,
+          "proteinPer100g": 6.9,
+          "fatPer100g": 5.8,
+          "carbsPer100g": 8.7,
           "diet": [
             "normal"
           ],
@@ -871,14 +1544,49 @@
           "type": "main",
           "complete": true,
           "budget": "medium",
-          "url": "https://eda.ru/recepty/gulyash"
+          "yieldGrams": 500,
+          "ingredients": [
+            {
+              "name": "Говядина",
+              "grams": 150
+            },
+            {
+              "name": "Картофель",
+              "grams": 200
+            },
+            {
+              "name": "Лук",
+              "grams": 40
+            },
+            {
+              "name": "Морковь",
+              "grams": 30
+            },
+            {
+              "name": "Томатная паста",
+              "grams": 25
+            },
+            {
+              "name": "Масло растительное",
+              "grams": 10
+            },
+            {
+              "name": "Вода",
+              "grams": 150
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
         },
         {
           "title": "Плов",
-          "kcalPer100g": 140,
-          "proteinPer100g": 5,
-          "fatPer100g": 6,
-          "carbsPer100g": 16,
+          "kcalPer100g": 197,
+          "proteinPer100g": 5.7,
+          "fatPer100g": 9.2,
+          "carbsPer100g": 23,
           "diet": [
             "normal",
             "vegetarian"
@@ -887,36 +1595,45 @@
           "type": "main",
           "complete": true,
           "budget": "medium",
-          "url": "https://eda.ru/recepty/plov",
           "ingredients": [
             {
               "name": "Рис",
-              "gramsPer100g": 35
+              "grams": 150
             },
             {
               "name": "Баранина",
-              "gramsPer100g": 25
+              "grams": 120
             },
             {
               "name": "Морковь",
-              "gramsPer100g": 18
+              "grams": 80
             },
             {
               "name": "Лук",
-              "gramsPer100g": 12
+              "grams": 50
             },
             {
               "name": "Масло растительное",
-              "gramsPer100g": 5
+              "grams": 30
+            },
+            {
+              "name": "Вода",
+              "grams": 250
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
             }
-          ]
+          ],
+          "yieldGrams": 550
         },
         {
           "title": "Лазанья",
-          "kcalPer100g": 180,
-          "proteinPer100g": 12,
-          "fatPer100g": 10,
-          "carbsPer100g": 11,
+          "kcalPer100g": 250,
+          "proteinPer100g": 12.4,
+          "fatPer100g": 14.4,
+          "carbsPer100g": 17,
           "diet": [
             "normal",
             "vegetarian"
@@ -929,14 +1646,44 @@
           "type": "main",
           "complete": true,
           "budget": "high",
-          "url": "https://eda.ru/recepty/lazanya"
+          "yieldGrams": 450,
+          "ingredients": [
+            {
+              "name": "Паста",
+              "grams": 80
+            },
+            {
+              "name": "Говяжий фарш",
+              "grams": 150
+            },
+            {
+              "name": "Помидоры",
+              "grams": 100
+            },
+            {
+              "name": "Сыр",
+              "grams": 60
+            },
+            {
+              "name": "Молоко",
+              "grams": 100
+            },
+            {
+              "name": "Мука",
+              "grams": 15
+            },
+            {
+              "name": "Масло сливочное",
+              "grams": 15
+            }
+          ]
         },
         {
           "title": "Макароны по-флотски",
-          "kcalPer100g": 155,
-          "proteinPer100g": 10,
-          "fatPer100g": 7,
-          "carbsPer100g": 14,
+          "kcalPer100g": 250,
+          "proteinPer100g": 10.1,
+          "fatPer100g": 11.6,
+          "carbsPer100g": 25.3,
           "diet": [
             "normal"
           ],
@@ -945,14 +1692,38 @@
           ],
           "type": "main",
           "complete": true,
-          "budget": "medium"
+          "budget": "medium",
+          "yieldGrams": 350,
+          "ingredients": [
+            {
+              "name": "Макароны",
+              "grams": 120
+            },
+            {
+              "name": "Говяжий фарш",
+              "grams": 120
+            },
+            {
+              "name": "Лук",
+              "grams": 40
+            },
+            {
+              "name": "Масло растительное",
+              "grams": 15
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
         },
         {
           "title": "Паста с томатами",
-          "kcalPer100g": 140,
-          "proteinPer100g": 5,
-          "fatPer100g": 6,
-          "carbsPer100g": 16,
+          "kcalPer100g": 195,
+          "proteinPer100g": 6.2,
+          "fatPer100g": 6.7,
+          "carbsPer100g": 27.1,
           "diet": [
             "normal",
             "vegetarian"
@@ -962,28 +1733,77 @@
           ],
           "type": "side",
           "complete": true,
-          "budget": "medium"
+          "budget": "medium",
+          "yieldGrams": 340,
+          "ingredients": [
+            {
+              "name": "Паста",
+              "grams": 120
+            },
+            {
+              "name": "Помидоры",
+              "grams": 120
+            },
+            {
+              "name": "Лук",
+              "grams": 30
+            },
+            {
+              "name": "Масло оливковое",
+              "grams": 15
+            },
+            {
+              "name": "Сыр",
+              "grams": 20
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
         },
         {
           "title": "Картофель по-деревенски",
-          "kcalPer100g": 125,
-          "proteinPer100g": 3,
-          "fatPer100g": 5,
-          "carbsPer100g": 17,
+          "kcalPer100g": 169,
+          "proteinPer100g": 2.2,
+          "fatPer100g": 9.7,
+          "carbsPer100g": 18.9,
           "diet": [
             "vegetarian"
           ],
           "allergens": [],
           "type": "side",
           "complete": true,
-          "budget": "medium"
+          "budget": "medium",
+          "yieldGrams": 270,
+          "ingredients": [
+            {
+              "name": "Картофель",
+              "grams": 300
+            },
+            {
+              "name": "Масло растительное",
+              "grams": 25
+            },
+            {
+              "name": "Специи",
+              "grams": 1,
+              "massless": true
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
         },
         {
           "title": "Кускус с овощами",
-          "kcalPer100g": 110,
-          "proteinPer100g": 4,
-          "fatPer100g": 1.5,
-          "carbsPer100g": 20,
+          "kcalPer100g": 148,
+          "proteinPer100g": 3.7,
+          "fatPer100g": 4.8,
+          "carbsPer100g": 21.9,
           "diet": [
             "vegetarian",
             "vegan",
@@ -992,13 +1812,150 @@
           "allergens": [],
           "type": "side",
           "complete": true,
-          "budget": "low"
+          "budget": "low",
+          "yieldGrams": 330,
+          "ingredients": [
+            {
+              "name": "Кускус",
+              "grams": 80
+            },
+            {
+              "name": "Кабачки",
+              "grams": 60
+            },
+            {
+              "name": "Перец",
+              "grams": 50
+            },
+            {
+              "name": "Морковь",
+              "grams": 40
+            },
+            {
+              "name": "Лук",
+              "grams": 30
+            },
+            {
+              "name": "Масло оливковое",
+              "grams": 15
+            },
+            {
+              "name": "Вода",
+              "grams": 120
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
         },
         {
           "title": "Тефтели в томатном соусе",
-          "kcalPer100g": 155,
-          "proteinPer100g": 11,
-          "fatPer100g": 9,
+          "kcalPer100g": 236,
+          "proteinPer100g": 11.3,
+          "fatPer100g": 14.1,
+          "carbsPer100g": 15.1,
+          "diet": [
+            "normal"
+          ],
+          "allergens": [
+            "eggs",
+            "gluten"
+          ],
+          "type": "main",
+          "complete": false,
+          "budget": "medium",
+          "ingredients": [
+            {
+              "name": "Говяжий фарш",
+              "grams": 200
+            },
+            {
+              "name": "Рис",
+              "grams": 50
+            },
+            {
+              "name": "Лук",
+              "grams": 40
+            },
+            {
+              "name": "Яйца",
+              "grams": 25
+            },
+            {
+              "name": "Томатный соус",
+              "grams": 100
+            },
+            {
+              "name": "Масло растительное",
+              "grams": 10
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ],
+          "yieldGrams": 380
+        },
+        {
+          "title": "Ленивые голубцы",
+          "kcalPer100g": 141,
+          "proteinPer100g": 7.4,
+          "fatPer100g": 6.9,
+          "carbsPer100g": 12,
+          "diet": [
+            "normal"
+          ],
+          "allergens": [
+            "eggs"
+          ],
+          "type": "main",
+          "complete": true,
+          "budget": "medium",
+          "yieldGrams": 450,
+          "ingredients": [
+            {
+              "name": "Говяжий фарш",
+              "grams": 150
+            },
+            {
+              "name": "Капуста",
+              "grams": 120
+            },
+            {
+              "name": "Рис",
+              "grams": 50
+            },
+            {
+              "name": "Лук",
+              "grams": 40
+            },
+            {
+              "name": "Морковь",
+              "grams": 30
+            },
+            {
+              "name": "Томатная паста",
+              "grams": 25
+            },
+            {
+              "name": "Вода",
+              "grams": 100
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
+        },
+        {
+          "title": "Свиная отбивная",
+          "kcalPer100g": 403,
+          "proteinPer100g": 18.6,
+          "fatPer100g": 32.5,
           "carbsPer100g": 7.5,
           "diet": [
             "normal"
@@ -1010,67 +1967,37 @@
           "type": "main",
           "complete": false,
           "budget": "medium",
-          "url": "https://eda.ru/recepty/tefteli",
+          "yieldGrams": 200,
           "ingredients": [
             {
-              "name": "Говяжий фарш",
-              "gramsPer100g": 45
+              "name": "Свинина",
+              "grams": 200
             },
             {
-              "name": "Рис",
-              "gramsPer100g": 12
+              "name": "Яйца",
+              "grams": 25
             },
             {
-              "name": "Лук",
-              "gramsPer100g": 10
+              "name": "Мука",
+              "grams": 20
             },
             {
-              "name": "Томатная паста",
-              "gramsPer100g": 15
+              "name": "Масло растительное",
+              "grams": 20
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
             }
           ]
         },
         {
-          "title": "Ленивые голубцы",
-          "kcalPer100g": 142,
-          "proteinPer100g": 10.5,
-          "fatPer100g": 7.5,
-          "carbsPer100g": 9,
-          "diet": [
-            "normal"
-          ],
-          "allergens": [
-            "eggs"
-          ],
-          "type": "main",
-          "complete": true,
-          "budget": "medium",
-          "url": "https://eda.ru/recepty/lenivye-golubcy"
-        },
-        {
-          "title": "Свиная отбивная",
-          "kcalPer100g": 210,
-          "proteinPer100g": 18,
-          "fatPer100g": 14,
-          "carbsPer100g": 3,
-          "diet": [
-            "normal"
-          ],
-          "allergens": [
-            "eggs",
-            "gluten"
-          ],
-          "type": "main",
-          "complete": false,
-          "budget": "medium",
-          "url": "https://eda.ru/recepty/svinaya-otbivnaya"
-        },
-        {
           "title": "Котлета по-киевски",
-          "kcalPer100g": 245,
-          "proteinPer100g": 16,
-          "fatPer100g": 17,
-          "carbsPer100g": 8,
+          "kcalPer100g": 315,
+          "proteinPer100g": 18.7,
+          "fatPer100g": 22,
+          "carbsPer100g": 10,
           "diet": [
             "normal"
           ],
@@ -1082,14 +2009,40 @@
           "type": "main",
           "complete": true,
           "budget": "high",
-          "url": "https://eda.ru/recepty/kotleta-po-kievski"
+          "yieldGrams": 260,
+          "ingredients": [
+            {
+              "name": "Куриная грудка",
+              "grams": 180
+            },
+            {
+              "name": "Масло сливочное",
+              "grams": 30
+            },
+            {
+              "name": "Яйца",
+              "grams": 25
+            },
+            {
+              "name": "Мука",
+              "grams": 15
+            },
+            {
+              "name": "Хлеб",
+              "grams": 30
+            },
+            {
+              "name": "Масло растительное",
+              "grams": 25
+            }
+          ]
         },
         {
           "title": "Паста с томатным соусом",
-          "kcalPer100g": 135,
-          "proteinPer100g": 5,
-          "fatPer100g": 3.5,
-          "carbsPer100g": 22,
+          "kcalPer100g": 197,
+          "proteinPer100g": 6.2,
+          "fatPer100g": 5.8,
+          "carbsPer100g": 29.5,
           "diet": [
             "vegetarian",
             "vegan"
@@ -1100,14 +2053,37 @@
           "type": "main",
           "complete": true,
           "budget": "low",
-          "url": "https://eda.ru/recepty/pasta"
+          "yieldGrams": 340,
+          "ingredients": [
+            {
+              "name": "Паста",
+              "grams": 120
+            },
+            {
+              "name": "Томатный соус",
+              "grams": 100
+            },
+            {
+              "name": "Масло оливковое",
+              "grams": 12
+            },
+            {
+              "name": "Сыр",
+              "grams": 20
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
         },
         {
           "title": "Салат греческий",
-          "kcalPer100g": 95,
-          "proteinPer100g": 3.5,
-          "fatPer100g": 7,
-          "carbsPer100g": 5,
+          "kcalPer100g": 118,
+          "proteinPer100g": 3.1,
+          "fatPer100g": 10.1,
+          "carbsPer100g": 4,
           "diet": [
             "vegetarian"
           ],
@@ -1117,29 +2093,37 @@
           "type": "main",
           "complete": true,
           "budget": "medium",
-          "url": "https://eda.ru/recepty/salat-grecheskiy",
           "ingredients": [
             {
               "name": "Помидоры",
-              "gramsPer100g": 25
+              "grams": 100
             },
             {
               "name": "Огурцы",
-              "gramsPer100g": 20
+              "grams": 80
+            },
+            {
+              "name": "Перец",
+              "grams": 50
             },
             {
               "name": "Сыр фета",
-              "gramsPer100g": 18
+              "grams": 60
             },
             {
               "name": "Маслины",
-              "gramsPer100g": 10
+              "grams": 30
             },
             {
               "name": "Масло оливковое",
-              "gramsPer100g": 8
+              "grams": 20
+            },
+            {
+              "name": "Лук",
+              "grams": 20
             }
-          ]
+          ],
+          "yieldGrams": 360
         }
       ]
     },
@@ -1147,9 +2131,9 @@
       "main": [
         {
           "title": "Запечённая курица",
-          "kcalPer100g": 165,
-          "proteinPer100g": 28,
-          "fatPer100g": 7,
+          "kcalPer100g": 297,
+          "proteinPer100g": 23.7,
+          "fatPer100g": 22.4,
           "carbsPer100g": 0,
           "diet": [
             "normal"
@@ -1160,20 +2144,31 @@
           "ingredients": [
             {
               "name": "Курица",
-              "gramsPer100g": 85
+              "grams": 250
+            },
+            {
+              "name": "Масло растительное",
+              "grams": 10
             },
             {
               "name": "Специи",
-              "gramsPer100g": 2
+              "grams": 1,
+              "massless": true
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
             }
-          ]
+          ],
+          "yieldGrams": 190
         },
         {
           "title": "Рыба на пару",
-          "kcalPer100g": 110,
-          "proteinPer100g": 20,
-          "fatPer100g": 2.5,
-          "carbsPer100g": 0,
+          "kcalPer100g": 111,
+          "proteinPer100g": 20.5,
+          "fatPer100g": 2.9,
+          "carbsPer100g": 0.6,
           "diet": [
             "normal"
           ],
@@ -1185,61 +2180,175 @@
           "ingredients": [
             {
               "name": "Филе рыбы",
-              "gramsPer100g": 88
+              "grams": 250
             },
             {
               "name": "Лимон",
-              "gramsPer100g": 3
+              "grams": 15
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ],
+          "yieldGrams": 220
+        },
+        {
+          "title": "Тушёные овощи",
+          "kcalPer100g": 69,
+          "proteinPer100g": 1.3,
+          "fatPer100g": 4.4,
+          "carbsPer100g": 5.9,
+          "diet": [
+            "vegetarian",
+            "vegan"
+          ],
+          "allergens": [],
+          "type": "main",
+          "budget": "low",
+          "yieldGrams": 360,
+          "ingredients": [
+            {
+              "name": "Кабачки",
+              "grams": 100
+            },
+            {
+              "name": "Капуста",
+              "grams": 80
+            },
+            {
+              "name": "Морковь",
+              "grams": 60
+            },
+            {
+              "name": "Перец",
+              "grams": 60
+            },
+            {
+              "name": "Лук",
+              "grams": 40
+            },
+            {
+              "name": "Помидоры",
+              "grams": 60
+            },
+            {
+              "name": "Масло растительное",
+              "grams": 15
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
             }
           ]
         },
         {
-          "title": "Тушёные овощи",
-          "kcalPer100g": 80,
-          "proteinPer100g": 2,
-          "fatPer100g": 5,
-          "carbsPer100g": 7,
-          "diet": [
-            "vegetarian",
-            "vegan"
-          ],
-          "allergens": [],
-          "type": "main",
-          "budget": "low"
-        },
-        {
           "title": "Овощное рагу",
-          "kcalPer100g": 85,
-          "proteinPer100g": 2.5,
-          "fatPer100g": 5.5,
-          "carbsPer100g": 8,
+          "kcalPer100g": 78,
+          "proteinPer100g": 1.4,
+          "fatPer100g": 4,
+          "carbsPer100g": 9.3,
           "diet": [
             "vegetarian",
             "vegan"
           ],
           "allergens": [],
           "type": "main",
-          "budget": "low"
+          "budget": "low",
+          "yieldGrams": 400,
+          "ingredients": [
+            {
+              "name": "Картофель",
+              "grams": 120
+            },
+            {
+              "name": "Кабачки",
+              "grams": 80
+            },
+            {
+              "name": "Морковь",
+              "grams": 60
+            },
+            {
+              "name": "Лук",
+              "grams": 40
+            },
+            {
+              "name": "Перец",
+              "grams": 50
+            },
+            {
+              "name": "Томатная паста",
+              "grams": 20
+            },
+            {
+              "name": "Масло растительное",
+              "grams": 15
+            },
+            {
+              "name": "Вода",
+              "grams": 100
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
         },
         {
           "title": "Тушеная индейка",
-          "kcalPer100g": 150,
-          "proteinPer100g": 24,
-          "fatPer100g": 6,
-          "carbsPer100g": 0,
+          "kcalPer100g": 142,
+          "proteinPer100g": 14.6,
+          "fatPer100g": 8.2,
+          "carbsPer100g": 2.2,
           "diet": [
             "normal"
           ],
           "allergens": [],
           "type": "main",
-          "budget": "medium"
+          "budget": "medium",
+          "yieldGrams": 330,
+          "ingredients": [
+            {
+              "name": "Индейка",
+              "grams": 220
+            },
+            {
+              "name": "Лук",
+              "grams": 40
+            },
+            {
+              "name": "Морковь",
+              "grams": 40
+            },
+            {
+              "name": "Сметана 15%",
+              "grams": 40
+            },
+            {
+              "name": "Масло растительное",
+              "grams": 10
+            },
+            {
+              "name": "Вода",
+              "grams": 100
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
         },
         {
           "title": "Запечённый лосось",
-          "kcalPer100g": 180,
-          "proteinPer100g": 20,
-          "fatPer100g": 11,
-          "carbsPer100g": 0,
+          "kcalPer100g": 290,
+          "proteinPer100g": 23.2,
+          "fatPer100g": 20.3,
+          "carbsPer100g": 0.7,
           "diet": [
             "normal"
           ],
@@ -1247,14 +2356,39 @@
             "fish"
           ],
           "type": "main",
-          "budget": "high"
+          "budget": "high",
+          "yieldGrams": 190,
+          "ingredients": [
+            {
+              "name": "Лосось",
+              "grams": 220
+            },
+            {
+              "name": "Лимон",
+              "grams": 15
+            },
+            {
+              "name": "Масло оливковое",
+              "grams": 10
+            },
+            {
+              "name": "Специи",
+              "grams": 1,
+              "massless": true
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
         },
         {
           "title": "Тофу в кунжутном соусе",
-          "kcalPer100g": 140,
-          "proteinPer100g": 11,
-          "fatPer100g": 9,
-          "carbsPer100g": 5,
+          "kcalPer100g": 162,
+          "proteinPer100g": 8.9,
+          "fatPer100g": 11.7,
+          "carbsPer100g": 7,
           "diet": [
             "vegetarian",
             "vegan"
@@ -1264,14 +2398,37 @@
             "soy"
           ],
           "type": "main",
-          "budget": "medium"
+          "budget": "medium",
+          "yieldGrams": 230,
+          "ingredients": [
+            {
+              "name": "Тофу",
+              "grams": 200
+            },
+            {
+              "name": "Соевый соус",
+              "grams": 30
+            },
+            {
+              "name": "Кунжут",
+              "grams": 15
+            },
+            {
+              "name": "Масло растительное",
+              "grams": 10
+            },
+            {
+              "name": "Мёд",
+              "grams": 10
+            }
+          ]
         },
         {
           "title": "Кабачковые оладьи",
-          "kcalPer100g": 110,
-          "proteinPer100g": 4,
-          "fatPer100g": 6,
-          "carbsPer100g": 10,
+          "kcalPer100g": 170,
+          "proteinPer100g": 4.6,
+          "fatPer100g": 9.2,
+          "carbsPer100g": 17.1,
           "diet": [
             "vegetarian"
           ],
@@ -1280,28 +2437,84 @@
             "dairy"
           ],
           "type": "main",
-          "budget": "medium"
+          "budget": "medium",
+          "yieldGrams": 300,
+          "ingredients": [
+            {
+              "name": "Кабачки",
+              "grams": 250
+            },
+            {
+              "name": "Яйца",
+              "grams": 55
+            },
+            {
+              "name": "Мука",
+              "grams": 50
+            },
+            {
+              "name": "Лук",
+              "grams": 30
+            },
+            {
+              "name": "Масло растительное",
+              "grams": 20
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
         },
         {
           "title": "Овсяные котлеты",
-          "kcalPer100g": 120,
-          "proteinPer100g": 6,
-          "fatPer100g": 5,
-          "carbsPer100g": 13,
+          "kcalPer100g": 191,
+          "proteinPer100g": 4.5,
+          "fatPer100g": 7.5,
+          "carbsPer100g": 25.9,
           "diet": [
             "vegetarian",
             "vegan"
           ],
           "allergens": [],
           "type": "main",
-          "budget": "low"
+          "budget": "low",
+          "yieldGrams": 280,
+          "ingredients": [
+            {
+              "name": "Овсяные хлопья",
+              "grams": 80
+            },
+            {
+              "name": "Картофель",
+              "grams": 100
+            },
+            {
+              "name": "Лук",
+              "grams": 40
+            },
+            {
+              "name": "Морковь",
+              "grams": 40
+            },
+            {
+              "name": "Масло растительное",
+              "grams": 15
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
         },
         {
           "title": "Гречка с грибами",
-          "kcalPer100g": 105,
-          "proteinPer100g": 4.5,
-          "fatPer100g": 4,
-          "carbsPer100g": 12,
+          "kcalPer100g": 129,
+          "proteinPer100g": 4,
+          "fatPer100g": 5.5,
+          "carbsPer100g": 15.6,
           "diet": [
             "vegetarian",
             "vegan",
@@ -1309,13 +2522,41 @@
           ],
           "allergens": [],
           "type": "main",
-          "budget": "medium"
+          "budget": "medium",
+          "yieldGrams": 320,
+          "ingredients": [
+            {
+              "name": "Гречка",
+              "grams": 70
+            },
+            {
+              "name": "Грибы",
+              "grams": 100
+            },
+            {
+              "name": "Лук",
+              "grams": 40
+            },
+            {
+              "name": "Масло растительное",
+              "grams": 15
+            },
+            {
+              "name": "Вода",
+              "grams": 160
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
         },
         {
           "title": "Куриная грудка на гриле",
-          "kcalPer100g": 165,
-          "proteinPer100g": 31,
-          "fatPer100g": 3.6,
+          "kcalPer100g": 196,
+          "proteinPer100g": 30.3,
+          "fatPer100g": 7.8,
           "carbsPer100g": 0,
           "diet": [
             "normal"
@@ -1323,24 +2564,34 @@
           "allergens": [],
           "type": "main",
           "budget": "medium",
-          "url": "https://eda.ru/recepty/kurinaya-grudka",
           "ingredients": [
             {
               "name": "Куриная грудка",
-              "gramsPer100g": 92
+              "grams": 250
+            },
+            {
+              "name": "Масло оливковое",
+              "grams": 10
             },
             {
               "name": "Специи",
-              "gramsPer100g": 2
+              "grams": 1,
+              "massless": true
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
             }
-          ]
+          ],
+          "yieldGrams": 190
         },
         {
           "title": "Треска в духовке",
-          "kcalPer100g": 105,
-          "proteinPer100g": 22,
-          "fatPer100g": 1.5,
-          "carbsPer100g": 0,
+          "kcalPer100g": 150,
+          "proteinPer100g": 22.6,
+          "fatPer100g": 5.9,
+          "carbsPer100g": 0.7,
           "diet": [
             "normal"
           ],
@@ -1349,13 +2600,37 @@
           ],
           "type": "main",
           "budget": "medium",
-          "url": "https://eda.ru/recepty/treska"
+          "yieldGrams": 200,
+          "ingredients": [
+            {
+              "name": "Треска",
+              "grams": 250
+            },
+            {
+              "name": "Лимон",
+              "grams": 15
+            },
+            {
+              "name": "Масло оливковое",
+              "grams": 10
+            },
+            {
+              "name": "Специи",
+              "grams": 1,
+              "massless": true
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
         },
         {
           "title": "Индейка с овощами",
-          "kcalPer100g": 125,
-          "proteinPer100g": 20,
-          "fatPer100g": 4,
+          "kcalPer100g": 115,
+          "proteinPer100g": 12.3,
+          "fatPer100g": 5.7,
           "carbsPer100g": 3.5,
           "diet": [
             "normal"
@@ -1363,13 +2638,44 @@
           "allergens": [],
           "type": "main",
           "budget": "medium",
-          "url": "https://eda.ru/recepty/indeyka"
+          "yieldGrams": 360,
+          "ingredients": [
+            {
+              "name": "Индейка",
+              "grams": 200
+            },
+            {
+              "name": "Кабачки",
+              "grams": 80
+            },
+            {
+              "name": "Перец",
+              "grams": 60
+            },
+            {
+              "name": "Морковь",
+              "grams": 50
+            },
+            {
+              "name": "Лук",
+              "grams": 30
+            },
+            {
+              "name": "Масло растительное",
+              "grams": 10
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
         },
         {
           "title": "Куриный стейк",
-          "kcalPer100g": 175,
-          "proteinPer100g": 27,
-          "fatPer100g": 7,
+          "kcalPer100g": 282,
+          "proteinPer100g": 22,
+          "fatPer100g": 21.4,
           "carbsPer100g": 0,
           "diet": [
             "normal"
@@ -1377,14 +2683,34 @@
           "allergens": [],
           "type": "main",
           "budget": "medium",
-          "url": "https://eda.ru/recepty/kurinyy-steyk"
+          "yieldGrams": 180,
+          "ingredients": [
+            {
+              "name": "Курица",
+              "grams": 220
+            },
+            {
+              "name": "Масло растительное",
+              "grams": 10
+            },
+            {
+              "name": "Специи",
+              "grams": 1,
+              "massless": true
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
         },
         {
           "title": "Запечённая тыква",
-          "kcalPer100g": 55,
+          "kcalPer100g": 84,
           "proteinPer100g": 1.2,
-          "fatPer100g": 2,
-          "carbsPer100g": 8.5,
+          "fatPer100g": 4,
+          "carbsPer100g": 12.8,
           "diet": [
             "vegetarian",
             "vegan",
@@ -1393,16 +2719,35 @@
           "allergens": [],
           "type": "main",
           "budget": "low",
-          "url": "https://eda.ru/recepty/tykva"
+          "yieldGrams": 260,
+          "ingredients": [
+            {
+              "name": "Тыква",
+              "grams": 300
+            },
+            {
+              "name": "Мёд",
+              "grams": 15
+            },
+            {
+              "name": "Масло растительное",
+              "grams": 10
+            },
+            {
+              "name": "Специи",
+              "grams": 1,
+              "massless": true
+            }
+          ]
         }
       ],
       "side": [
         {
           "title": "Картофельное пюре",
-          "kcalPer100g": 90,
-          "proteinPer100g": 2,
-          "fatPer100g": 3,
-          "carbsPer100g": 14,
+          "kcalPer100g": 124,
+          "proteinPer100g": 2.2,
+          "fatPer100g": 6.4,
+          "carbsPer100g": 15,
           "diet": [
             "vegetarian"
           ],
@@ -1414,24 +2759,30 @@
           "ingredients": [
             {
               "name": "Картофель",
-              "gramsPer100g": 75
+              "grams": 250
             },
             {
               "name": "Молоко",
-              "gramsPer100g": 15
+              "grams": 50
             },
             {
               "name": "Масло сливочное",
-              "gramsPer100g": 5
+              "grams": 20
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
             }
-          ]
+          ],
+          "yieldGrams": 300
         },
         {
           "title": "Гречка",
-          "kcalPer100g": 110,
-          "proteinPer100g": 3.5,
-          "fatPer100g": 1,
-          "carbsPer100g": 20,
+          "kcalPer100g": 120,
+          "proteinPer100g": 4.5,
+          "fatPer100g": 1.2,
+          "carbsPer100g": 21.7,
           "diet": [
             "normal",
             "vegetarian",
@@ -1444,20 +2795,26 @@
           "ingredients": [
             {
               "name": "Гречка",
-              "gramsPer100g": 40
+              "grams": 70
             },
             {
               "name": "Вода",
-              "gramsPer100g": 55
+              "grams": 160
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
             }
-          ]
+          ],
+          "yieldGrams": 200
         },
         {
           "title": "Рис",
-          "kcalPer100g": 115,
-          "proteinPer100g": 2.7,
+          "kcalPer100g": 120,
+          "proteinPer100g": 2.4,
           "fatPer100g": 0.3,
-          "carbsPer100g": 25.5,
+          "carbsPer100g": 27.3,
           "diet": [
             "normal",
             "vegetarian",
@@ -1470,48 +2827,107 @@
           "ingredients": [
             {
               "name": "Рис",
-              "gramsPer100g": 38
+              "grams": 70
             },
             {
               "name": "Вода",
-              "gramsPer100g": 58
+              "grams": 150
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ],
+          "yieldGrams": 200
+        },
+        {
+          "title": "Тушёная капуста",
+          "kcalPer100g": 83,
+          "proteinPer100g": 2.1,
+          "fatPer100g": 5.1,
+          "carbsPer100g": 6.7,
+          "diet": [
+            "vegetarian",
+            "vegan"
+          ],
+          "allergens": [],
+          "type": "side",
+          "budget": "low",
+          "yieldGrams": 300,
+          "ingredients": [
+            {
+              "name": "Капуста",
+              "grams": 250
+            },
+            {
+              "name": "Морковь",
+              "grams": 40
+            },
+            {
+              "name": "Лук",
+              "grams": 30
+            },
+            {
+              "name": "Томатная паста",
+              "grams": 20
+            },
+            {
+              "name": "Масло растительное",
+              "grams": 15
+            },
+            {
+              "name": "Вода",
+              "grams": 80
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
             }
           ]
         },
         {
-          "title": "Тушёная капуста",
-          "kcalPer100g": 60,
-          "proteinPer100g": 1.5,
-          "fatPer100g": 4,
-          "carbsPer100g": 5,
-          "diet": [
-            "vegetarian",
-            "vegan"
-          ],
-          "allergens": [],
-          "type": "side",
-          "budget": "low"
-        },
-        {
           "title": "Запечённый картофель",
-          "kcalPer100g": 85,
-          "proteinPer100g": 2,
-          "fatPer100g": 0.1,
-          "carbsPer100g": 19,
+          "kcalPer100g": 146,
+          "proteinPer100g": 2.4,
+          "fatPer100g": 6.5,
+          "carbsPer100g": 20.4,
           "diet": [
             "vegetarian",
             "vegan"
           ],
           "allergens": [],
           "type": "side",
-          "budget": "low"
+          "budget": "low",
+          "yieldGrams": 250,
+          "ingredients": [
+            {
+              "name": "Картофель",
+              "grams": 300
+            },
+            {
+              "name": "Масло растительное",
+              "grams": 15
+            },
+            {
+              "name": "Специи",
+              "grams": 1,
+              "massless": true
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
         },
         {
           "title": "Квашеная капуста",
-          "kcalPer100g": 25,
-          "proteinPer100g": 1,
-          "fatPer100g": 0.2,
-          "carbsPer100g": 5.5,
+          "kcalPer100g": 64,
+          "proteinPer100g": 0.9,
+          "fatPer100g": 5.1,
+          "carbsPer100g": 4.3,
           "diet": [
             "vegetarian",
             "vegan",
@@ -1519,14 +2935,25 @@
           ],
           "allergens": [],
           "type": "side",
-          "budget": "low"
+          "budget": "low",
+          "yieldGrams": 200,
+          "ingredients": [
+            {
+              "name": "Капуста квашеная",
+              "grams": 200
+            },
+            {
+              "name": "Масло растительное",
+              "grams": 10
+            }
+          ]
         },
         {
           "title": "Салат из свежих овощей",
-          "kcalPer100g": 45,
-          "proteinPer100g": 1.2,
-          "fatPer100g": 2,
-          "carbsPer100g": 6,
+          "kcalPer100g": 65,
+          "proteinPer100g": 1.1,
+          "fatPer100g": 5.1,
+          "carbsPer100g": 3.7,
           "diet": [
             "vegetarian",
             "vegan",
@@ -1538,28 +2965,37 @@
           "ingredients": [
             {
               "name": "Огурцы",
-              "gramsPer100g": 30
+              "grams": 100
             },
             {
               "name": "Помидоры",
-              "gramsPer100g": 30
+              "grams": 100
             },
             {
               "name": "Перец",
-              "gramsPer100g": 15
+              "grams": 50
+            },
+            {
+              "name": "Лук",
+              "grams": 20
             },
             {
               "name": "Масло растительное",
-              "gramsPer100g": 8
+              "grams": 15
+            },
+            {
+              "name": "Зелень",
+              "grams": 15
             }
-          ]
+          ],
+          "yieldGrams": 300
         },
         {
           "title": "Салат Цезарь (без куриного)",
-          "kcalPer100g": 120,
-          "proteinPer100g": 4,
-          "fatPer100g": 9,
-          "carbsPer100g": 7,
+          "kcalPer100g": 113,
+          "proteinPer100g": 6.5,
+          "fatPer100g": 5,
+          "carbsPer100g": 10.7,
           "diet": [
             "vegetarian"
           ],
@@ -1570,14 +3006,36 @@
           ],
           "type": "side",
           "budget": "high",
-          "url": "https://eda.ru/recepty/salat-cezar"
+          "yieldGrams": 250,
+          "ingredients": [
+            {
+              "name": "Салат листовой",
+              "grams": 100
+            },
+            {
+              "name": "Хлеб",
+              "grams": 40
+            },
+            {
+              "name": "Сыр пармезан",
+              "grams": 30
+            },
+            {
+              "name": "Соус",
+              "grams": 30
+            },
+            {
+              "name": "Помидоры",
+              "grams": 50
+            }
+          ]
         },
         {
           "title": "Табуле",
-          "kcalPer100g": 100,
-          "proteinPer100g": 3,
-          "fatPer100g": 2.5,
-          "carbsPer100g": 17,
+          "kcalPer100g": 123,
+          "proteinPer100g": 3.2,
+          "fatPer100g": 5.1,
+          "carbsPer100g": 17.3,
           "diet": [
             "vegetarian",
             "vegan"
@@ -1586,14 +3044,45 @@
             "gluten"
           ],
           "type": "side",
-          "budget": "medium"
+          "budget": "medium",
+          "yieldGrams": 320,
+          "ingredients": [
+            {
+              "name": "Булгур",
+              "grams": 60
+            },
+            {
+              "name": "Помидоры",
+              "grams": 100
+            },
+            {
+              "name": "Огурцы",
+              "grams": 80
+            },
+            {
+              "name": "Зелень",
+              "grams": 40
+            },
+            {
+              "name": "Лук",
+              "grams": 20
+            },
+            {
+              "name": "Масло оливковое",
+              "grams": 15
+            },
+            {
+              "name": "Лимонный сок",
+              "grams": 15
+            }
+          ]
         },
         {
           "title": "Брокколи на пару",
-          "kcalPer100g": 35,
-          "proteinPer100g": 2.8,
-          "fatPer100g": 0.4,
-          "carbsPer100g": 7,
+          "kcalPer100g": 76,
+          "proteinPer100g": 3,
+          "fatPer100g": 4.8,
+          "carbsPer100g": 7.6,
           "diet": [
             "vegetarian",
             "vegan",
@@ -1601,7 +3090,23 @@
           ],
           "allergens": [],
           "type": "side",
-          "budget": "low"
+          "budget": "low",
+          "yieldGrams": 230,
+          "ingredients": [
+            {
+              "name": "Брокколи",
+              "grams": 250
+            },
+            {
+              "name": "Масло оливковое",
+              "grams": 10
+            },
+            {
+              "name": "Соль",
+              "grams": 1,
+              "massless": true
+            }
+          ]
         }
       ]
     },
@@ -1624,9 +3129,10 @@
         "ingredients": [
           {
             "name": "Банан",
-            "gramsPer100g": 100
+            "grams": 120
           }
-        ]
+        ],
+        "yieldGrams": 120
       },
       {
         "title": "Яблоко",
@@ -1646,9 +3152,10 @@
         "ingredients": [
           {
             "name": "Яблоко",
-            "gramsPer100g": 100
+            "grams": 150
           }
-        ]
+        ],
+        "yieldGrams": 150
       },
       {
         "title": "Груша",
@@ -1664,7 +3171,14 @@
         ],
         "allergens": [],
         "type": "snack",
-        "budget": "low"
+        "budget": "low",
+        "yieldGrams": 150,
+        "ingredients": [
+          {
+            "name": "Груша",
+            "grams": 150
+          }
+        ]
       },
       {
         "title": "Апельсин",
@@ -1680,7 +3194,14 @@
         ],
         "allergens": [],
         "type": "snack",
-        "budget": "low"
+        "budget": "low",
+        "yieldGrams": 150,
+        "ingredients": [
+          {
+            "name": "Апельсин",
+            "grams": 150
+          }
+        ]
       },
       {
         "title": "Мандарин",
@@ -1696,7 +3217,14 @@
         ],
         "allergens": [],
         "type": "snack",
-        "budget": "low"
+        "budget": "low",
+        "yieldGrams": 100,
+        "ingredients": [
+          {
+            "name": "Мандарин",
+            "grams": 100
+          }
+        ]
       },
       {
         "title": "Киви",
@@ -1712,14 +3240,21 @@
         ],
         "allergens": [],
         "type": "snack",
-        "budget": "medium"
+        "budget": "medium",
+        "yieldGrams": 80,
+        "ingredients": [
+          {
+            "name": "Киви",
+            "grams": 80
+          }
+        ]
       },
       {
         "title": "Ягоды свежие",
-        "kcalPer100g": 57,
-        "proteinPer100g": 0.7,
-        "fatPer100g": 0.3,
-        "carbsPer100g": 14,
+        "kcalPer100g": 50,
+        "proteinPer100g": 1,
+        "fatPer100g": 0.5,
+        "carbsPer100g": 10,
         "diet": [
           "normal",
           "vegetarian",
@@ -1728,7 +3263,14 @@
         ],
         "allergens": [],
         "type": "snack",
-        "budget": "medium"
+        "budget": "medium",
+        "yieldGrams": 100,
+        "ingredients": [
+          {
+            "name": "Ягоды",
+            "grams": 100
+          }
+        ]
       },
       {
         "title": "Виноград",
@@ -1744,28 +3286,54 @@
         ],
         "allergens": [],
         "type": "snack",
-        "budget": "medium"
+        "budget": "medium",
+        "yieldGrams": 120,
+        "ingredients": [
+          {
+            "name": "Виноград",
+            "grams": 120
+          }
+        ]
       },
       {
         "title": "Хумус с овощами",
-        "kcalPer100g": 160,
-        "proteinPer100g": 6,
-        "fatPer100g": 10,
-        "carbsPer100g": 12,
+        "kcalPer100g": 69,
+        "proteinPer100g": 3.2,
+        "fatPer100g": 3,
+        "carbsPer100g": 7.8,
         "diet": [
           "vegetarian",
           "vegan"
         ],
         "allergens": [],
         "type": "snack",
-        "budget": "medium"
+        "budget": "medium",
+        "yieldGrams": 260,
+        "ingredients": [
+          {
+            "name": "Хумус",
+            "grams": 80
+          },
+          {
+            "name": "Морковь",
+            "grams": 60
+          },
+          {
+            "name": "Перец",
+            "grams": 60
+          },
+          {
+            "name": "Огурцы",
+            "grams": 60
+          }
+        ]
       },
       {
         "title": "Протеиновый батончик",
-        "kcalPer100g": 400,
-        "proteinPer100g": 25,
-        "fatPer100g": 15,
-        "carbsPer100g": 40,
+        "kcalPer100g": 350,
+        "proteinPer100g": 30,
+        "fatPer100g": 12,
+        "carbsPer100g": 35,
         "diet": [
           "normal",
           "vegetarian"
@@ -1776,14 +3344,21 @@
           "gluten"
         ],
         "type": "snack",
-        "budget": "high"
+        "budget": "high",
+        "yieldGrams": 50,
+        "ingredients": [
+          {
+            "name": "Протеиновый батончик",
+            "grams": 50
+          }
+        ]
       },
       {
         "title": "Сырные кубики",
-        "kcalPer100g": 300,
-        "proteinPer100g": 20,
-        "fatPer100g": 25,
-        "carbsPer100g": 2,
+        "kcalPer100g": 364,
+        "proteinPer100g": 25,
+        "fatPer100g": 30,
+        "carbsPer100g": 0,
         "diet": [
           "normal",
           "vegetarian"
@@ -1792,7 +3367,14 @@
           "dairy"
         ],
         "type": "snack",
-        "budget": "high"
+        "budget": "high",
+        "yieldGrams": 40,
+        "ingredients": [
+          {
+            "name": "Сыр",
+            "grams": 40
+          }
+        ]
       },
       {
         "title": "Авокадо",
@@ -1806,14 +3388,21 @@
         ],
         "allergens": [],
         "type": "snack",
-        "budget": "high"
+        "budget": "high",
+        "yieldGrams": 100,
+        "ingredients": [
+          {
+            "name": "Авокадо",
+            "grams": 100
+          }
+        ]
       },
       {
         "title": "Сухофрукты",
         "kcalPer100g": 280,
         "proteinPer100g": 2.5,
         "fatPer100g": 0.5,
-        "carbsPer100g": 70,
+        "carbsPer100g": 68,
         "diet": [
           "vegetarian",
           "vegan",
@@ -1821,14 +3410,21 @@
         ],
         "allergens": [],
         "type": "snack",
-        "budget": "medium"
+        "budget": "medium",
+        "yieldGrams": 40,
+        "ingredients": [
+          {
+            "name": "Сухофрукты",
+            "grams": 40
+          }
+        ]
       },
       {
         "title": "Варёное яйцо",
-        "kcalPer100g": 155,
-        "proteinPer100g": 13,
-        "fatPer100g": 11,
-        "carbsPer100g": 1.1,
+        "kcalPer100g": 173,
+        "proteinPer100g": 14,
+        "fatPer100g": 12.7,
+        "carbsPer100g": 0.8,
         "diet": [
           "normal",
           "vegetarian"
@@ -1837,14 +3433,21 @@
           "eggs"
         ],
         "type": "snack",
-        "budget": "low"
+        "budget": "low",
+        "yieldGrams": 50,
+        "ingredients": [
+          {
+            "name": "Яйца",
+            "grams": 55
+          }
+        ]
       },
       {
         "title": "Огурец с солью",
-        "kcalPer100g": 12,
-        "proteinPer100g": 0.7,
+        "kcalPer100g": 15,
+        "proteinPer100g": 0.8,
         "fatPer100g": 0.1,
-        "carbsPer100g": 2.2,
+        "carbsPer100g": 2.8,
         "diet": [
           "vegetarian",
           "vegan",
@@ -1852,14 +3455,26 @@
         ],
         "allergens": [],
         "type": "snack",
-        "budget": "low"
+        "budget": "low",
+        "yieldGrams": 150,
+        "ingredients": [
+          {
+            "name": "Огурец",
+            "grams": 150
+          },
+          {
+            "name": "Соль",
+            "grams": 1,
+            "massless": true
+          }
+        ]
       },
       {
         "title": "Кефир 1%",
-        "kcalPer100g": 45,
+        "kcalPer100g": 40,
         "proteinPer100g": 3,
         "fatPer100g": 1,
-        "carbsPer100g": 5,
+        "carbsPer100g": 4,
         "diet": [
           "normal",
           "vegetarian"
@@ -1868,14 +3483,21 @@
           "dairy"
         ],
         "type": "snack",
-        "budget": "low"
+        "budget": "low",
+        "yieldGrams": 200,
+        "ingredients": [
+          {
+            "name": "Кефир 1%",
+            "grams": 200
+          }
+        ]
       },
       {
         "title": "Гранола без сахара",
-        "kcalPer100g": 380,
+        "kcalPer100g": 420,
         "proteinPer100g": 10,
-        "fatPer100g": 12,
-        "carbsPer100g": 60,
+        "fatPer100g": 14,
+        "carbsPer100g": 64,
         "diet": [
           "vegetarian"
         ],
@@ -1884,14 +3506,21 @@
           "nuts"
         ],
         "type": "snack",
-        "budget": "medium"
+        "budget": "medium",
+        "yieldGrams": 50,
+        "ingredients": [
+          {
+            "name": "Гранола",
+            "grams": 50
+          }
+        ]
       },
       {
         "title": "Хлебец с творожным сыром",
-        "kcalPer100g": 210,
-        "proteinPer100g": 9,
-        "fatPer100g": 12,
-        "carbsPer100g": 16,
+        "kcalPer100g": 274,
+        "proteinPer100g": 7.3,
+        "fatPer100g": 14.2,
+        "carbsPer100g": 28.3,
         "diet": [
           "normal",
           "vegetarian"
@@ -1902,14 +3531,24 @@
         ],
         "type": "snack",
         "budget": "low",
-        "url": "https://eda.ru/recepty/buterbrod"
+        "yieldGrams": 45,
+        "ingredients": [
+          {
+            "name": "Хлебец",
+            "grams": 20
+          },
+          {
+            "name": "Творожный сыр",
+            "grams": 25
+          }
+        ]
       },
       {
         "title": "Тост с арахисовой пастой",
-        "kcalPer100g": 280,
-        "proteinPer100g": 10,
-        "fatPer100g": 18,
-        "carbsPer100g": 20,
+        "kcalPer100g": 297,
+        "proteinPer100g": 10.1,
+        "fatPer100g": 12.5,
+        "carbsPer100g": 38.3,
         "diet": [
           "vegetarian",
           "vegan"
@@ -1920,14 +3559,28 @@
         ],
         "type": "snack",
         "budget": "medium",
-        "url": "https://eda.ru/recepty/tost"
+        "yieldGrams": 120,
+        "ingredients": [
+          {
+            "name": "Тост",
+            "grams": 60
+          },
+          {
+            "name": "Арахисовая паста",
+            "grams": 25
+          },
+          {
+            "name": "Банан",
+            "grams": 40
+          }
+        ]
       },
       {
         "title": "Ролл с лососем",
-        "kcalPer100g": 185,
-        "proteinPer100g": 9,
-        "fatPer100g": 8,
-        "carbsPer100g": 20,
+        "kcalPer100g": 246,
+        "proteinPer100g": 9.4,
+        "fatPer100g": 4.1,
+        "carbsPer100g": 42.9,
         "diet": [
           "normal"
         ],
@@ -1938,17 +3591,31 @@
         ],
         "type": "snack",
         "budget": "high",
-        "url": "https://eda.ru/recepty/roll"
+        "yieldGrams": 110,
+        "ingredients": [
+          {
+            "name": "Рис",
+            "grams": 60
+          },
+          {
+            "name": "Лосось",
+            "grams": 30
+          },
+          {
+            "name": "Огурцы",
+            "grams": 15
+          }
+        ]
       }
     ]
   },
   "calorieBoosters": [
     {
       "title": "Кусочек чёрного хлеба",
-      "kcalPer100g": 250,
-      "proteinPer100g": 8,
-      "fatPer100g": 3,
-      "carbsPer100g": 48,
+      "kcalPer100g": 214,
+      "proteinPer100g": 6.6,
+      "fatPer100g": 1.2,
+      "carbsPer100g": 41,
       "diet": [
         "normal",
         "vegetarian"
@@ -1956,7 +3623,14 @@
       "allergens": [
         "gluten"
       ],
-      "budget": "low"
+      "budget": "low",
+      "yieldGrams": 40,
+      "ingredients": [
+        {
+          "name": "Чёрный хлеб",
+          "grams": 40
+        }
+      ]
     },
     {
       "title": "Авокадо",
@@ -1970,14 +3644,21 @@
         "vegan"
       ],
       "allergens": [],
-      "budget": "high"
+      "budget": "high",
+      "yieldGrams": 100,
+      "ingredients": [
+        {
+          "name": "Авокадо",
+          "grams": 100
+        }
+      ]
     },
     {
       "title": "Сыр",
-      "kcalPer100g": 400,
+      "kcalPer100g": 364,
       "proteinPer100g": 25,
-      "fatPer100g": 35,
-      "carbsPer100g": 1.5,
+      "fatPer100g": 30,
+      "carbsPer100g": 0,
       "diet": [
         "normal",
         "vegetarian"
@@ -1985,14 +3666,21 @@
       "allergens": [
         "dairy"
       ],
-      "budget": "high"
+      "budget": "high",
+      "yieldGrams": 30,
+      "ingredients": [
+        {
+          "name": "Сыр",
+          "grams": 30
+        }
+      ]
     },
     {
       "title": "Орехи (горсть)",
-      "kcalPer100g": 600,
-      "proteinPer100g": 20,
-      "fatPer100g": 50,
-      "carbsPer100g": 20,
+      "kcalPer100g": 607,
+      "proteinPer100g": 15,
+      "fatPer100g": 54,
+      "carbsPer100g": 18,
       "diet": [
         "vegetarian",
         "vegan"
@@ -2000,66 +3688,118 @@
       "allergens": [
         "nuts"
       ],
-      "budget": "high"
+      "budget": "high",
+      "yieldGrams": 30,
+      "ingredients": [
+        {
+          "name": "Орехи",
+          "grams": 30
+        }
+      ]
     },
     {
       "title": "Оливковое масло (1 ст. л.)",
-      "kcalPer100g": 884,
+      "kcalPer100g": 898,
       "proteinPer100g": 0,
-      "fatPer100g": 100,
+      "fatPer100g": 99.8,
       "carbsPer100g": 0,
       "diet": [
         "vegetarian",
         "vegan"
       ],
       "allergens": [],
-      "budget": "high"
+      "budget": "high",
+      "yieldGrams": 15,
+      "ingredients": [
+        {
+          "name": "Оливковое масло",
+          "grams": 15
+        }
+      ]
     },
     {
       "title": "Мед (1 ч. л.)",
       "kcalPer100g": 304,
       "proteinPer100g": 0.3,
       "fatPer100g": 0,
-      "carbsPer100g": 80,
+      "carbsPer100g": 82,
       "diet": [
         "vegetarian"
       ],
       "allergens": [],
-      "budget": "medium"
+      "budget": "medium",
+      "yieldGrams": 10,
+      "ingredients": [
+        {
+          "name": "Мёд",
+          "grams": 10
+        }
+      ]
     },
     {
       "title": "Гуакамоле",
-      "kcalPer100g": 180,
-      "proteinPer100g": 2,
-      "fatPer100g": 16,
-      "carbsPer100g": 8,
+      "kcalPer100g": 125,
+      "proteinPer100g": 1.8,
+      "fatPer100g": 11,
+      "carbsPer100g": 8.3,
       "diet": [
         "vegetarian",
         "vegan"
       ],
       "allergens": [],
-      "budget": "medium"
+      "budget": "medium",
+      "yieldGrams": 110,
+      "ingredients": [
+        {
+          "name": "Авокадо",
+          "grams": 80
+        },
+        {
+          "name": "Помидоры",
+          "grams": 20
+        },
+        {
+          "name": "Лук",
+          "grams": 10
+        },
+        {
+          "name": "Лимонный сок",
+          "grams": 5
+        },
+        {
+          "name": "Соль",
+          "grams": 1,
+          "massless": true
+        }
+      ]
     },
     {
       "title": "Сыр фета",
       "kcalPer100g": 264,
       "proteinPer100g": 14,
       "fatPer100g": 21,
-      "carbsPer100g": 3,
+      "carbsPer100g": 4,
       "diet": [
         "vegetarian"
       ],
       "allergens": [
         "dairy"
       ],
-      "budget": "high"
+      "budget": "high",
+      "yieldGrams": 40,
+      "ingredients": [
+        {
+          "name": "Сыр фета",
+          "grams": 40
+        }
+      ]
     },
     {
       "title": "Хлебец ржаной",
-      "kcalPer100g": 280,
-      "proteinPer100g": 10,
+      "kcalPer100g": 300,
+      "proteinPer100g": 9,
       "fatPer100g": 2,
-      "carbsPer100g": 55,
+      "carbsPer100g": 60,
       "diet": [
         "normal",
         "vegetarian"
@@ -2067,7 +3807,14 @@
       "allergens": [
         "gluten"
       ],
-      "budget": "low"
+      "budget": "low",
+      "yieldGrams": 20,
+      "ingredients": [
+        {
+          "name": "Хлебец",
+          "grams": 20
+        }
+      ]
     },
     {
       "title": "Банан",
@@ -2085,9 +3832,10 @@
       "ingredients": [
         {
           "name": "Банан",
-          "gramsPer100g": 100
+          "grams": 120
         }
-      ]
+      ],
+      "yieldGrams": 120
     },
     {
       "title": "Яблоко",
@@ -2106,9 +3854,10 @@
       "ingredients": [
         {
           "name": "Яблоко",
-          "gramsPer100g": 100
+          "grams": 150
         }
-      ]
+      ],
+      "yieldGrams": 150
     },
     {
       "title": "Груша",
@@ -2123,12 +3872,19 @@
         "glutenfree"
       ],
       "allergens": [],
-      "budget": "low"
+      "budget": "low",
+      "yieldGrams": 150,
+      "ingredients": [
+        {
+          "name": "Груша",
+          "grams": 150
+        }
+      ]
     },
     {
       "title": "Кефир 2.5%",
       "kcalPer100g": 53,
-      "proteinPer100g": 3,
+      "proteinPer100g": 2.9,
       "fatPer100g": 2.5,
       "carbsPer100g": 4,
       "diet": [
@@ -2138,7 +3894,14 @@
       "allergens": [
         "dairy"
       ],
-      "budget": "low"
+      "budget": "low",
+      "yieldGrams": 200,
+      "ingredients": [
+        {
+          "name": "Кефир 2.5%",
+          "grams": 200
+        }
+      ]
     },
     {
       "title": "Творог 5%",
@@ -2153,12 +3916,19 @@
       "allergens": [
         "dairy"
       ],
-      "budget": "medium"
+      "budget": "medium",
+      "yieldGrams": 100,
+      "ingredients": [
+        {
+          "name": "Творог 5%",
+          "grams": 100
+        }
+      ]
     },
     {
       "title": "Сметана 15%",
-      "kcalPer100g": 160,
-      "proteinPer100g": 2.5,
+      "kcalPer100g": 158,
+      "proteinPer100g": 2.6,
       "fatPer100g": 15,
       "carbsPer100g": 3,
       "diet": [
@@ -2168,13 +3938,20 @@
       "allergens": [
         "dairy"
       ],
-      "budget": "medium"
+      "budget": "medium",
+      "yieldGrams": 30,
+      "ingredients": [
+        {
+          "name": "Сметана 15%",
+          "grams": 30
+        }
+      ]
     },
     {
       "title": "Сливочное масло",
       "kcalPer100g": 748,
       "proteinPer100g": 0.5,
-      "fatPer100g": 82,
+      "fatPer100g": 82.5,
       "carbsPer100g": 0.8,
       "diet": [
         "normal",
@@ -2183,21 +3960,35 @@
       "allergens": [
         "dairy"
       ],
-      "budget": "medium"
+      "budget": "medium",
+      "yieldGrams": 10,
+      "ingredients": [
+        {
+          "name": "Сливочное масло",
+          "grams": 10
+        }
+      ]
     },
     {
       "title": "Сухофрукты (горсть)",
       "kcalPer100g": 280,
       "proteinPer100g": 2.5,
       "fatPer100g": 0.5,
-      "carbsPer100g": 70,
+      "carbsPer100g": 68,
       "diet": [
         "normal",
         "vegetarian",
         "vegan"
       ],
       "allergens": [],
-      "budget": "low"
+      "budget": "low",
+      "yieldGrams": 30,
+      "ingredients": [
+        {
+          "name": "Сухофрукты",
+          "grams": 30
+        }
+      ]
     },
     {
       "title": "Хумус",
@@ -2210,14 +4001,21 @@
         "vegan"
       ],
       "allergens": [],
-      "budget": "medium"
+      "budget": "medium",
+      "yieldGrams": 50,
+      "ingredients": [
+        {
+          "name": "Хумус",
+          "grams": 50
+        }
+      ]
     },
     {
       "title": "Чай",
-      "kcalPer100g": 1,
+      "kcalPer100g": 0,
       "proteinPer100g": 0,
       "fatPer100g": 0,
-      "carbsPer100g": 0.2,
+      "carbsPer100g": 0,
       "diet": [
         "normal",
         "vegetarian",
@@ -2225,14 +4023,21 @@
         "glutenfree"
       ],
       "allergens": [],
-      "budget": "low"
+      "budget": "low",
+      "yieldGrams": 200,
+      "ingredients": [
+        {
+          "name": "Чай",
+          "grams": 200
+        }
+      ]
     },
     {
       "title": "Кубик сахара",
       "kcalPer100g": 387,
       "proteinPer100g": 0,
       "fatPer100g": 0,
-      "carbsPer100g": 99.8,
+      "carbsPer100g": 100,
       "diet": [
         "normal",
         "vegetarian",
@@ -2240,16 +4045,23 @@
         "glutenfree"
       ],
       "allergens": [],
-      "budget": "low"
+      "budget": "low",
+      "yieldGrams": 5,
+      "ingredients": [
+        {
+          "name": "Сахар",
+          "grams": 5
+        }
+      ]
     }
   ],
   "cheatMealRecipes": [
     {
       "title": "Бургер с картошкой",
-      "kcalPer100g": 320,
-      "proteinPer100g": 12,
-      "fatPer100g": 18,
-      "carbsPer100g": 30,
+      "kcalPer100g": 252,
+      "proteinPer100g": 8.7,
+      "fatPer100g": 13.2,
+      "carbsPer100g": 24.2,
       "diet": [
         "normal"
       ],
@@ -2263,28 +4075,41 @@
       "ingredients": [
         {
           "name": "Булочка",
-          "gramsPer100g": 25
+          "grams": 80
         },
         {
           "name": "Говяжий фарш",
-          "gramsPer100g": 30
+          "grams": 100
         },
         {
           "name": "Сыр",
-          "gramsPer100g": 10
+          "grams": 20
+        },
+        {
+          "name": "Помидоры",
+          "grams": 30
+        },
+        {
+          "name": "Салат листовой",
+          "grams": 15
+        },
+        {
+          "name": "Соус",
+          "grams": 20
         },
         {
           "name": "Картофель фри",
-          "gramsPer100g": 28
+          "grams": 120
         }
-      ]
+      ],
+      "yieldGrams": 380
     },
     {
       "title": "Пицца",
-      "kcalPer100g": 280,
-      "proteinPer100g": 11,
-      "fatPer100g": 12,
-      "carbsPer100g": 32,
+      "kcalPer100g": 261,
+      "proteinPer100g": 10.4,
+      "fatPer100g": 11.8,
+      "carbsPer100g": 27.7,
       "diet": [
         "normal",
         "vegetarian"
@@ -2298,28 +4123,29 @@
       "ingredients": [
         {
           "name": "Тесто",
-          "gramsPer100g": 40
+          "grams": 150
         },
         {
           "name": "Сыр моцарелла",
-          "gramsPer100g": 22
+          "grams": 80
         },
         {
           "name": "Томатный соус",
-          "gramsPer100g": 15
+          "grams": 60
         },
         {
           "name": "Колбаса",
-          "gramsPer100g": 12
+          "grams": 50
         }
-      ]
+      ],
+      "yieldGrams": 320
     },
     {
       "title": "Паста карбонара",
-      "kcalPer100g": 310,
-      "proteinPer100g": 13,
-      "fatPer100g": 16,
-      "carbsPer100g": 30,
+      "kcalPer100g": 275,
+      "proteinPer100g": 13.4,
+      "fatPer100g": 12.5,
+      "carbsPer100g": 26.7,
       "diet": [
         "normal"
       ],
@@ -2330,36 +4156,36 @@
       ],
       "type": "main",
       "budget": "high",
-      "url": "https://eda.ru/recepty/karbonara",
       "ingredients": [
         {
           "name": "Паста",
-          "gramsPer100g": 45
+          "grams": 120
         },
         {
           "name": "Бекон",
-          "gramsPer100g": 18
+          "grams": 50
         },
         {
           "name": "Яйца",
-          "gramsPer100g": 12
+          "grams": 50
         },
         {
           "name": "Сыр пармезан",
-          "gramsPer100g": 10
+          "grams": 30
         },
         {
           "name": "Сливки",
-          "gramsPer100g": 8
+          "grams": 40
         }
-      ]
+      ],
+      "yieldGrams": 330
     },
     {
       "title": "Торт",
-      "kcalPer100g": 380,
-      "proteinPer100g": 6,
-      "fatPer100g": 20,
-      "carbsPer100g": 45,
+      "kcalPer100g": 350,
+      "proteinPer100g": 4.5,
+      "fatPer100g": 18,
+      "carbsPer100g": 44,
       "diet": [
         "normal"
       ],
@@ -2369,7 +4195,14 @@
         "gluten"
       ],
       "type": "dessert",
-      "budget": "high"
+      "budget": "high",
+      "yieldGrams": 120,
+      "ingredients": [
+        {
+          "name": "Торт",
+          "grams": 120
+        }
+      ]
     },
     {
       "title": "Мороженое",
@@ -2385,14 +4218,21 @@
         "dairy"
       ],
       "type": "dessert",
-      "budget": "medium"
+      "budget": "medium",
+      "yieldGrams": 100,
+      "ingredients": [
+        {
+          "name": "Мороженое",
+          "grams": 100
+        }
+      ]
     },
     {
       "title": "Чизбургер",
-      "kcalPer100g": 295,
-      "proteinPer100g": 14,
-      "fatPer100g": 17,
-      "carbsPer100g": 24,
+      "kcalPer100g": 243,
+      "proteinPer100g": 12.2,
+      "fatPer100g": 13.5,
+      "carbsPer100g": 17.4,
       "diet": [
         "normal"
       ],
@@ -2403,14 +4243,40 @@
       ],
       "type": "main",
       "budget": "high",
-      "url": "https://eda.ru/recepty/cheeseburger"
+      "yieldGrams": 250,
+      "ingredients": [
+        {
+          "name": "Булочка",
+          "grams": 80
+        },
+        {
+          "name": "Говяжий фарш",
+          "grams": 100
+        },
+        {
+          "name": "Сыр",
+          "grams": 25
+        },
+        {
+          "name": "Помидоры",
+          "grams": 30
+        },
+        {
+          "name": "Соус",
+          "grams": 20
+        },
+        {
+          "name": "Лук",
+          "grams": 15
+        }
+      ]
     },
     {
       "title": "Наггетсы с соусом",
-      "kcalPer100g": 270,
-      "proteinPer100g": 13,
-      "fatPer100g": 16,
-      "carbsPer100g": 20,
+      "kcalPer100g": 261,
+      "proteinPer100g": 12.1,
+      "fatPer100g": 17.3,
+      "carbsPer100g": 13.9,
       "diet": [
         "normal"
       ],
@@ -2420,7 +4286,17 @@
       ],
       "type": "main",
       "budget": "high",
-      "url": "https://eda.ru/recepty/naggetsy"
+      "yieldGrams": 190,
+      "ingredients": [
+        {
+          "name": "Наггетсы",
+          "grams": 150
+        },
+        {
+          "name": "Соус",
+          "grams": 40
+        }
+      ]
     }
   ]
 }

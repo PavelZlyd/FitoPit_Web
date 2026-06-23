@@ -6,15 +6,18 @@ import {
   SHOPPING_MODES
 } from '../shoppingList.js';
 
+// Новый формат: ингредиенты в абсолютных граммах сырого продукта + выход блюда.
 const samplePlan = [
   {
     breakfast: [
       {
         title: 'Омлет',
         weight: 200,
+        yieldGrams: 100,
         ingredients: [
-          { name: 'Яйца', gramsPer100g: 50 },
-          { name: 'Сыр', gramsPer100g: 25 }
+          { name: 'Яйца', grams: 50 },
+          { name: 'Сыр', grams: 25 },
+          { name: 'Соль', grams: 1, massless: true }
         ]
       }
     ],
@@ -22,7 +25,8 @@ const samplePlan = [
       {
         title: 'Борщ',
         weight: 300,
-        ingredients: [{ name: 'Свёкла', gramsPer100g: 20 }]
+        yieldGrams: 100,
+        ingredients: [{ name: 'Свёкла', grams: 20 }]
       }
     ]
   },
@@ -31,9 +35,11 @@ const samplePlan = [
       {
         title: 'Омлет',
         weight: 150,
+        yieldGrams: 100,
         ingredients: [
-          { name: 'Яйца', gramsPer100g: 50 },
-          { name: 'Сыр', gramsPer100g: 25 }
+          { name: 'Яйца', grams: 50 },
+          { name: 'Сыр', grams: 25 },
+          { name: 'Соль', grams: 1, massless: true }
         ]
       }
     ]
@@ -57,6 +63,32 @@ describe('shoppingList', () => {
     expect(eggs.totalWeight).toBe(175);
     expect(cheese.totalWeight).toBe(87.5);
     expect(beet.totalWeight).toBe(60);
+  });
+
+  it('excludes massless ingredients (salt/spices) from the list', () => {
+    const items = buildShoppingList(samplePlan, SHOPPING_MODES.INGREDIENTS);
+    expect(items.find((item) => item.title === 'Соль')).toBeUndefined();
+  });
+
+  it('keeps raw grain weight independent of cooked portion weight', () => {
+    const plan = [
+      {
+        dinner: [
+          {
+            title: 'Гречка',
+            weight: 400, // готовая каша набрала воду
+            yieldGrams: 200,
+            ingredients: [
+              { name: 'Гречка', grams: 70 },
+              { name: 'Вода', grams: 160 }
+            ]
+          }
+        ]
+      }
+    ];
+    const items = buildShoppingList(plan, SHOPPING_MODES.INGREDIENTS);
+    const grain = items.find((item) => item.title === 'Гречка');
+    expect(grain.totalWeight).toBe(140); // 70 г сухой крупы * (400/200)
   });
 
   it('detects ingredient data in plan', () => {

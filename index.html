@@ -193,7 +193,11 @@
       <h3 data-i18n="myRecipes">Моя база блюд</h3>
       <form id="userRecipeForm" class="user-recipe-form">
         <input type="text" id="userRecipeTitle" placeholder="Название блюда" required>
-        <input type="number" id="userRecipeKcal" placeholder="ккал/100г" min="20" max="900" required>
+        <textarea id="userRecipeIngredients" class="user-recipe-ingredients" rows="3"
+                  placeholder="Состав (необязательно), по строке: Продукт : граммы&#10;Например:&#10;Гречка : 60&#10;Вода : 150"></textarea>
+        <input type="number" id="userRecipeYield" placeholder="Выход готового блюда, г (необязательно)" min="1" step="1">
+        <p class="user-recipe-hint">Если заполнить состав, КБЖУ посчитаются автоматически. Иначе введите значения вручную ниже.</p>
+        <input type="number" id="userRecipeKcal" placeholder="ккал/100г" min="20" max="900">
         <input type="number" id="userRecipeProtein" placeholder="Белки/100г" min="0" step="0.1">
         <input type="number" id="userRecipeFat" placeholder="Жиры/100г" min="0" step="0.1">
         <input type="number" id="userRecipeCarbs" placeholder="Углеводы/100г" min="0" step="0.1">
@@ -249,10 +253,12 @@
         <strong id="macroFat">0</strong> <span data-i18n="macroFat">Ж</span> •
         <strong id="macroCarbs">0</strong> <span data-i18n="macroCarbs">У</span>
       </p>
-      <div id="weeklyKcalChart" class="weekly-kcal-chart"></div>
-      <div id="shoppingListPanel" class="shopping-list-panel" style="display: none;"></div>
       <div id="tabs-container"></div>
-      <div id="mealPlan"></div>
+      <div class="plan-body">
+        <div id="weeklyKcalChart" class="weekly-kcal-chart"></div>
+        <div id="mealPlan"></div>
+      </div>
+      <div id="shoppingListPanel" class="shopping-list-panel" style="display: none;"></div>
       <div class="plan-actions">
         <button type="button" id="copyPlan">📋 Копировать план</button>
         <button type="button" id="copyShoppingList" data-i18n="copyShoppingList">🛒 Копировать список покупок</button>

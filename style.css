@@ -315,15 +315,27 @@ form button[type="reset"]:hover {
 #result h2 {
   font-size: 22px;
   color: var(--text);
-  margin-bottom: 16px;
+  margin-bottom: 10px;
   border-bottom: 2px solid var(--accent);
-  padding-bottom: 8px;
+  padding-bottom: 6px;
   display: inline-block;
 }
 
 #result p {
   color: var(--text);
   font-size: 16px;
+  margin-bottom: 8px;
+}
+
+#result > p:last-of-type {
+  margin-bottom: 14px;
+}
+
+.plan-body {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
   margin-bottom: 16px;
 }
 
@@ -634,6 +646,87 @@ form button[type="reset"]:hover {
   text-decoration: underline;
 }
 
+/* Кнопка и всплывашка «Состав» */
+.composition-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.composition-btn {
+  font-size: 13px;
+  color: var(--accent);
+  white-space: nowrap;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(58, 134, 255, 0.25);
+  background: rgba(58, 134, 255, 0.06);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.composition-btn:hover {
+  background: rgba(58, 134, 255, 0.12);
+  border-color: rgba(58, 134, 255, 0.4);
+}
+
+.composition-popover {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 200px;
+  max-width: 280px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--card-bg, #fff);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.composition-popover[hidden] {
+  display: none;
+}
+
+.composition-title {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.composition-popover ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.composition-popover li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.composition-popover li span:last-child {
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.user-recipe-ingredients {
+  width: 100%;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.user-recipe-hint {
+  font-size: 12px;
+  opacity: 0.7;
+  margin: 0;
+}
+
 /* Вкладки сайта */
 .site-tabs {
   display: flex;
@@ -669,7 +762,7 @@ form button[type="reset"]:hover {
 }
 
 .macro-targets-line {
-  margin: 6px 0 0;
+  margin: 0 0 12px;
   font-size: 14px;
   color: var(--gray);
 }
@@ -870,6 +963,10 @@ footer {
     padding: 8px 12px;
   }
 
+  .plan-body {
+    grid-template-columns: 1fr;
+  }
+
   footer {
     padding: 16px 0;
     border-radius: 10px;
@@ -1011,6 +1108,15 @@ footer {
   color: var(--text);
 }
 
+.strategy-section .form-group {
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.strategy-section .form-group:last-child {
+  margin-bottom: 0;
+}
+
 .strategy-section .form-group label {
   font-size: 15px;
   font-weight: 600;
@@ -1018,21 +1124,43 @@ footer {
 }
 
 .strategy-section .field-hint {
-  margin: 4px 0 0;
+  margin: 6px 0 2px;
   font-size: 14px;
-  line-height: 1.55;
+  line-height: 1.65;
   color: var(--text);
   opacity: 0.82;
 }
 
 .strategy-section .checkbox-row {
-  gap: 4px;
+  gap: 8px;
 }
 
 .strategy-section .checkbox-row label {
   font-size: 15px;
   font-weight: 500;
   color: var(--text);
+}
+
+.strategy-section .checkbox-row .field-hint {
+  margin-top: 4px;
+  padding-left: 28px;
+}
+
+#prefsSection .form-group[data-field="allergies"] .checkbox-group {
+  margin-top: 4px;
+  gap: 8px;
+}
+
+#prefsSection .form-group[data-field="allergies"] ~ .form-group {
+  gap: 4px;
+}
+
+#prefsSection .checkbox-item label {
+  padding: 2px 4px;
+}
+
+#prefsSection .checkbox-row + .checkbox-row {
+  margin-top: -2px;
 }
 
 .field-hint {
@@ -1170,7 +1298,7 @@ footer {
 }
 
 .weekly-kcal-chart {
-  margin: 12px 0 20px;
+  margin: 0;
   padding: 14px 12px;
   background: var(--card-bg);
   border: 1px solid var(--border);
@@ -1397,7 +1525,7 @@ footer {
   align-items: baseline;
   gap: 8px;
   flex-wrap: wrap;
-  padding: 8px 0;
+  padding: 10px 0;
   border-bottom: 1px solid var(--border);
 }
 

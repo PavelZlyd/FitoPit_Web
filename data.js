@@ -4,6 +4,11 @@ const bundle = await fetch(new URL('./data/recipes.json', import.meta.url)).then
   return res.json();
 });
 
+const productsBundle = await fetch(new URL('./data/products.json', import.meta.url)).then((res) => {
+  if (!res.ok) throw new Error('Не удалось загрузить data/products.json');
+  return res.json();
+});
+
 const IMAGE_RULES = [
   { match: ['суп', 'борщ', 'щи', 'уха', 'солянк', 'рассольник', 'горох', 'окрошк'], image: 'images/dishes/soup.svg' },
   { match: ['каша', 'овсянк', 'греч', 'рис', 'мюсли'], image: 'images/dishes/porridge.svg' },
@@ -57,28 +62,10 @@ function enrichRecipesDB(db) {
   };
 }
 
-function buildRecipeLinkMap(db, boosters, cheatMeals) {
-  const map = {};
-  const collect = (items) => {
-    for (const recipe of items || []) {
-      if (recipe?.url) map[recipe.title] = recipe.url;
-    }
-  };
-  collect(db.breakfast);
-  collect(db.lunch?.first);
-  collect(db.lunch?.second);
-  collect(db.dinner?.main);
-  collect(db.dinner?.side);
-  collect(db.snack);
-  collect(boosters);
-  collect(cheatMeals);
-  return map;
-}
-
 export const recipesDB = enrichRecipesDB(bundle.recipesDB);
 export const calorieBoosters = enrichList(bundle.calorieBoosters);
 export const cheatMealRecipes = enrichList(bundle.cheatMealRecipes);
-export const recipeLinkMap = buildRecipeLinkMap(recipesDB, calorieBoosters, cheatMealRecipes);
+export const products = productsBundle.products || {};
 export const noRecipeLinkTitles = new Set(SIMPLE_FOOD_TITLES);
 
 export const emojiMap = {

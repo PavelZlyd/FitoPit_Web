@@ -1,5 +1,6 @@
 // Локальное хранение профиля и пользовательских блюд
-import { recipesDB } from './data.js';
+import { recipesDB, products } from './data.js';
+import { calculateRecipeNutrition, normalizeIngredient } from './nutrition.js';
 
 const PROFILE_KEY = 'fitopit_profile';
 const RECIPES_KEY = 'fitopit_user_recipes';
@@ -66,13 +67,32 @@ function saveUserRecipes(recipes) {
 
 function addUserRecipe(recipe) {
   const recipes = getUserRecipes();
+  const ingredients = (recipe.ingredients || [])
+    .map(normalizeIngredient)
+    .filter((ing) => ing.name && ing.grams > 0);
+
+  let nutrition;
+  let yieldGrams;
+  if (ingredients.length) {
+    // Считаем КБЖУ из ингредиентов по справочнику продуктов.
+    const massGrams = ingredients
+      .filter((ing) => !ing.massless)
+      .reduce((sum, ing) => sum + ing.grams, 0);
+    yieldGrams = recipe.yieldGrams > 0 ? parseFloat(recipe.yieldGrams) : massGrams || 100;
+    nutrition = calculateRecipeNutrition({ ingredients, yieldGrams }, products);
+  } else {
+    nutrition = {
+      kcalPer100g: parseFloat(recipe.kcalPer100g),
+      proteinPer100g: parseFloat(recipe.proteinPer100g) || 0,
+      fatPer100g: parseFloat(recipe.fatPer100g) || 0,
+      carbsPer100g: parseFloat(recipe.carbsPer100g) || 0
+    };
+  }
+
   const entry = {
     id: recipe.id || `user_${Date.now()}`,
     title: recipe.title.trim(),
-    kcalPer100g: parseFloat(recipe.kcalPer100g),
-    proteinPer100g: parseFloat(recipe.proteinPer100g) || 0,
-    fatPer100g: parseFloat(recipe.fatPer100g) || 0,
-    carbsPer100g: parseFloat(recipe.carbsPer100g) || 0,
+    ...nutrition,
     diet: recipe.diet || ['normal'],
     allergens: recipe.allergens || [],
     budget: recipe.budget || 'medium',
@@ -80,6 +100,10 @@ function addUserRecipe(recipe) {
     type: recipe.type || 'main',
     isUser: true
   };
+  if (ingredients.length) {
+    entry.ingredients = ingredients;
+    entry.yieldGrams = yieldGrams;
+  }
   recipes.push(entry);
   saveUserRecipes(recipes);
   return entry;
@@ -108,8 +132,8 @@ function cloneRecipe(r) {
     budget: r.budget || 'medium',
     type: r.type || 'main',
     complete: r.complete,
-    url: r.url,
     image: r.image,
+    yieldGrams: r.yieldGrams,
     ingredients: r.ingredients ? r.ingredients.map((i) => ({ ...i })) : undefined,
     isUser: !!r.isUser
   };
