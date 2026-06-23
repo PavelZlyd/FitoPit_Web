@@ -730,25 +730,28 @@ form button[type="reset"]:hover {
 /* Вкладки сайта */
 .site-tabs {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   margin-bottom: 20px;
   padding: 4px;
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
+  flex-wrap: wrap;
 }
 
 .site-tab {
-  flex: 1;
-  padding: 10px 16px;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 10px 12px;
   border: none;
   border-radius: 8px;
   background: transparent;
   color: var(--gray);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
 }
 
 .site-tab:hover {
@@ -759,6 +762,27 @@ form button[type="reset"]:hover {
 .site-tab.active {
   background: var(--accent);
   color: #fff;
+}
+
+.panel-title {
+  font-size: 18px;
+  margin: 0 0 12px;
+  color: var(--text);
+}
+
+.panel-empty-hint {
+  margin: 0 0 20px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: rgba(58, 134, 255, 0.08);
+  border: 1px solid rgba(58, 134, 255, 0.2);
+  color: var(--gray);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.plan-save-inline {
+  margin: 16px 0 8px;
 }
 
 .macro-targets-line {
@@ -874,6 +898,15 @@ footer {
   .controls {
     flex-direction: column;
     align-items: center;
+  }
+
+  .site-tab {
+    flex: 1 1 calc(50% - 6px);
+    font-size: 12px;
+    padding: 8px 10px;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.25;
   }
 
   .content {
@@ -1146,21 +1179,59 @@ footer {
   padding-left: 28px;
 }
 
-#prefsSection .form-group[data-field="allergies"] .checkbox-group {
+#prefsSection .checkbox-row + .checkbox-row {
+  margin-top: -2px;
+}
+
+#allergiesSection .form-group[data-field="allergies"] .checkbox-group {
   margin-top: 4px;
   gap: 8px;
 }
 
-#prefsSection .form-group[data-field="allergies"] ~ .form-group {
-  gap: 4px;
-}
-
-#prefsSection .checkbox-item label {
+#allergiesSection .checkbox-item label {
   padding: 2px 4px;
 }
 
-#prefsSection .checkbox-row + .checkbox-row {
-  margin-top: -2px;
+.collapsible-panel {
+  margin-bottom: 16px;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.collapsible-panel details {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+
+.collapsible-panel summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text);
+  font-size: 15px;
+  list-style: none;
+}
+
+.collapsible-panel summary::-webkit-details-marker {
+  display: none;
+}
+
+.collapsible-panel-body {
+  margin-top: 14px;
+  display: grid;
+  gap: 14px;
+}
+
+.user-recipes-panel.collapsible-panel {
+  margin-top: 28px;
+  padding-top: 0;
+  border-top: none;
+}
+
+.user-recipes-panel.collapsible-panel details {
+  border-top: 1px solid var(--border);
+  border-radius: 10px;
 }
 
 .field-hint {
@@ -1206,9 +1277,9 @@ footer {
 }
 
 .user-recipes-panel {
-  margin-top: 28px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border);
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
   max-width: 100%;
   overflow-x: hidden;
 }
@@ -1664,10 +1735,15 @@ footer {
   #particles,
   header .controls,
   .site-tabs,
+  #profilePanel,
+  #savedPlansPanel,
+  #myRecipesPanel,
+  #feedbackPanel,
   #nutritionForm,
   #userRecipesSection,
-  #planHistorySection,
   #importPlanSection,
+  .plan-save-inline,
+  .plan-history-status,
   .shopping-list-panel,
   .plan-actions,
   .mini-btn,
@@ -1695,6 +1771,14 @@ footer {
 
   #result {
     display: block !important;
+  }
+
+  #planPanel {
+    display: block !important;
+  }
+
+  #planEmptyState {
+    display: none !important;
   }
 
   .tab-buttons {

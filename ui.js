@@ -79,6 +79,7 @@ const translations = {
     regenMeal: "Перегенерировать приём пищи",
     sectionProfile: "Профиль",
     sectionPrefs: "Предпочтения",
+    sectionAllergies: "Аллергии",
     sectionStrategy: "Стратегия недели",
     strategyCaloriesHint: "Ровная неделя — одинаковая норма каждый день. Циклическая — пн–чт чуть меньше, суббота чуть больше.",
     strategyCheatHint: "В этот день вместо обычного меню — разрешённые «вкусняшки».",
@@ -105,7 +106,11 @@ const translations = {
     importPlanError: "Не удалось распознать план. Проверь, что текст скопирован из FitoPit.",
     copyFailed: "❌ Не удалось скопировать",
     tabPlan: "План питания",
+    tabProfile: "Профиль",
+    tabSavedPlans: "Сохранённые планы",
+    tabMyRecipes: "Мои блюда",
     tabFeedback: "Обратная связь",
+    planEmptyHint: "Сначала заполни профиль и нажми «Создать план» в разделе «Профиль».",
     macroNorms: "Норма БЖУ в день",
     macroProtein: "Б",
     macroFat: "Ж",
@@ -177,6 +182,7 @@ const translations = {
     regenMeal: "Regenerate meal",
     sectionProfile: "Profile",
     sectionPrefs: "Preferences",
+    sectionAllergies: "Allergies",
     sectionStrategy: "Weekly strategy",
     strategyCaloriesHint: "Flat — same calories every day. Cycle — slightly less Mon–Thu, slightly more on Saturday.",
     strategyCheatHint: "On this day, regular meals are replaced with allowed treat options.",
@@ -203,7 +209,11 @@ const translations = {
     importPlanError: "Could not parse the plan. Make sure the text was copied from FitoPit.",
     copyFailed: "❌ Copy failed",
     tabPlan: "Meal plan",
+    tabProfile: "Profile",
+    tabSavedPlans: "Saved plans",
+    tabMyRecipes: "My dishes",
     tabFeedback: "Feedback",
+    planEmptyHint: "Fill in your profile and tap «Create plan» in the Profile section first.",
     macroNorms: "Daily macro targets",
     macroProtein: "P",
     macroFat: "F",
@@ -386,15 +396,34 @@ function formatMacroLine(label, actual, target) {
   return `${label}: ${actual.toFixed(1)} / ${target} ${t().macroGrams} — ${formatMacroDelta(delta)}`;
 }
 
+const SITE_PANELS = {
+  profile: 'profilePanel',
+  plan: 'planPanel',
+  savedPlans: 'savedPlansPanel',
+  myRecipes: 'myRecipesPanel',
+  feedback: 'feedbackPanel'
+};
+
 function switchSitePanel(panelId) {
+  const targetId = SITE_PANELS[panelId] ? panelId : 'profile';
   document.querySelectorAll(".site-tab").forEach(btn => {
-    const isActive = btn.dataset.panel === panelId;
+    const isActive = btn.dataset.panel === targetId;
     btn.classList.toggle("active", isActive);
     btn.setAttribute("aria-selected", isActive ? "true" : "false");
   });
-  document.getElementById("planPanel").style.display = panelId === "plan" ? "block" : "none";
-  document.getElementById("feedbackPanel").style.display = panelId === "feedback" ? "block" : "none";
-  localStorage.setItem("fitopit_active_panel", panelId);
+  for (const [id, elId] of Object.entries(SITE_PANELS)) {
+    const el = document.getElementById(elId);
+    if (el) el.style.display = id === targetId ? "block" : "none";
+  }
+  localStorage.setItem("fitopit_active_panel", targetId);
+}
+
+function updatePlanEmptyState() {
+  const empty = document.getElementById("planEmptyState");
+  const result = document.getElementById("result");
+  if (!empty) return;
+  const hasPlan = weeklyPlan?.length > 0 && result?.style.display !== "none";
+  empty.style.display = hasPlan ? "none" : "block";
 }
 
 function updateFeedbackFormLabels() {
@@ -517,10 +546,8 @@ function updateSurveyVisibility() {
     const tr = t();
     document.getElementById("profileSummaryText").textContent =
       `${tr.profileSummary}: ${profile.age} ${currentLang === 'ru' ? 'лет' : 'y'}, ${profile.weight} кг, ${profile.height} см — ${profile.goal}`;
-    ['profileSection', 'prefsSection'].forEach(id => {
-      const sec = document.getElementById(id);
-      if (sec) sec.classList.add('section-collapsed');
-    });
+    const profileSec = document.getElementById('profileSection');
+    if (profileSec) profileSec.classList.add('section-collapsed');
     document.getElementById("strategySection")?.classList.remove('section-collapsed');
     document.getElementById("submitBtn").textContent = t().submitQuick;
   } else {
@@ -866,7 +893,7 @@ function renderShoppingList(plan) {
 
   panel.style.display = 'block';
   panel.innerHTML = `
-    <details open>
+    <details>
       <summary>${tr.shoppingListTitle}</summary>
       ${hasIngredients ? `
         <div class="shopping-list-mode" role="group" aria-label="${tr.shoppingModeLabel}">
@@ -973,6 +1000,7 @@ function loadPlanFromHistoryEntry(id) {
   macroTargets = entry.macroTargets || macroTargets;
   activeDayIndex = Math.max(0, Math.min(6, entry.activeDayIndex ?? 0));
   displayWeeklyPlan(weeklyPlan, baseDailyCalories, activeDayIndex);
+  switchSitePanel('plan');
   document.getElementById('result')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
@@ -1003,6 +1031,7 @@ function displayWeeklyPlan(plan, dailyCalories, dayIndex = activeDayIndex) {
   const constraints = form ? buildConstraints(getFormData(form)) : {};
 
   resultDiv.style.display = "block";
+  updatePlanEmptyState();
   document.getElementById("calories").textContent = Math.round(dailyCalories);
   renderMacroTargetsLine();
   renderWeeklyKcalChart(plan);
@@ -1290,6 +1319,7 @@ function loadImportedPlan(text) {
   activeDayIndex = 0;
 
   displayWeeklyPlan(weeklyPlan, baseDailyCalories, activeDayIndex);
+  switchSitePanel('plan');
   showImportPlanError('');
   document.getElementById('result')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   return true;
@@ -1505,6 +1535,8 @@ function createPlanFromForm() {
   displayWeeklyPlan(weeklyPlan, baseDailyCalories, activeDayIndex);
   profileEditMode = false;
   updateSurveyVisibility();
+  switchSitePanel('plan');
+  document.getElementById('result')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function initApp() {
@@ -1525,12 +1557,13 @@ function initApp() {
   profileEditMode = !isProfileComplete(profile);
   updateSurveyVisibility();
   renderUserRecipesList();
-  restoreLastPlan();
+  const hadPlan = restoreLastPlan();
   renderPlanHistoryList();
   updateFeedbackFormLabels();
+  updatePlanEmptyState();
 
-  const savedPanel = localStorage.getItem("fitopit_active_panel") || "plan";
-  switchSitePanel(savedPanel);
+  const savedPanel = localStorage.getItem("fitopit_active_panel") || "profile";
+  switchSitePanel(hadPlan ? 'plan' : savedPanel);
 
   document.querySelectorAll(".site-tab").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -1541,6 +1574,7 @@ function initApp() {
   document.getElementById("editProfileBtn")?.addEventListener("click", () => {
     profileEditMode = true;
     updateSurveyVisibility();
+    switchSitePanel('profile');
   });
 
   document.getElementById("cheatDay")?.addEventListener("change", (e) => {
@@ -1564,6 +1598,7 @@ function initApp() {
     weeklyTargets = [];
     clearLastPlan();
     document.getElementById("result").style.display = "none";
+    updatePlanEmptyState();
     profileEditMode = true;
     updateSurveyVisibility();
   });

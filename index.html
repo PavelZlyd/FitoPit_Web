@@ -42,11 +42,14 @@
 
   <main class="content">
     <nav class="site-tabs" aria-label="Разделы сайта">
-      <button type="button" class="site-tab active" data-panel="plan" data-i18n="tabPlan" aria-selected="true">План питания</button>
+      <button type="button" class="site-tab active" data-panel="profile" data-i18n="tabProfile" aria-selected="true">Профиль</button>
+      <button type="button" class="site-tab" data-panel="plan" data-i18n="tabPlan" aria-selected="false">План питания</button>
+      <button type="button" class="site-tab" data-panel="savedPlans" data-i18n="tabSavedPlans" aria-selected="false">Сохранённые планы</button>
+      <button type="button" class="site-tab" data-panel="myRecipes" data-i18n="tabMyRecipes" aria-selected="false">Мои блюда</button>
       <button type="button" class="site-tab" data-panel="feedback" data-i18n="tabFeedback" aria-selected="false">Обратная связь</button>
     </nav>
 
-    <div id="planPanel" class="site-panel">
+    <div id="profilePanel" class="site-panel">
     <div id="profileSummary" class="profile-summary" style="display: none;">
       <p id="profileSummaryText"></p>
       <button type="button" id="editProfileBtn" class="btn-secondary">✏️ Изменить профиль</button>
@@ -94,62 +97,74 @@
         </div>
       </section>
 
-      <section id="prefsSection" class="form-section">
-        <h3 class="section-title" data-i18n="sectionPrefs">Предпочтения</h3>
-        <div class="form-group" data-field="diet">
-          <label for="diet">Диета</label>
-          <select id="diet" name="diet" required>
-            <option value="normal" selected>Обычная</option>
-            <option value="vegetarian">Вегетарианская</option>
-            <option value="vegan">Веганская</option>
-            <option value="glutenfree">Без глютена</option>
-          </select>
-        </div>
-        <div class="form-group" data-field="breakfastType">
-          <label for="breakfastType">Завтрак</label>
-          <select id="breakfastType" name="breakfastType" required>
-            <option value="normal" selected>Обычный</option>
-            <option value="light">Лёгкий</option>
-          </select>
-        </div>
-        <div class="form-group" data-field="cookingPref">
-          <label for="cookingPref">Каши и крупы</label>
-          <select id="cookingPref" name="cookingPref">
-            <option value="any" selected>Любой способ</option>
-            <option value="milk">На молоке</option>
-            <option value="water">На воде</option>
-          </select>
-        </div>
-        <div class="form-group" data-field="budget">
-          <label for="budget">Бюджет питания</label>
-          <select id="budget" name="budget" required>
-            <option value="low">Низкий</option>
-            <option value="medium" selected>Средний</option>
-            <option value="high">Высокий</option>
-          </select>
-        </div>
-        <div class="form-group" data-field="allergies">
-          <label>Аллергии</label>
-          <div class="checkbox-group" id="allergies">
-            <div class="checkbox-item"><input type="checkbox" id="allergy-dairy" value="dairy"><label for="allergy-dairy">Молочные</label></div>
-            <div class="checkbox-item"><input type="checkbox" id="allergy-nuts" value="nuts"><label for="allergy-nuts">Орехи</label></div>
-            <div class="checkbox-item"><input type="checkbox" id="allergy-gluten" value="gluten"><label for="allergy-gluten">Глютен</label></div>
-            <div class="checkbox-item"><input type="checkbox" id="allergy-eggs" value="eggs"><label for="allergy-eggs">Яйца</label></div>
-            <div class="checkbox-item"><input type="checkbox" id="allergy-fish" value="fish"><label for="allergy-fish">Рыба</label></div>
-            <div class="checkbox-item"><input type="checkbox" id="allergy-soy" value="soy"><label for="allergy-soy">Соя</label></div>
-            <div class="checkbox-item"><input type="checkbox" id="allergy-sesame" value="sesame"><label for="allergy-sesame">Кунжут</label></div>
+      <section id="prefsSection" class="form-section collapsible-panel">
+        <details>
+          <summary data-i18n="sectionPrefs">Предпочтения</summary>
+          <div class="collapsible-panel-body">
+            <div class="form-group" data-field="diet">
+              <label for="diet">Диета</label>
+              <select id="diet" name="diet" required>
+                <option value="normal" selected>Обычная</option>
+                <option value="vegetarian">Вегетарианская</option>
+                <option value="vegan">Веганская</option>
+                <option value="glutenfree">Без глютена</option>
+              </select>
+            </div>
+            <div class="form-group" data-field="breakfastType">
+              <label for="breakfastType">Завтрак</label>
+              <select id="breakfastType" name="breakfastType" required>
+                <option value="normal" selected>Обычный</option>
+                <option value="light">Лёгкий</option>
+              </select>
+            </div>
+            <div class="form-group" data-field="cookingPref">
+              <label for="cookingPref">Каши и крупы</label>
+              <select id="cookingPref" name="cookingPref">
+                <option value="any" selected>Любой способ</option>
+                <option value="milk">На молоке</option>
+                <option value="water">На воде</option>
+              </select>
+            </div>
+            <div class="form-group" data-field="budget">
+              <label for="budget">Бюджет питания</label>
+              <select id="budget" name="budget" required>
+                <option value="low">Низкий</option>
+                <option value="medium" selected>Средний</option>
+                <option value="high">Высокий</option>
+              </select>
+            </div>
+            <div class="form-group checkbox-row">
+              <label><input type="checkbox" id="enableSecondBreakfast"> Второй завтрак каждый день</label>
+            </div>
+            <div class="form-group checkbox-row">
+              <label><input type="checkbox" id="enableSecondDinner"> Второй ужин каждый день</label>
+            </div>
           </div>
-        </div>
-        <div class="form-group" data-field="excludedKeywords">
-          <label for="excludedKeywords">Исключить продукты (через запятую)</label>
-          <input type="text" id="excludedKeywords" name="excludedKeywords" placeholder="грибы, печень, курица">
-        </div>
-        <div class="form-group checkbox-row">
-          <label><input type="checkbox" id="enableSecondBreakfast"> Второй завтрак каждый день</label>
-        </div>
-        <div class="form-group checkbox-row">
-          <label><input type="checkbox" id="enableSecondDinner"> Второй ужин каждый день</label>
-        </div>
+        </details>
+      </section>
+
+      <section id="allergiesSection" class="form-section collapsible-panel">
+        <details>
+          <summary data-i18n="sectionAllergies">Аллергии</summary>
+          <div class="collapsible-panel-body">
+            <div class="form-group" data-field="allergies">
+              <label>Аллергии</label>
+              <div class="checkbox-group" id="allergies">
+                <div class="checkbox-item"><input type="checkbox" id="allergy-dairy" value="dairy"><label for="allergy-dairy">Молочные</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="allergy-nuts" value="nuts"><label for="allergy-nuts">Орехи</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="allergy-gluten" value="gluten"><label for="allergy-gluten">Глютен</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="allergy-eggs" value="eggs"><label for="allergy-eggs">Яйца</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="allergy-fish" value="fish"><label for="allergy-fish">Рыба</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="allergy-soy" value="soy"><label for="allergy-soy">Соя</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="allergy-sesame" value="sesame"><label for="allergy-sesame">Кунжут</label></div>
+              </div>
+            </div>
+            <div class="form-group" data-field="excludedKeywords">
+              <label for="excludedKeywords">Исключить продукты (через запятую)</label>
+              <input type="text" id="excludedKeywords" name="excludedKeywords" placeholder="грибы, печень, курица">
+            </div>
+          </div>
+        </details>
       </section>
 
       <section id="strategySection" class="form-section strategy-section">
@@ -188,49 +203,10 @@
         <button type="reset" id="resetBtn">🗑 Очистить</button>
       </div>
     </form>
+    </div>
 
-    <section id="userRecipesSection" class="user-recipes-panel">
-      <h3 data-i18n="myRecipes">Моя база блюд</h3>
-      <form id="userRecipeForm" class="user-recipe-form">
-        <input type="text" id="userRecipeTitle" placeholder="Название блюда" required>
-        <textarea id="userRecipeIngredients" class="user-recipe-ingredients" rows="3"
-                  placeholder="Состав (необязательно), по строке: Продукт : граммы&#10;Например:&#10;Гречка : 60&#10;Вода : 150"></textarea>
-        <input type="number" id="userRecipeYield" placeholder="Выход готового блюда, г (необязательно)" min="1" step="1">
-        <p class="user-recipe-hint">Если заполнить состав, КБЖУ посчитаются автоматически. Иначе введите значения вручную ниже.</p>
-        <input type="number" id="userRecipeKcal" placeholder="ккал/100г" min="20" max="900">
-        <input type="number" id="userRecipeProtein" placeholder="Белки/100г" min="0" step="0.1">
-        <input type="number" id="userRecipeFat" placeholder="Жиры/100г" min="0" step="0.1">
-        <input type="number" id="userRecipeCarbs" placeholder="Углеводы/100г" min="0" step="0.1">
-        <select id="userRecipeBudget">
-          <option value="low">Бюджет: низкий</option>
-          <option value="medium" selected>Бюджет: средний</option>
-          <option value="high">Бюджет: высокий</option>
-        </select>
-        <select id="userRecipeSlot" multiple size="3">
-          <option value="breakfast" selected>Завтрак</option>
-          <option value="lunchFirst">Суп</option>
-          <option value="lunchSecond">Обед</option>
-          <option value="dinnerMain">Ужин</option>
-          <option value="dinnerSide">Гарнир</option>
-          <option value="snack">Перекус</option>
-        </select>
-        <button type="submit">➕ Добавить блюдо</button>
-      </form>
-      <ul id="userRecipesList" class="user-recipes-list"></ul>
-    </section>
-
-    <section id="planHistorySection" class="plan-history-panel">
-      <details>
-        <summary data-i18n="planHistorySummary">📚 История планов</summary>
-        <p class="plan-history-hint" data-i18n="planHistoryHint">Сохраняй удачные планы и загружай их позже.</p>
-        <div class="plan-history-save">
-          <input type="text" id="planHistoryName" data-i18n-placeholder="planHistoryNamePlaceholder" placeholder="Название (необязательно)">
-          <button type="button" id="savePlanHistoryBtn" data-i18n="savePlanHistory">💾 Сохранить текущий план</button>
-        </div>
-        <p id="planHistoryStatus" class="plan-history-status" style="display: none;"></p>
-        <ul id="planHistoryList" class="plan-history-list"></ul>
-      </details>
-    </section>
+    <div id="planPanel" class="site-panel" style="display: none;">
+    <p id="planEmptyState" class="panel-empty-hint" data-i18n="planEmptyHint">Сначала заполни профиль и нажми «Создать план» в разделе «Профиль».</p>
 
     <section id="importPlanSection" class="import-plan-panel">
       <details>
@@ -259,12 +235,55 @@
         <div id="mealPlan"></div>
       </div>
       <div id="shoppingListPanel" class="shopping-list-panel" style="display: none;"></div>
+      <div class="plan-history-save plan-save-inline">
+        <input type="text" id="planHistoryName" data-i18n-placeholder="planHistoryNamePlaceholder" placeholder="Название (необязательно)">
+        <button type="button" id="savePlanHistoryBtn" data-i18n="savePlanHistory">💾 Сохранить текущий план</button>
+      </div>
+      <p id="planHistoryStatus" class="plan-history-status" style="display: none;"></p>
       <div class="plan-actions">
         <button type="button" id="copyPlan">📋 Копировать план</button>
         <button type="button" id="copyShoppingList" data-i18n="copyShoppingList">🛒 Копировать список покупок</button>
         <button type="button" id="printPlan" data-i18n="printPlan">🖨 Печать</button>
       </div>
     </div>
+    </div>
+
+    <div id="savedPlansPanel" class="site-panel" style="display: none;">
+      <h3 class="panel-title" data-i18n="tabSavedPlans">Сохранённые планы</h3>
+      <p class="plan-history-hint" data-i18n="planHistoryHint">Сохраняй удачные планы и загружай их позже.</p>
+      <ul id="planHistoryList" class="plan-history-list"></ul>
+    </div>
+
+    <div id="myRecipesPanel" class="site-panel" style="display: none;">
+    <section id="userRecipesSection" class="user-recipes-panel">
+      <h3 class="panel-title" data-i18n="myRecipes">Моя база блюд</h3>
+      <form id="userRecipeForm" class="user-recipe-form">
+        <input type="text" id="userRecipeTitle" placeholder="Название блюда" required>
+        <textarea id="userRecipeIngredients" class="user-recipe-ingredients" rows="3"
+                  placeholder="Состав (необязательно), по строке: Продукт : граммы&#10;Например:&#10;Гречка : 60&#10;Вода : 150"></textarea>
+        <input type="number" id="userRecipeYield" placeholder="Выход готового блюда, г (необязательно)" min="1" step="1">
+        <p class="user-recipe-hint">Если заполнить состав, КБЖУ посчитаются автоматически. Иначе введите значения вручную ниже.</p>
+        <input type="number" id="userRecipeKcal" placeholder="ккал/100г" min="20" max="900">
+        <input type="number" id="userRecipeProtein" placeholder="Белки/100г" min="0" step="0.1">
+        <input type="number" id="userRecipeFat" placeholder="Жиры/100г" min="0" step="0.1">
+        <input type="number" id="userRecipeCarbs" placeholder="Углеводы/100г" min="0" step="0.1">
+        <select id="userRecipeBudget">
+          <option value="low">Бюджет: низкий</option>
+          <option value="medium" selected>Бюджет: средний</option>
+          <option value="high">Бюджет: высокий</option>
+        </select>
+        <select id="userRecipeSlot" multiple size="3">
+          <option value="breakfast" selected>Завтрак</option>
+          <option value="lunchFirst">Суп</option>
+          <option value="lunchSecond">Обед</option>
+          <option value="dinnerMain">Ужин</option>
+          <option value="dinnerSide">Гарнир</option>
+          <option value="snack">Перекус</option>
+        </select>
+        <button type="submit">➕ Добавить блюдо</button>
+      </form>
+      <ul id="userRecipesList" class="user-recipes-list"></ul>
+    </section>
     </div>
 
     <section id="feedbackPanel" class="site-panel feedback-panel" style="display: none;">

@@ -17,6 +17,75 @@ function roundCalories(cal) {
   return Math.round(cal / 10) * 10;
 }
 
+const MEAT_PORTION_REDUCTION = 0.15;
+const MEAT_KEYWORDS = [
+  'кури', 'индей', 'мяс', 'говя', 'свин', 'тефтел', 'котлет', 'гуляш',
+  'отбив', 'стейк', 'бургер', 'наггет', 'баран', 'утк', 'колбас', 'сосиск', 'фарш'
+];
+const FISH_KEYWORDS = ['рыб', 'лосос', 'треск', 'сайр', 'семг', 'минт', 'кревет', 'кальмар'];
+
+function isMeatDish(recipe) {
+  if (!recipe || recipe.isAddOn) return false;
+  const diet = recipe.diet || [];
+  if (diet.length && !diet.includes('normal')) return false;
+  const title = (recipe.title || '').toLowerCase();
+  if (FISH_KEYWORDS.some(k => title.includes(k))) return false;
+  return MEAT_KEYWORDS.some(k => title.includes(k));
+}
+
+function isSideDish(meal) {
+  return meal.type === 'side' || meal.isExtra;
+}
+
+function compensateMeatReductionOnSides(meals, lostCalories, sideOptions, constraints) {
+  if (lostCalories < 20 || !sideOptions?.length) return;
+
+  const existingSide = meals.find(m => isSideDish(m) && !m.isAddOn);
+  if (existingSide?.kcalPer100g) {
+    const extraWeight = roundPortionWeight((lostCalories / existingSide.kcalPer100g) * 100);
+    const maxWeight = existingSide.isExtra ? 400 : 500;
+    recalcMealFromWeight(existingSide, Math.min(maxWeight, existingSide.weight + extraWeight));
+    return;
+  }
+
+  const allowedSides = filterAllowed(sideOptions, constraints);
+  const sideRecipe = allowedSides.length ? getWeightedRandom(allowedSides, constraints.budget) : null;
+  if (!sideRecipe) return;
+
+  let weightSide = roundPortionWeight((lostCalories / sideRecipe.kcalPer100g) * 100);
+  weightSide = Math.min(400, Math.max(100, weightSide));
+  const calSide = roundCalories((sideRecipe.kcalPer100g * weightSide) / 100);
+  meals.push({
+    ...sideRecipe,
+    weight: weightSide,
+    calories: calSide,
+    protein: parseFloat(((sideRecipe.proteinPer100g * weightSide) / 100).toFixed(1)),
+    fat: parseFloat(((sideRecipe.fatPer100g * weightSide) / 100).toFixed(1)),
+    carbs: parseFloat(((sideRecipe.carbsPer100g * weightSide) / 100).toFixed(1)),
+    type: 'side'
+  });
+}
+
+function reduceMeatAndBoostSides(meals, sideOptions, constraints) {
+  if (!Array.isArray(meals) || constraints.diet === 'vegetarian' || constraints.diet === 'vegan') {
+    return;
+  }
+
+  let lostCalories = 0;
+  for (const meal of meals) {
+    if (meal.isAddOn || isSideDish(meal) || !isMeatDish(meal) || !meal.kcalPer100g) continue;
+    const minWeight = meal.complete ? 150 : 100;
+    const targetWeight = roundPortionWeight(meal.weight * (1 - MEAT_PORTION_REDUCTION));
+    if (targetWeight >= meal.weight || targetWeight < minWeight) continue;
+
+    const oldCalories = meal.calories;
+    recalcMealFromWeight(meal, targetWeight);
+    lostCalories += Math.max(0, oldCalories - meal.calories);
+  }
+
+  compensateMeatReductionOnSides(meals, lostCalories, sideOptions, constraints);
+}
+
 function isExcluded(recipe, constraints) {
   const title = (recipe.title || '').toLowerCase();
   const titles = constraints.excludedTitles || [];
@@ -266,6 +335,7 @@ function generateLunch(targetCalories, db, constraints) {
     meals.push(...generateMealWithSides(remainingAfterFirst, incompleteMains, sideCourses, constraints, 0.5));
   }
 
+  reduceMeatAndBoostSides(meals, sideCourses, constraints);
   addCalorieBooster(meals, targetCalories, constraints);
   return meals.length ? meals : [getFallbackMeal(constraints.diet)];
 }
@@ -296,6 +366,8 @@ function generateDinner(targetCalories, db, constraints) {
   } else if (mains.length && sides.length) {
     meals.push(...generateMealWithSides(targetCalories, mains, sides, constraints, 0.6));
   }
+
+  reduceMeatAndBoostSides(meals, sides, constraints);
 
   const totalCalories = meals.reduce((s, m) => s + m.calories, 0);
   if (totalCalories < targetCalories * 0.8) {
@@ -757,5 +829,7 @@ export {
   replaceDishWithRecipe,
   getBoosterPortionWeight,
   isRecipeAllowed,
-  recalcMealFromWeight
+  isMeatDish,
+  recalcMealFromWeight,
+  reduceMeatAndBoostSides
 };
